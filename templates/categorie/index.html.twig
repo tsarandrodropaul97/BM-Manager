@@ -1,0 +1,679 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories des Biens{% endblock %}
+
+{% block body %}
+    <!-- En-tête page -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                    <h5 class="mb-0">Catégories des Biens</h5>
+                    <p class="mb-0 fs-11 text-muted">Gérez les catégories pour organiser vos biens immobiliers</p>
+                </div>
+                <div class="col-auto ms-auto">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#importModal">
+                            <span class="fas fa-upload me-1"></span>Importer
+                        </button>
+                        <button class="btn btn-outline-info btn-sm" type="button" onclick="exporterCategories()">
+                            <span class="fas fa-download me-1"></span>Exporter
+                        </button>
+                        <a href="{{ path('app_categorie_ajout') }}" class="btn btn-primary btn-sm">
+                            <span class="fas fa-plus me-1"></span>Nouvelle catégorie
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres et recherche -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="search-box">
+                        <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
+                            <input class="form-control search-input search" type="search" placeholder="Rechercher une catégorie..." aria-label="Search">
+                            <span class="fas fa-search search-box-icon"></span>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filtreStatut">
+                        <option value="">Tous les statuts</option>
+                        <option value="active">Actives</option>
+                        <option value="inactive">Inactives</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filtreType">
+                        <option value="">Tous les types</option>
+                        <option value="residentiel">Résidentiel</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="mixte">Mixte</option>
+                        <option value="industriel">Industriel</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100" type="button" onclick="reinitialiserFiltres()">
+                        <span class="fas fa-filter me-1"></span>Réinitialiser
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <div class="card bg-soft-primary border-0">
+                <div class="card-body">
+                    <div class="row flex-between-center">
+                        <div class="col-auto">
+                            <h6 class="text-primary mb-0">Total catégories</h6>
+                            <p class="fs-3 fw-bold text-primary mb-0">12</p>
+                        </div>
+                        <div class="col-auto">
+                            <div class="avatar avatar-2xl">
+                                <div class="avatar-name rounded-circle bg-primary-subtle text-primary">
+                                    <span class="fs-2 fas fa-tags"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-soft-success border-0">
+                <div class="card-body">
+                    <div class="row flex-between-center">
+                        <div class="col-auto">
+                            <h6 class="text-success mb-0">Actives</h6>
+                            <p class="fs-3 fw-bold text-success mb-0">10</p>
+                        </div>
+                        <div class="col-auto">
+                            <div class="avatar avatar-2xl">
+                                <div class="avatar-name rounded-circle bg-success-subtle text-success">
+                                    <span class="fs-2 fas fa-check-circle"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-soft-warning border-0">
+                <div class="card-body">
+                    <div class="row flex-between-center">
+                        <div class="col-auto">
+                            <h6 class="text-warning mb-0">Inactives</h6>
+                            <p class="fs-3 fw-bold text-warning mb-0">2</p>
+                        </div>
+                        <div class="col-auto">
+                            <div class="avatar avatar-2xl">
+                                <div class="avatar-name rounded-circle bg-warning-subtle text-warning">
+                                    <span class="fs-2 fas fa-pause-circle"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-soft-info border-0">
+                <div class="card-body">
+                    <div class="row flex-between-center">
+                        <div class="col-auto">
+                            <h6 class="text-info mb-0">Biens associés</h6>
+                            <p class="fs-3 fw-bold text-info mb-0">147</p>
+                        </div>
+                        <div class="col-auto">
+                            <div class="avatar avatar-2xl">
+                                <div class="avatar-name rounded-circle bg-info-subtle text-info">
+                                    <span class="fs-2 fas fa-building"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des catégories -->
+    <div class="card">
+        <div class="card-header">
+            <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                    <h6 class="mb-0">Liste des Catégories</h6>
+                </div>
+                <div class="col-auto ms-auto">
+                    <div class="d-flex">
+                        <select class="form-select form-select-sm me-2" style="width: auto;">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span class="text-muted fs-11 align-self-center">par page</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive scrollbar">
+                <table class="table table-sm table-striped fs-11 mb-0">
+                    <thead class="bg-200">
+                    <tr>
+                        <th class="text-900 sort" data-sort="nom">Nom</th>
+                        <th class="text-900 sort" data-sort="type">Type</th>
+                        <th class="text-900 sort" data-sort="description">Description</th>
+                        <th class="text-900 sort" data-sort="nb_biens">Nb. Biens</th>
+                        <th class="text-900 sort" data-sort="couleur">Couleur</th>
+                        <th class="text-900 sort" data-sort="statut">Statut</th>
+                        <th class="text-900 sort" data-sort="date_creation">Créé le</th>
+                        <th class="text-900 no-sort">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody class="list">
+                    <tr>
+                        <td class="nom">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-xl me-3">
+                                    <div class="avatar-name rounded bg-primary-subtle text-primary">
+                                        <span class="fas fa-home"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-semi-bold text-900">Résidentiel</h6>
+                                    <p class="fs-11 mb-0 text-500">Logements d'habitation</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="type">
+                            <span class="badge rounded-pill badge-subtle-primary">Résidentiel</span>
+                        </td>
+                        <td class="description">
+                                <span class="text-truncate" style="max-width: 200px; display: inline-block;" title="Appartements, maisons, studios destinés à l'habitation principale ou secondaire">
+                                    Appartements, maisons, studios destinés à l'habitation...
+                                </span>
+                        </td>
+                        <td class="nb_biens">
+                            <span class="badge bg-soft-info text-info">85</span>
+                        </td>
+                        <td class="couleur">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary rounded me-2" style="width: 20px; height: 20px;"></div>
+                                <span class="text-700">#0d6efd</span>
+                            </div>
+                        </td>
+                        <td class="statut">
+                            <span class="badge badge-subtle-success">Active</span>
+                        </td>
+                        <td class="date_creation">
+                            <small class="text-700">15/01/2024</small>
+                        </td>
+                        <td>
+                            <div class="dropdown font-sans-serif position-static">
+                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" data-bs-toggle="dropdown">
+                                    <span class="fas fa-ellipsis-h fs-11"></span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end border py-0">
+                                    <div class="py-2">
+                                        <a class="dropdown-item" href="#!">
+                                            <span class="fas fa-eye me-1"></span>Voir détails
+                                        </a>
+                                        <a class="dropdown-item" href="">
+                                            <span class="fas fa-edit me-1"></span>Modifier
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-warning" href="#!">
+                                            <span class="fas fa-archive me-1"></span>Archiver
+                                        </a>
+                                        <a class="dropdown-item text-danger" href="#!" onclick="confirmerSuppression(1)">
+                                            <span class="fas fa-trash me-1"></span>Supprimer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="nom">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-xl me-3">
+                                    <div class="avatar-name rounded bg-success-subtle text-success">
+                                        <span class="fas fa-store"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-semi-bold text-900">Commercial</h6>
+                                    <p class="fs-11 mb-0 text-500">Locaux commerciaux</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="type">
+                            <span class="badge rounded-pill badge-subtle-success">Commercial</span>
+                        </td>
+                        <td class="description">
+                                <span class="text-truncate" style="max-width: 200px; display: inline-block;" title="Boutiques, bureaux, entrepôts pour activités commerciales">
+                                    Boutiques, bureaux, entrepôts pour activités...
+                                </span>
+                        </td>
+                        <td class="nb_biens">
+                            <span class="badge bg-soft-info text-info">42</span>
+                        </td>
+                        <td class="couleur">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success rounded me-2" style="width: 20px; height: 20px;"></div>
+                                <span class="text-700">#198754</span>
+                            </div>
+                        </td>
+                        <td class="statut">
+                            <span class="badge badge-subtle-success">Active</span>
+                        </td>
+                        <td class="date_creation">
+                            <small class="text-700">15/01/2024</small>
+                        </td>
+                        <td>
+                            <div class="dropdown font-sans-serif position-static">
+                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" data-bs-toggle="dropdown">
+                                    <span class="fas fa-ellipsis-h fs-11"></span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end border py-0">
+                                    <div class="py-2">
+                                        <a class="dropdown-item" href="#!">
+                                            <span class="fas fa-eye me-1"></span>Voir détails
+                                        </a>
+                                        <a class="dropdown-item" href="">
+                                            <span class="fas fa-edit me-1"></span>Modifier
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-warning" href="#!">
+                                            <span class="fas fa-archive me-1"></span>Archiver
+                                        </a>
+                                        <a class="dropdown-item text-danger" href="#!" onclick="confirmerSuppression(2)">
+                                            <span class="fas fa-trash me-1"></span>Supprimer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="nom">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-xl me-3">
+                                    <div class="avatar-name rounded bg-warning-subtle text-warning">
+                                        <span class="fas fa-industry"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-semi-bold text-900">Industriel</h6>
+                                    <p class="fs-11 mb-0 text-500">Bâtiments industriels</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="type">
+                            <span class="badge rounded-pill badge-subtle-warning">Industriel</span>
+                        </td>
+                        <td class="description">
+                                <span class="text-truncate" style="max-width: 200px; display: inline-block;" title="Usines, ateliers, entrepôts industriels">
+                                    Usines, ateliers, entrepôts industriels
+                                </span>
+                        </td>
+                        <td class="nb_biens">
+                            <span class="badge bg-soft-info text-info">12</span>
+                        </td>
+                        <td class="couleur">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-warning rounded me-2" style="width: 20px; height: 20px;"></div>
+                                <span class="text-700">#ffc107</span>
+                            </div>
+                        </td>
+                        <td class="statut">
+                            <span class="badge badge-subtle-warning">Inactive</span>
+                        </td>
+                        <td class="date_creation">
+                            <small class="text-700">20/02/2024</small>
+                        </td>
+                        <td>
+                            <div class="dropdown font-sans-serif position-static">
+                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" data-bs-toggle="dropdown">
+                                    <span class="fas fa-ellipsis-h fs-11"></span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end border py-0">
+                                    <div class="py-2">
+                                        <a class="dropdown-item" href="#!">
+                                            <span class="fas fa-eye me-1"></span>Voir détails
+                                        </a>
+                                        <a class="dropdown-item" href="">
+                                            <span class="fas fa-edit me-1"></span>Modifier
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-success" href="#!">
+                                            <span class="fas fa-play me-1"></span>Activer
+                                        </a>
+                                        <a class="dropdown-item text-danger" href="#!" onclick="confirmerSuppression(3)">
+                                            <span class="fas fa-trash me-1"></span>Supprimer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="nom">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-xl me-3">
+                                    <div class="avatar-name rounded bg-info-subtle text-info">
+                                        <span class="fas fa-building"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-semi-bold text-900">Mixte</h6>
+                                    <p class="fs-11 mb-0 text-500">Usage mixte</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="type">
+                            <span class="badge rounded-pill badge-subtle-info">Mixte</span>
+                        </td>
+                        <td class="description">
+                                <span class="text-truncate" style="max-width: 200px; display: inline-block;" title="Biens à usage mixte résidentiel et commercial">
+                                    Biens à usage mixte résidentiel et commercial
+                                </span>
+                        </td>
+                        <td class="nb_biens">
+                            <span class="badge bg-soft-info text-info">8</span>
+                        </td>
+                        <td class="couleur">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info rounded me-2" style="width: 20px; height: 20px;"></div>
+                                <span class="text-700">#0dcaf0</span>
+                            </div>
+                        </td>
+                        <td class="statut">
+                            <span class="badge badge-subtle-success">Active</span>
+                        </td>
+                        <td class="date_creation">
+                            <small class="text-700">10/03/2024</small>
+                        </td>
+                        <td>
+                            <div class="dropdown font-sans-serif position-static">
+                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" data-bs-toggle="dropdown">
+                                    <span class="fas fa-ellipsis-h fs-11"></span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end border py-0">
+                                    <div class="py-2">
+                                        <a class="dropdown-item" href="#!">
+                                            <span class="fas fa-eye me-1"></span>Voir détails
+                                        </a>
+                                        <a class="dropdown-item" href="">
+                                            <span class="fas fa-edit me-1"></span>Modifier
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-warning" href="#!">
+                                            <span class="fas fa-archive me-1"></span>Archiver
+                                        </a>
+                                        <a class="dropdown-item text-danger" href="#!" onclick="confirmerSuppression(4)">
+                                            <span class="fas fa-trash me-1"></span>Supprimer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row align-items-center">
+                <div class="pagination-wrapper">
+                    <div class="d-flex justify-content-center">
+                        <nav aria-label="Pagination">
+                            <ul class="pagination mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#!">
+                                        <span class="fas fa-chevron-left"></span>
+                                    </a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#!">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#!">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#!">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#!">
+                                        <span class="fas fa-chevron-right"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    <p class="mb-0 text-700 fs-11">Affichage 1-4 sur 4 résultats</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal d'importation -->
+    <div class="modal fade" id="importModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Importer des catégories</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="fichierImport" class="form-label">Fichier CSV/Excel</label>
+                        <input type="file" class="form-control" id="fichierImport" accept=".csv,.xlsx,.xls">
+                        <div class="form-text">Formats acceptés: CSV, Excel (.xlsx, .xls)</div>
+                    </div>
+                    <div class="alert alert-info">
+                        <span class="fas fa-info-circle me-2"></span>
+                        <strong>Format requis:</strong> Nom, Type, Description, Couleur (hex), Statut
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="importerCategories()">Importer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <span class="fas fa-exclamation-triangle me-2"></span>
+                        Êtes-vous sûr de vouloir supprimer cette catégorie ?
+                    </div>
+                    <p>Cette action est irréversible. Les biens associés à cette catégorie devront être recatégorisés.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" id="confirmerSuppression">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let categorieASupprimer = null;
+
+        // Fonction de recherche
+        function rechercherCategories() {
+            const terme = document.querySelector('.search-input').value.toLowerCase();
+            const lignes = document.querySelectorAll('tbody tr');
+
+            lignes.forEach(ligne => {
+                const nom = ligne.querySelector('.nom').textContent.toLowerCase();
+                const type = ligne.querySelector('.type').textContent.toLowerCase();
+                const description = ligne.querySelector('.description').textContent.toLowerCase();
+
+                if (nom.includes(terme) || type.includes(terme) || description.includes(terme)) {
+                    ligne.style.display = '';
+                } else {
+                    ligne.style.display = 'none';
+                }
+            });
+        }
+
+        // Fonction de filtrage
+        function filtrerCategories() {
+            const filtreStatut = document.getElementById('filtreStatut').value;
+            const filtreType = document.getElementById('filtreType').value;
+            const lignes = document.querySelectorAll('tbody tr');
+
+            lignes.forEach(ligne => {
+                let afficher = true;
+
+                if (filtreStatut) {
+                    const statut = ligne.querySelector('.statut .badge').textContent.toLowerCase();
+                    if (filtreStatut === 'active' && !statut.includes('active')) afficher = false;
+                    if (filtreStatut === 'inactive' && !statut.includes('inactive')) afficher = false;
+                }
+
+                if (filtreType) {
+                    const type = ligne.querySelector('.type .badge').textContent.toLowerCase();
+                    if (!type.includes(filtreType)) afficher = false;
+                }
+
+                ligne.style.display = afficher ? '' : 'none';
+            });
+        }
+
+        // Réinitialiser les filtres
+        function reinitialiserFiltres() {
+            document.querySelector('.search-input').value = '';
+            document.getElementById('filtreStatut').value = '';
+            document.getElementById('filtreType').value = '';
+
+            document.querySelectorAll('tbody tr').forEach(ligne => {
+                ligne.style.display = '';
+            });
+        }
+
+        // Confirmation de suppression
+        function confirmerSuppression(id) {
+            categorieASupprimer = id;
+            const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            modal.show();
+        }
+
+        // Exporter les catégories
+        function exporterCategories() {
+            // Simulation d'export
+            const donnees = [];
+            document.querySelectorAll('tbody tr').forEach(ligne => {
+                donnees.push({
+                    nom: ligne.querySelector('.nom h6').textContent,
+                    type: ligne.querySelector('.type .badge').textContent,
+                    description: ligne.querySelector('.description').textContent.trim(),
+                    nb_biens: ligne.querySelector('.nb_biens .badge').textContent,
+                    statut: ligne.querySelector('.statut .badge').textContent
+                });
+            });
+
+            // Créer et télécharger le CSV
+            const csv = 'data:text/csv;charset=utf-8,' +
+                'Nom,Type,Description,Nombre de biens,Statut\n' +
+                donnees.map(row => Object.values(row).join(',')).join('\n');
+
+            const lien = document.createElement('a');
+            lien.setAttribute('href', encodeURI(csv));
+            lien.setAttribute('download', 'categories_' + new Date().toISOString().split('T')[0] + '.csv');
+            lien.click();
+        }
+
+        // Importer les catégories
+        function importerCategories() {
+            const fichier = document.getElementById('fichierImport').files[0];
+            if (!fichier) {
+                alert('Veuillez sélectionner un fichier');
+                return;
+            }
+
+            // Ici, vous ajouteriez la logique d'import réelle
+            alert('Import simulé - Fichier: ' + fichier.name);
+            bootstrap.Modal.getInstance(document.getElementById('importModal')).hide();
+        }
+
+        // Événements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Recherche en temps réel
+            document.querySelector('.search-input').addEventListener('input', rechercherCategories);
+
+            // Filtres
+            document.getElementById('filtreStatut').addEventListener('change', filtrerCategories);
+            document.getElementById('filtreType').addEventListener('change', filtrerCategories);
+
+            // Confirmation de suppression
+            document.getElementById('confirmerSuppression').addEventListener('click', function() {
+                if (categorieASupprimer) {
+                    // Ici, vous ajouteriez l'appel AJAX pour supprimer la catégorie
+                    alert('Catégorie supprimée: ID ' + categorieASupprimer);
+                    bootstrap.Modal.getInstance(document.getElementById('confirmationModal')).hide();
+                    // Recharger ou supprimer la ligne du tableau
+                    location.reload();
+                }
+            });
+
+            // Tri des colonnes
+            document.querySelectorAll('.sort').forEach(th => {
+                th.addEventListener('click', function() {
+                    const colonne = this.getAttribute('data-sort');
+                    trierTableau(colonne);
+                });
+            });
+        });
+
+        // Fonction de tri du tableau
+        function trierTableau(colonne) {
+            const tbody = document.querySelector('tbody');
+            const lignes = Array.from(tbody.querySelectorAll('tr'));
+
+            lignes.sort((a, b) => {
+                const aVal = a.querySelector('.' + colonne).textContent.trim();
+                const bVal = b.querySelector('.' + colonne).textContent.trim();
+
+                if (colonne === 'nb_biens' || colonne === 'date_creation') {
+                    return new Date(aVal) - new Date(bVal);
+                }
+
+                return aVal.localeCompare(bVal);
+            });
+
+            lignes.forEach(ligne => tbody.appendChild(ligne));
+        }
+
+        // Fonction pour changer le statut d'une catégorie
+        function changerStatut(id, nouveauStatut) {
+            // Simulation du changement de statut
+            console.log('Changement statut - ID:', id, 'Nouveau statut:', nouveauStatut);
+            location.reload();
+        }
+    </script>
+{% endblock %}

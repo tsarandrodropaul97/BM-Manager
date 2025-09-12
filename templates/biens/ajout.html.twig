@@ -1,0 +1,892 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Bien{% endblock %}
+
+{% block body %}
+    <!-- En-tête page -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                    <h5 class="mb-0">Ajouter un Nouveau Bien</h5>
+                    <p class="mb-0 fs-11 text-muted">Enregistrement d'un nouveau bien immobilier dans votre portefeuille</p>
+                </div>
+                <div class="col-auto ms-auto">
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('app_biens') }}" class="btn btn-outline-secondary btn-sm">
+                            <span class="fas fa-arrow-left me-1"></span>Retour à la liste
+                        </a>
+                        <button class="btn btn-outline-info btn-sm" type="button">
+                            <span class="fas fa-save me-1"></span>Brouillon
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire d'ajout -->
+    <form id="ajouterBienForm">
+        <!-- Section 1: Informations générales -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-info-circle me-2 text-primary"></span>
+                    Informations Générales
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label for="designation" class="form-label">Désignation du bien <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="designation" name="designation" placeholder="ex: Appartement T3 centre-ville" required>
+                        <div class="form-text">Nom descriptif du bien pour identification rapide</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="reference" class="form-label">Référence interne</label>
+                        <div class="input-group">
+                            <span class="input-group-text">BM</span>
+                            <input type="text" class="form-control" id="reference" name="reference" placeholder="Auto-généré">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="type_bien" class="form-label">Type de bien <span class="text-danger">*</span></label>
+                        <select class="form-select" id="type_bien" name="type_bien" required>
+                            <option value="">Sélectionnez le type</option>
+                            <option value="appartement">Appartement</option>
+                            <option value="maison">Maison individuelle</option>
+                            <option value="villa">Villa</option>
+                            <option value="studio">Studio</option>
+                            <option value="loft">Loft</option>
+                            <option value="duplex">Duplex</option>
+                            <option value="triplex">Triplex</option>
+                            <option value="commerce">Local commercial</option>
+                            <option value="bureau">Bureau</option>
+                            <option value="garage">Garage/Parking</option>
+                            <option value="cave">Cave</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="categorie" class="form-label">Catégorie <span class="text-danger">*</span></label>
+                        <select class="form-select" id="categorie" name="categorie" required>
+                            <option value="">Sélectionnez la catégorie</option>
+                            <option value="residentiel">Résidentiel</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="mixte">Mixte</option>
+                            <option value="industriel">Industriel</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="statut" class="form-label">Statut initial</label>
+                        <select class="form-select" id="statut" name="statut">
+                            <option value="vacant">Vacant</option>
+                            <option value="occupe">Occupé</option>
+                            <option value="travaux">En travaux</option>
+                            <option value="maintenance">En maintenance</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Adresse et localisation -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-map-marker-alt me-2 text-success"></span>
+                    Adresse et Localisation
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label for="adresse" class="form-label">Adresse complète <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Numéro, rue, avenue..." required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="complement_adresse" class="form-label">Complément d'adresse</label>
+                        <input type="text" class="form-control" id="complement_adresse" name="complement_adresse" placeholder="Bât., Étage, Porte...">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="code_postal" class="form-label">Code postal <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="code_postal" name="code_postal" placeholder="75001" pattern="[0-9]{5}" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="ville" class="form-label">Ville <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="ville" name="ville" placeholder="Paris" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="departement" class="form-label">Département</label>
+                        <select class="form-select" id="departement" name="departement">
+                            <option value="">Sélectionnez</option>
+                            <option value="75">75 - Paris</option>
+                            <option value="69">69 - Rhône</option>
+                            <option value="13">13 - Bouches-du-Rhône</option>
+                            <!-- Autres départements... -->
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="quartier" class="form-label">Quartier/Secteur</label>
+                        <input type="text" class="form-control" id="quartier" name="quartier" placeholder="Centre-ville, Belleville...">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="transport" class="form-label">Transports à proximité</label>
+                        <input type="text" class="form-control" id="transport" name="transport" placeholder="Métro, Bus, RER...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Caractéristiques techniques -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-ruler-combined me-2 text-warning"></span>
+                    Caractéristiques Techniques
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="surface_habitable" class="form-label">Surface habitable (m²) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="surface_habitable" name="surface_habitable" placeholder="75" min="1" step="0.01" required>
+                            <span class="input-group-text">m²</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="surface_totale" class="form-label">Surface totale (m²)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="surface_totale" name="surface_totale" placeholder="85" min="1" step="0.01">
+                            <span class="input-group-text">m²</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="nb_pieces" class="form-label">Nombre de pièces <span class="text-danger">*</span></label>
+                        <select class="form-select" id="nb_pieces" name="nb_pieces" required>
+                            <option value="">Sélectionnez</option>
+                            <option value="1">1 pièce</option>
+                            <option value="2">2 pièces</option>
+                            <option value="3">3 pièces</option>
+                            <option value="4">4 pièces</option>
+                            <option value="5">5 pièces</option>
+                            <option value="6">6 pièces et +</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="nb_chambres" class="form-label">Nombre de chambres</label>
+                        <select class="form-select" id="nb_chambres" name="nb_chambres">
+                            <option value="">Sélectionnez</option>
+                            <option value="0">Studio</option>
+                            <option value="1">1 chambre</option>
+                            <option value="2">2 chambres</option>
+                            <option value="3">3 chambres</option>
+                            <option value="4">4 chambres</option>
+                            <option value="5">5 chambres et +</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="nb_salles_bain" class="form-label">Salles de bain</label>
+                        <select class="form-select" id="nb_salles_bain" name="nb_salles_bain">
+                            <option value="">Sélectionnez</option>
+                            <option value="1">1 salle de bain</option>
+                            <option value="2">2 salles de bain</option>
+                            <option value="3">3 salles de bain et +</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="nb_wc" class="form-label">WC séparés</label>
+                        <select class="form-select" id="nb_wc" name="nb_wc">
+                            <option value="">Sélectionnez</option>
+                            <option value="0">Aucun</option>
+                            <option value="1">1 WC</option>
+                            <option value="2">2 WC</option>
+                            <option value="3">3 WC et +</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="etage" class="form-label">Étage</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="etage" name="etage" placeholder="3" min="0">
+                            <span class="input-group-text">e</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ascenseur" class="form-label">Ascenseur</label>
+                        <select class="form-select" id="ascenseur" name="ascenseur">
+                            <option value="">Non spécifié</option>
+                            <option value="oui">Oui</option>
+                            <option value="non">Non</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="balcon_terrasse" class="form-label">Balcon/Terrasse</label>
+                        <select class="form-select" id="balcon_terrasse" name="balcon_terrasse">
+                            <option value="">Aucun</option>
+                            <option value="balcon">Balcon</option>
+                            <option value="terrasse">Terrasse</option>
+                            <option value="loggia">Loggia</option>
+                            <option value="jardin">Jardin privatif</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Équipements et caractéristiques -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-home me-2 text-info"></span>
+                    Équipements et Caractéristiques
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="chauffage" class="form-label">Type de chauffage</label>
+                        <select class="form-select" id="chauffage" name="chauffage">
+                            <option value="">Sélectionnez</option>
+                            <option value="individuel_gaz">Individuel gaz</option>
+                            <option value="individuel_electrique">Individuel électrique</option>
+                            <option value="collectif">Collectif</option>
+                            <option value="climatisation">Climatisation réversible</option>
+                            <option value="poele">Poêle</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="eau_chaude" class="form-label">Eau chaude</label>
+                        <select class="form-select" id="eau_chaude" name="eau_chaude">
+                            <option value="">Sélectionnez</option>
+                            <option value="individuelle">Individuelle</option>
+                            <option value="collective">Collective</option>
+                            <option value="electrique">Électrique</option>
+                            <option value="gaz">Gaz</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="cuisine" class="form-label">Cuisine</label>
+                        <select class="form-select" id="cuisine" name="cuisine">
+                            <option value="">Sélectionnez</option>
+                            <option value="equipee">Équipée</option>
+                            <option value="amenagee">Aménagée</option>
+                            <option value="non_equipee">Non équipée</option>
+                            <option value="kitchenette">Kitchenette</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Équipements disponibles</label>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="parking" name="equipements[]" value="parking">
+                                    <label class="form-check-label" for="parking">Place de parking</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="garage" name="equipements[]" value="garage">
+                                    <label class="form-check-label" for="garage">Garage</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="cave" name="equipements[]" value="cave">
+                                    <label class="form-check-label" for="cave">Cave</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="interphone" name="equipements[]" value="interphone">
+                                    <label class="form-check-label" for="interphone">Interphone</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="digicode" name="equipements[]" value="digicode">
+                                    <label class="form-check-label" for="digicode">Digicode</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gardien" name="equipements[]" value="gardien">
+                                    <label class="form-check-label" for="gardien">Gardien</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="fibre" name="equipements[]" value="fibre">
+                                    <label class="form-check-label" for="fibre">Fibre optique</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="climatisation" name="equipements[]" value="climatisation">
+                                    <label class="form-check-label" for="climatisation">Climatisation</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="cheminee" name="equipements[]" value="cheminee">
+                                    <label class="form-check-label" for="cheminee">Cheminée</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="piscine" name="equipements[]" value="piscine">
+                                    <label class="form-check-label" for="piscine">Piscine</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="jardin" name="equipements[]" value="jardin">
+                                    <label class="form-check-label" for="jardin">Jardin</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="meuble" name="equipements[]" value="meuble">
+                                    <label class="form-check-label" for="meuble">Meublé</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Informations financières -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-euro-sign me-2 text-success"></span>
+                    Informations Financières
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="prix_achat" class="form-label">Prix d'achat</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="prix_achat" name="prix_achat" placeholder="250000" min="0" step="0.01">
+                            <span class="input-group-text">€</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="date_achat" class="form-label">Date d'achat</label>
+                        <input type="date" class="form-control" id="date_achat" name="date_achat">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="valeur_estimee" class="form-label">Valeur estimée actuelle</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="valeur_estimee" name="valeur_estimee" placeholder="280000" min="0" step="0.01">
+                            <span class="input-group-text">€</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="loyer_souhaite" class="form-label">Loyer souhaité <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="loyer_souhaite" name="loyer_souhaite" placeholder="1200" min="0" step="0.01" required>
+                            <span class="input-group-text">€</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="charges_locatives" class="form-label">Charges locatives</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="charges_locatives" name="charges_locatives" placeholder="150" min="0" step="0.01">
+                            <span class="input-group-text">€</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="depot_garantie" class="form-label">Dépôt de garantie</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="depot_garantie" name="depot_garantie" placeholder="1200" min="0" step="0.01">
+                            <span class="input-group-text">€</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="charges_proprietaire" class="form-label">Charges propriétaire mensuelles</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="charges_proprietaire" name="charges_proprietaire" placeholder="200" min="0" step="0.01">
+                            <span class="input-group-text">€</span>
+                        </div>
+                        <div class="form-text">Charges de copropriété, assurance, etc.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="rentabilite_attendue" class="form-label">Rentabilité brute attendue</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="rentabilite_attendue" name="rentabilite_attendue" placeholder="5.8" min="0" step="0.1" readonly>
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="form-text">Calculé automatiquement</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Diagnostics et conformité -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-clipboard-check me-2 text-warning"></span>
+                    Diagnostics et Conformité
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="dpe_note" class="form-label">Note DPE</label>
+                        <select class="form-select" id="dpe_note" name="dpe_note">
+                            <option value="">Non renseigné</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="dpe_date" class="form-label">Date DPE</label>
+                        <input type="date" class="form-control" id="dpe_date" name="dpe_date">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="dpe_validite" class="form-label">Validité DPE</label>
+                        <input type="date" class="form-control" id="dpe_validite" name="dpe_validite">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Diagnostics disponibles</label>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="diag_amiante" name="diagnostics[]" value="amiante">
+                                    <label class="form-check-label" for="diag_amiante">Amiante</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="diag_plomb" name="diagnostics[]" value="plomb">
+                                    <label class="form-check-label" for="diag_plomb">Plomb</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="diag_termites" name="diagnostics[]" value="termites">
+                                    <label class="form-check-label" for="diag_termites">Termites</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="diag_gaz" name="diagnostics[]" value="gaz">
+                                    <label class="form-check-label" for="diag_gaz">Installation gaz</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="diag_electricite" name="diagnostics[]" value="electricite">
+                                    <label class="form-check-label" for="diag_electricite">Installation électrique</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="diag_ernmt" name="diagnostics[]" value="ernmt">
+                                    <label class="form-check-label" for="diag_ernmt">ERNMT</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="diag_surface" name="diagnostics[]" value="surface">
+                                    <label class="form-check-label" for="diag_surface">Surface Carrez</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="diag_assainissement" name="diagnostics[]" value="assainissement">
+                                    <label class="form-check-label" for="diag_assainissement">Assainissement</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Propriétaire et gestion -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-user-tie me-2 text-primary"></span>
+                    Propriétaire et Gestion
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="proprietaire" class="form-label">Propriétaire <span class="text-danger">*</span></label>
+                        <select class="form-select" id="proprietaire" name="proprietaire" required>
+                            <option value="">Sélectionnez un propriétaire</option>
+                            <option value="1">Jean Dupont</option>
+                            <option value="2">Marie Martin</option>
+                            <option value="3">SCI IMMOBILIER</option>
+                        </select>
+                        <div class="form-text">
+                            <a href="#" class="text-primary">+ Ajouter un nouveau propriétaire</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="type_mandat" class="form-label">Type de mandat</label>
+                        <select class="form-select" id="type_mandat" name="type_mandat">
+                            <option value="gestion_locative">Gestion locative complète</option>
+                            <option value="gestion_administrative">Gestion administrative</option>
+                            <option value="commercialisation">Commercialisation uniquement</option>
+                            <option value="conseil">Conseil</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="commission_gestion" class="form-label">Commission de gestion</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="commission_gestion" name="commission_gestion" placeholder="8" min="0" max="100" step="0.1">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="date_debut_mandat" class="form-label">Début du mandat</label>
+                        <input type="date" class="form-control" id="date_debut_mandat" name="date_debut_mandat">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="duree_mandat" class="form-label">Durée du mandat</label>
+                        <select class="form-select" id="duree_mandat" name="duree_mandat">
+                            <option value="1">1 an</option>
+                            <option value="2">2 ans</option>
+                            <option value="3" selected>3 ans</option>
+                            <option value="5">5 ans</option>
+                            <option value="indefinie">Indéfinie</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 8: Photos et documents -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-camera me-2 text-info"></span>
+                    Photos et Documents
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label for="photos" class="form-label">Photos du bien</label>
+                        <div class="border border-dashed rounded p-4 text-center">
+                            <input type="file" class="form-control d-none" id="photos" name="photos[]" multiple accept="image/*">
+                            <label for="photos" class="btn btn-outline-primary mb-2">
+                                <span class="fas fa-cloud-upload-alt me-2"></span>Ajouter des photos
+                            </label>
+                            <p class="text-muted mb-0 fs-11">Formats acceptés: JPG, PNG, WEBP - Taille max: 5Mo par photo</p>
+                        </div>
+                        <div class="form-text">La première photo sera utilisée comme photo principale</div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="documents" class="form-label">Documents associés</label>
+                        <div class="border border-dashed rounded p-4 text-center">
+                            <input type="file" class="form-control d-none" id="documents" name="documents[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
+                            <label for="documents" class="btn btn-outline-secondary mb-2">
+                                <span class="fas fa-paperclip me-2"></span>Ajouter des documents
+                            </label>
+                            <p class="text-muted mb-0 fs-11">Diagnostics, plans, actes de propriété, etc.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 9: Notes et observations -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="fas fa-sticky-note me-2 text-secondary"></span>
+                    Notes et Observations
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label for="description" class="form-label">Description détaillée</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" placeholder="Description complète du bien, ses atouts, particularités..."></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="notes_internes" class="form-label">Notes internes</label>
+                        <textarea class="form-control" id="notes_internes" name="notes_internes" rows="3" placeholder="Notes privées, points d'attention, historique..."></textarea>
+                        <div class="form-text">Ces notes ne seront pas visibles dans les annonces</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="travaux_prevus" class="form-label">Travaux prévus</label>
+                        <textarea class="form-control" id="travaux_prevus" name="travaux_prevus" rows="2" placeholder="Liste des travaux à prévoir..."></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="points_attention" class="form-label">Points d'attention</label>
+                        <textarea class="form-control" id="points_attention" name="points_attention" rows="2" placeholder="Éléments à surveiller, défauts connus..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="publier_directement" name="publier_directement">
+                            <label class="form-check-label" for="publier_directement">
+                                Publier le bien immédiatement après création
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="notifier_proprietaire" name="notifier_proprietaire" checked>
+                            <label class="form-check-label" for="notifier_proprietaire">
+                                Notifier le propriétaire par email
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-secondary">
+                                <span class="fas fa-save me-1"></span>Sauvegarder brouillon
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="fas fa-check me-1"></span>Créer le bien
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Script de calcul automatique -->
+    <script>
+        // Calcul automatique de la rentabilité
+        function calculerRentabilite() {
+            const prixAchat = parseFloat(document.getElementById('prix_achat').value) || 0;
+            const loyerMensuel = parseFloat(document.getElementById('loyer_souhaite').value) || 0;
+
+            if (prixAchat > 0 && loyerMensuel > 0) {
+                const loyerAnnuel = loyerMensuel * 12;
+                const rentabilite = (loyerAnnuel / prixAchat) * 100;
+                document.getElementById('rentabilite_attendue').value = rentabilite.toFixed(1);
+            } else {
+                document.getElementById('rentabilite_attendue').value = '';
+            }
+        }
+
+        // Génération automatique de référence
+        function genererReference() {
+            const ville = document.getElementById('ville').value;
+            const typeBien = document.getElementById('type_bien').value;
+
+            if (ville && typeBien) {
+                const villeCode = ville.substring(0, 3).toUpperCase();
+                const typeCode = typeBien.substring(0, 1).toUpperCase();
+                const timestamp = Date.now().toString().slice(-4);
+                const reference = `${villeCode}${typeCode}${timestamp}`;
+                document.getElementById('reference').value = reference;
+            }
+        }
+
+        // Calcul surface totale suggérée
+        function suggererSurfaceTotale() {
+            const surfaceHabitable = parseFloat(document.getElementById('surface_habitable').value) || 0;
+            const balcon = document.getElementById('balcon_terrasse').value;
+
+            if (surfaceHabitable > 0) {
+                let surfaceTotale = surfaceHabitable;
+                if (balcon === 'balcon') surfaceTotale += 5;
+                if (balcon === 'terrasse') surfaceTotale += 10;
+                if (balcon === 'jardin') surfaceTotale += 20;
+
+                if (!document.getElementById('surface_totale').value) {
+                    document.getElementById('surface_totale').value = surfaceTotale;
+                }
+            }
+        }
+
+        // Calcul dépôt de garantie automatique
+        function calculerDepotGarantie() {
+            const loyer = parseFloat(document.getElementById('loyer_souhaite').value) || 0;
+            const meuble = document.querySelector('#meuble').checked;
+
+            if (loyer > 0) {
+                const depot = meuble ? loyer * 2 : loyer;
+                if (!document.getElementById('depot_garantie').value) {
+                    document.getElementById('depot_garantie').value = depot;
+                }
+            }
+        }
+
+        // Validation du formulaire
+        function validerFormulaire(event) {
+            const champsRequis = document.querySelectorAll('input[required], select[required]');
+            let formulaireValide = true;
+
+            champsRequis.forEach(champ => {
+                if (!champ.value.trim()) {
+                    champ.classList.add('is-invalid');
+                    formulaireValide = false;
+                } else {
+                    champ.classList.remove('is-invalid');
+                }
+            });
+
+            if (!formulaireValide) {
+                event.preventDefault();
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Prévisualisation des photos
+        function previsualiserPhotos(input) {
+            const preview = document.createElement('div');
+            preview.className = 'mt-3 row g-2';
+
+            Array.from(input.files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const col = document.createElement('div');
+                        col.className = 'col-md-2';
+                        col.innerHTML = `
+                            <div class="position-relative">
+                                <img src="${e.target.result}" class="img-fluid rounded" style="height: 100px; width: 100%; object-fit: cover;">
+                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" style="padding: 2px 6px;">
+                                    <span class="fas fa-times"></span>
+                                </button>
+                            </div>
+                        `;
+                        preview.appendChild(col);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            const existingPreview = input.parentNode.querySelector('.preview');
+            if (existingPreview) {
+                existingPreview.remove();
+            }
+
+            preview.classList.add('preview');
+            input.parentNode.appendChild(preview);
+        }
+
+        // Événements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculs automatiques
+            document.getElementById('prix_achat').addEventListener('input', calculerRentabilite);
+            document.getElementById('loyer_souhaite').addEventListener('input', function() {
+                calculerRentabilite();
+                calculerDepotGarantie();
+            });
+
+            // Génération référence
+            document.getElementById('ville').addEventListener('blur', genererReference);
+            document.getElementById('type_bien').addEventListener('change', genererReference);
+
+            // Surface totale
+            document.getElementById('surface_habitable').addEventListener('input', suggererSurfaceTotale);
+            document.getElementById('balcon_terrasse').addEventListener('change', suggererSurfaceTotale);
+
+            // Dépôt de garantie
+            document.getElementById('meuble').addEventListener('change', calculerDepotGarantie);
+
+            // Validation
+            document.getElementById('ajouterBienForm').addEventListener('submit', validerFormulaire);
+
+            // Prévisualisation photos
+            document.getElementById('photos').addEventListener('change', function() {
+                previsualiserPhotos(this);
+            });
+
+            // Autocomplétion code postal/ville
+            document.getElementById('code_postal').addEventListener('input', function() {
+                const codePostal = this.value;
+                if (codePostal.length === 5) {
+                    // Ici, vous pourriez intégrer une API de géocodage
+                    // pour récupérer automatiquement la ville
+                }
+            });
+        });
+
+        // Fonction de sauvegarde en brouillon
+        function sauvegarderBrouillon() {
+            const formData = new FormData(document.getElementById('ajouterBienForm'));
+            const data = Object.fromEntries(formData);
+
+            // Sauvegarder en localStorage pour récupération ultérieure
+            localStorage.setItem('brouillon_bien', JSON.stringify(data));
+
+            // Afficher confirmation
+            const toast = document.createElement('div');
+            toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed top-0 end-0 m-3';
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        Brouillon sauvegardé avec succès
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+
+            // Supprimer le toast après 3 secondes
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Récupération brouillon au chargement
+        window.addEventListener('load', function() {
+            const brouillon = localStorage.getItem('brouillon_bien');
+            if (brouillon) {
+                const confirmation = confirm('Un brouillon a été trouvé. Voulez-vous le restaurer ?');
+                if (confirmation) {
+                    const data = JSON.parse(brouillon);
+                    Object.keys(data).forEach(key => {
+                        const element = document.querySelector(`[name="${key}"]`);
+                        if (element) {
+                            if (element.type === 'checkbox') {
+                                element.checked = data[key] === 'on';
+                            } else {
+                                element.value = data[key];
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+
+    <!-- Styles personnalisés -->
+    <style>
+        .border-dashed {
+            border-style: dashed !important;
+        }
+
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .card-header h6 {
+            font-weight: 600;
+        }
+
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .preview img {
+            transition: transform 0.2s;
+        }
+
+        .preview img:hover {
+            transform: scale(1.05);
+        }
+
+        .toast {
+            z-index: 1050;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .col-md-3, .col-md-4, .col-md-6 {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,271 @@
+<nav class="navbar navbar-light navbar-vertical navbar-expand-xl" style="display: none;">
+    <script>
+        var navbarStyle = localStorage.getItem("navbarStyle");
+        if (navbarStyle && navbarStyle !== 'transparent') {
+            document.querySelector('.navbar-vertical').classList.add(`navbar-${navbarStyle}`);
+        }
+    </script>
+    <div class="d-flex align-items-center">
+        <div class="toggle-icon-wrapper">
+            <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+        </div><a class="navbar-brand" href="index.html">
+            <div class="d-flex align-items-center py-3">
+                <div class="me-3" style="width: 44px; height: 44px; background: linear-gradient(135deg, #0d6efd, #6f42c1); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25); transition: transform 0.2s ease;">
+                    <span style="color: white; font-weight: 700; font-size: 14px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; letter-spacing: -0.5px;">BM</span>
+                </div>
+                <span style="color: #ffffff; font-weight: 600; font-size: 20px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; letter-spacing: -0.3px;">BailManager</span>
+            </div>         </a>
+    </div>
+
+
+    <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
+        <div class="navbar-vertical-content scrollbar">
+            <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
+                <li class="nav-item"><!-- parent pages--><a class="nav-link dropdown-indicator" href="#tableau-bord" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="tableau-bord">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span><span class="nav-link-text ps-1">Tableau de bord</span></div>
+                    </a>
+                    <ul class="nav collapse show" id="tableau-bord">
+                        <li class="nav-item"><a class="nav-link active" href="{{ path('app_dashboard') }}">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Vue d'ensemble</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_revenu_locatif') }}">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Revenus locatifs</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_taux_occupation') }}">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Taux d'occupation</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_maintenance') }}">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Maintenance</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_finance') }}">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Finances</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><!-- label-->
+                    <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+                        <div class="col-auto navbar-vertical-label">Gestion</div>
+                        <div class="col ps-0">
+                            <hr class="mb-0 navbar-vertical-divider" />
+                        </div>
+                    </div><!-- parent pages--><a class="nav-link dropdown-indicator" href="#biens" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="biens">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-building"></span></span><span class="nav-link-text ps-1">Biens immobiliers</span></div>
+                    </a>
+                    <ul class="nav collapse" id="biens">
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_biens') }}">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Liste des biens</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_bien_ajouter') }}">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ajouter un bien</span></div>
+                            </a><!-- more inner pages--></li>
+
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_categorie') }}">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Liste des catégories</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="biens/etat.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">État des lieux</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#locataires" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="locataires">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-users"></span></span><span class="nav-link-text ps-1">Locataires</span></div>
+                    </a>
+                    <ul class="nav collapse" id="locataires">
+                        <li class="nav-item"><a class="nav-link" href="locataires/liste.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Liste des locataires</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="locataires/ajouter.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ajouter locataire</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="locataires/historique.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Historique</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#contrats" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="contrats">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-file-contract"></span></span><span class="nav-link-text ps-1">Contrats de bail</span></div>
+                    </a>
+                    <ul class="nav collapse" id="contrats">
+                        <li class="nav-item"><a class="nav-link" href="contrats/actifs.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Contrats actifs</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="contrats/nouveau.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Nouveau contrat</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="contrats/renouvellements.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Renouvellements</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="contrats/resiliations.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Résiliations</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="contrats/modeles.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Modèles</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#loyers" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="loyers">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-money-bill-wave"></span></span><span class="nav-link-text ps-1">Gestion des loyers</span></div>
+                    </a>
+                    <ul class="nav collapse" id="loyers">
+                        <li class="nav-item"><a class="nav-link" href="loyers/encaissements.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Encaissements</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="loyers/impayés.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Impayés</span><span class="badge rounded-pill ms-2 badge-subtle-success">Suivi</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="loyers/quittances.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Quittances</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="loyers/charges.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Charges locatives</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="loyers/revisions.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Révisions loyers</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#charges" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="charges">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-bolt"></span></span><span class="nav-link-text ps-1">Charges & Services</span></div>
+                    </a>
+                    <ul class="nav collapse" id="charges">
+                        <li class="nav-item"><a class="nav-link" href="charges/electricite.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Électricité</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="charges/eau.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Eau</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="charges/gaz.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Gaz</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="charges/internet.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Internet/Télé</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="charges/assurances.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Assurances</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="charges/syndic.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Syndic</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#maintenance" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="maintenance">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-tools"></span></span><span class="nav-link-text ps-1">Maintenance</span></div>
+                    </a>
+                    <ul class="nav collapse" id="maintenance">
+                        <li class="nav-item"><a class="nav-link" href="maintenance/demandes.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Demandes</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="maintenance/interventions.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Interventions</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="maintenance/prestataires.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Prestataires</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="maintenance/planning.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Planning</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="maintenance/historique.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Historique</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><!-- label-->
+                    <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+                        <div class="col-auto navbar-vertical-label">Comptabilité</div>
+                        <div class="col ps-0">
+                            <hr class="mb-0 navbar-vertical-divider" />
+                        </div>
+                    </div><!-- parent pages--><a class="nav-link dropdown-indicator" href="#comptabilite" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="comptabilite">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-calculator"></span></span><span class="nav-link-text ps-1">Comptabilité</span></div>
+                    </a>
+                    <ul class="nav collapse" id="comptabilite">
+                        <li class="nav-item"><a class="nav-link" href="comptabilite/recettes.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Recettes</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="comptabilite/depenses.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Dépenses</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="comptabilite/factures.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Factures</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="comptabilite/budget.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Budget</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#rapports" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="rapports">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-bar"></span></span><span class="nav-link-text ps-1">Rapports</span></div>
+                    </a>
+                    <ul class="nav collapse" id="rapports">
+                        <li class="nav-item"><a class="nav-link" href="rapports/revenus.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Rapport revenus</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="rapports/rentabilite.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Rentabilité</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="rapports/fiscaux.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Rapports fiscaux</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="rapports/occupancy.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Taux occupation</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><!-- label-->
+                    <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+                        <div class="col-auto navbar-vertical-label">Administration</div>
+                        <div class="col ps-0">
+                            <hr class="mb-0 navbar-vertical-divider" />
+                        </div>
+                    </div><!-- parent pages--><a class="nav-link dropdown-indicator" href="#proprietaires" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="proprietaires">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-user-tie"></span></span><span class="nav-link-text ps-1">Propriétaires</span></div>
+                    </a>
+                    <ul class="nav collapse" id="proprietaires">
+                        <li class="nav-item"><a class="nav-link" href="proprietaires/liste.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Liste propriétaires</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="proprietaires/ajouter.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ajouter propriétaire</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="proprietaires/mandats.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Mandats</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#documents" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="documents">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-folder"></span></span><span class="nav-link-text ps-1">Documents</span></div>
+                    </a>
+                    <ul class="nav collapse" id="documents">
+                        <li class="nav-item"><a class="nav-link" href="documents/contrats.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Contrats</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="documents/diagnostics.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Diagnostics</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="documents/photos.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Photos</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="documents/correspondances.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Correspondances</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#parametres" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="parametres">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-cog"></span></span><span class="nav-link-text ps-1">Paramètres</span></div>
+                    </a>
+                    <ul class="nav collapse" id="parametres">
+                        <li class="nav-item"><a class="nav-link" href="parametres/utilisateurs.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Utilisateurs</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="parametres/profil.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Mon profil</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="parametres/agence.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Infos agence</span></div>
+                            </a><!-- more inner pages--></li>
+                        <li class="nav-item"><a class="nav-link" href="parametres/sauvegarde.html">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Sauvegarde</span></div>
+                            </a><!-- more inner pages--></li>
+                    </ul><!-- parent pages--><a class="nav-link" href="aide.html" role="button">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-question-circle"></span></span><span class="nav-link-text ps-1">Aide</span></div>
+                    </a>
+                </li>
+            </ul>
+            <div class="settings my-3">
+                <div class="card shadow-none">
+                    <div class="card-body alert mb-0" role="alert">
+                        <div class="btn-close-falcon-container"><button class="btn btn-link btn-close-falcon p-0" aria-label="Close" data-bs-dismiss="alert"></button></div>
+                        <div class="text-center"><img src="assets/img/icons/spot-illustrations/navbar-vertical.png" alt="" width="80" />
+                            <p class="fs-11 mt-2">Loving what you see? <br />Get your copy of <a href="#!">Falcon</a></p>
+                            <div class="d-grid"><a class="btn btn-sm btn-primary" href="https://themewagon.com/themes/falcon/" target="_blank">Purchase</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

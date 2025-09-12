@@ -1,0 +1,442 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Revenus Locatifs{% endblock %}
+
+{% block body %}
+    <!-- En-tête page -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                    <h5 class="mb-0">Revenus Locatifs</h5>
+                    <p class="mb-0 fs-11 text-muted">Analyse complète de vos revenus immobiliers</p>
+                </div>
+                <div class="col-auto ms-auto">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-primary btn-sm" type="button">
+                            <span class="fas fa-download me-1"></span>Exporter
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" type="button">
+                            <span class="fas fa-filter me-1"></span>Filtrer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sélecteur de période -->
+    <div class="row g-3 mb-3">
+        <div class="col-auto">
+            <div class="btn-group" role="group" aria-label="Période">
+                <input type="radio" class="btn-check" name="periode" id="mois" checked>
+                <label class="btn btn-outline-primary btn-sm" for="mois">Ce mois</label>
+
+                <input type="radio" class="btn-check" name="periode" id="trimestre">
+                <label class="btn btn-outline-primary btn-sm" for="trimestre">Trimestre</label>
+
+                <input type="radio" class="btn-check" name="periode" id="annee">
+                <label class="btn btn-outline-primary btn-sm" for="annee">Année</label>
+            </div>
+        </div>
+        <div class="col-auto ms-auto">
+            <div class="input-group input-group-sm">
+                <input class="form-control" type="month" value="2025-09" />
+                <button class="btn btn-outline-secondary" type="button">
+                    <span class="fas fa-calendar-alt"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métriques revenus principales -->
+    <div class="row g-3 mb-3">
+        <div class="col-sm-6 col-lg-3">
+            <div class="card overflow-hidden" style="min-height: 10rem">
+                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-1.png);"></div>
+                <div class="card-body position-relative">
+                    <h6 class="text-muted">Revenus Total</h6>
+                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-success">€18,500</div>
+                    <div class="d-flex align-items-center">
+                        <span class="badge badge-subtle-success rounded-pill fs-11">+5.2%</span>
+                        <span class="fs-11 ms-1 text-muted">vs mois dernier</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card overflow-hidden" style="min-height: 10rem">
+                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-2.png);"></div>
+                <div class="card-body position-relative">
+                    <h6 class="text-muted">Loyers Encaissés</h6>
+                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-primary">€17,300</div>
+                    <div class="d-flex align-items-center">
+                        <span class="badge badge-subtle-success rounded-pill fs-11">93.5%</span>
+                        <span class="fs-11 ms-1 text-muted">du prévu</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card overflow-hidden" style="min-height: 10rem">
+                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-3.png);"></div>
+                <div class="card-body position-relative">
+                    <h6 class="text-muted">Revenus Annexes</h6>
+                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-info">€1,200</div>
+                    <div class="d-flex align-items-center">
+                        <span class="fs-11 text-muted">Charges, frais, etc.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card overflow-hidden" style="min-height: 10rem">
+                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-4.png);"></div>
+                <div class="card-body position-relative">
+                    <h6 class="text-muted">Revenus Moyens/m²</h6>
+                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-secondary">€12.30</div>
+                    <div class="d-flex align-items-center">
+                        <span class="badge badge-subtle-success rounded-pill fs-11">+2.1%</span>
+                        <span class="fs-11 ms-1 text-muted">vs marché</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphique évolution et répartition -->
+    <div class="row g-3 mb-3">
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <div class="row flex-between-end">
+                        <div class="col-auto">
+                            <h6 class="mb-0">Évolution des Revenus (12 mois)</h6>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="graphType" id="line" checked>
+                                <label class="btn btn-outline-secondary" for="line">
+                                    <span class="fas fa-chart-line"></span>
+                                </label>
+                                <input type="radio" class="btn-check" name="graphType" id="bar">
+                                <label class="btn btn-outline-secondary" for="bar">
+                                    <span class="fas fa-chart-bar"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 2px dashed #dee2e6;">
+                        <div class="text-center">
+                            <span class="fas fa-chart-area fa-2x text-muted mb-2 d-block"></span>
+                            <p class="text-muted mb-0">Graphique d'évolution des revenus</p>
+                            <small class="text-muted">Oct 2024 - Sept 2025</small>
+                        </div>
+                    </div>
+                    <!-- Légende graphique -->
+                    <div class="row mt-3 text-center">
+                        <div class="col-3">
+                            <div class="fs-11"><span class="fas fa-square text-success me-1"></span>Loyers</div>
+                            <div class="fs-10 fw-semi-bold">€17,300</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="fs-11"><span class="fas fa-square text-info me-1"></span>Charges</div>
+                            <div class="fs-10 fw-semi-bold">€800</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="fs-11"><span class="fas fa-square text-primary me-1"></span>Annexes</div>
+                            <div class="fs-10 fw-semi-bold">€400</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="fs-11"><span class="fas fa-square text-secondary me-1"></span>Total</div>
+                            <div class="fs-10 fw-semi-bold">€18,500</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0">Répartition par Type</h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 200px; background: radial-gradient(circle, #f8f9fa 30%, #e9ecef 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; width: 200px; border: 2px dashed #dee2e6;">
+                        <div class="text-center">
+                            <span class="fas fa-chart-pie fa-2x text-muted mb-2 d-block"></span>
+                            <p class="text-muted mb-0 fs-11">Graphique circulaire</p>
+                        </div>
+                    </div>
+                    <!-- Détails répartition -->
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="fs-11"><span class="fas fa-building text-primary me-2"></span>Appartements</div>
+                            <div class="fs-11 fw-semi-bold">67% - €12,400</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="fs-11"><span class="fas fa-home text-success me-2"></span>Studios</div>
+                            <div class="fs-11 fw-semi-bold">23% - €4,200</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="fs-11"><span class="fas fa-house-user text-info me-2"></span>Maisons</div>
+                            <div class="fs-11 fw-semi-bold">10% - €1,900</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Détail par bien et analyse -->
+    <div class="row g-3 mb-3">
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <div class="row flex-between-end">
+                        <div class="col-auto">
+                            <h6 class="mb-0">Détail par Bien Immobilier</h6>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group input-group-sm">
+                                <input class="form-control" type="search" placeholder="Rechercher..." />
+                                <button class="btn btn-outline-secondary" type="button">
+                                    <span class="fas fa-search"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="bg-light">
+                            <tr>
+                                <th class="border-0 fs-11">Bien</th>
+                                <th class="border-0 fs-11">Type</th>
+                                <th class="border-0 fs-11">Loyer</th>
+                                <th class="border-0 fs-11">Charges</th>
+                                <th class="border-0 fs-11">Total</th>
+                                <th class="border-0 fs-11">Statut</th>
+                                <th class="border-0 fs-11">€/m²</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="py-2">
+                                    <strong>15 Rue Victor Hugo</strong><br>
+                                    <span class="fs-10 text-muted">75m² - 3ème étage</span>
+                                </td>
+                                <td class="py-2"><span class="badge badge-subtle-primary">T3</span></td>
+                                <td class="py-2 fw-semi-bold">€1,200</td>
+                                <td class="py-2">€150</td>
+                                <td class="py-2 fw-bold text-success">€1,350</td>
+                                <td class="py-2">
+                                    <span class="badge badge-subtle-success rounded-pill">Payé</span>
+                                </td>
+                                <td class="py-2">€16.00</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">
+                                    <strong>8 Avenue de la République</strong><br>
+                                    <span class="fs-10 text-muted">45m² - 2ème étage</span>
+                                </td>
+                                <td class="py-2"><span class="badge badge-subtle-info">T2</span></td>
+                                <td class="py-2 fw-semi-bold">€850</td>
+                                <td class="py-2">€100</td>
+                                <td class="py-2 fw-bold text-success">€950</td>
+                                <td class="py-2">
+                                    <span class="badge badge-subtle-success rounded-pill">Payé</span>
+                                </td>
+                                <td class="py-2">€18.89</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">
+                                    <strong>22 Boulevard Jean Jaurès</strong><br>
+                                    <span class="fs-10 text-muted">25m² - 1er étage</span>
+                                </td>
+                                <td class="py-2"><span class="badge badge-subtle-secondary">Studio</span></td>
+                                <td class="py-2 fw-semi-bold">€600</td>
+                                <td class="py-2">€80</td>
+                                <td class="py-2 fw-bold text-warning">€680</td>
+                                <td class="py-2">
+                                    <span class="badge badge-subtle-warning rounded-pill">Retard</span>
+                                </td>
+                                <td class="py-2">€24.00</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">
+                                    <strong>5 Rue Pasteur</strong><br>
+                                    <span class="fs-10 text-muted">30m² - RDC</span>
+                                </td>
+                                <td class="py-2"><span class="badge badge-subtle-secondary">Studio</span></td>
+                                <td class="py-2 fw-semi-bold">€520</td>
+                                <td class="py-2">€70</td>
+                                <td class="py-2 fw-bold text-danger">€590</td>
+                                <td class="py-2">
+                                    <span class="badge badge-subtle-danger rounded-pill">Impayé</span>
+                                </td>
+                                <td class="py-2">€17.33</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">
+                                    <strong>12 Place du Marché</strong><br>
+                                    <span class="fs-10 text-muted">90m² - Maison</span>
+                                </td>
+                                <td class="py-2"><span class="badge badge-subtle-success">Maison</span></td>
+                                <td class="py-2 fw-semi-bold">€1,400</td>
+                                <td class="py-2">€200</td>
+                                <td class="py-2 fw-bold text-success">€1,600</td>
+                                <td class="py-2">
+                                    <span class="badge badge-subtle-success rounded-pill">Payé</span>
+                                </td>
+                                <td class="py-2">€15.56</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-light py-2">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <span class="fs-11 text-muted">Affichage 5 biens sur 24</span>
+                        </div>
+                        <div class="col-auto">
+                            <nav aria-label="Pagination">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">›</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0">Analyse de Performance</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Rendement moyen -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fs-11">Rendement Brut</span>
+                            <span class="fs-11 fw-semi-bold text-success">6.8%</span>
+                        </div>
+                        <div class="progress" style="height: 6px">
+                            <div class="progress-bar bg-success" style="width: 68%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Taux de recouvrement -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fs-11">Taux de Recouvrement</span>
+                            <span class="fs-11 fw-semi-bold text-primary">93.5%</span>
+                        </div>
+                        <div class="progress" style="height: 6px">
+                            <div class="progress-bar bg-primary" style="width: 93.5%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Objectif mensuel -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fs-11">Objectif Mensuel</span>
+                            <span class="fs-11 fw-semi-bold text-info">102.8%</span>
+                        </div>
+                        <div class="progress" style="height: 6px">
+                            <div class="progress-bar bg-info" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <!-- Statistiques complémentaires -->
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <div class="fs-4 fw-normal text-primary mb-1">22</div>
+                            <div class="fs-11 text-muted">Biens Occupés</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="fs-4 fw-normal text-warning mb-1">2</div>
+                            <div class="fs-11 text-muted">Retards/Impayés</div>
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <!-- Actions rapides -->
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-primary btn-sm" href="loyers/encaissements.html">
+                            <span class="fas fa-money-bill-wave me-1"></span>Encaissements
+                        </a>
+                        <a class="btn btn-outline-warning btn-sm" href="loyers/impayés.html">
+                            <span class="fas fa-exclamation-triangle me-1"></span>Gérer Impayés
+                        </a>
+                        <a class="btn btn-outline-info btn-sm" href="rapports/revenus.html">
+                            <span class="fas fa-chart-bar me-1"></span>Rapport Détaillé
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerte et tendances -->
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Alertes Revenus</h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <span class="fas fa-exclamation-triangle me-2"></span>
+                        <div class="flex-1">
+                            <strong>2 loyers en retard</strong> pour un montant de €1,270
+                            <div class="fs-11 text-muted">Actions recommandées disponibles</div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <span class="fas fa-info-circle me-2"></span>
+                        <div class="flex-1">
+                            <strong>Révision des loyers</strong> possible sur 8 biens
+                            <div class="fs-11 text-muted">Gains estimés: +€420/mois</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Tendances & Prévisions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fs-11">Croissance mensuelle</span>
+                        <span class="badge badge-subtle-success">+5.2%</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fs-11">Prévision trimestre</span>
+                        <span class="badge badge-subtle-primary">€55,800</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fs-11">Objectif annuel</span>
+                        <span class="badge badge-subtle-info">78% atteint</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="text-center">
+                        <small class="text-muted">Basé sur les 12 derniers mois</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
