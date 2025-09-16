@@ -19,6 +19,7 @@ final class CategorieController extends AbstractController
             'controller_name' => 'CategorieController',
         ]);
     }
+
     #[Route('/categorie/ajout', name: 'app_categorie_ajout')]
     public function ajout(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -27,22 +28,41 @@ final class CategorieController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($categorie);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Catégorie créée avec succès !');
-
-            if ($categorie->getStatut() === 'brouillon') {
-                return $this->redirectToRoute('app_categorie_ajout');
-            }
-
-            return $this->redirectToRoute('app_categorie');
+        // === Gestion AJAX ===
+        if ($request->isXmlHttpRequest()) {
+            return $this->handleAjaxForm($form, $categorie, $entityManager);
         }
 
         return $this->render('categorie/ajout.html.twig', [
             'form' => $form->createView(),
             'categorie' => $categorie
+        ]);
+    }
+
+    // Méthode séparée pour gérer l’AJAX
+    private function handleAjaxForm($form, Categorie $categorie, EntityManagerInterface $entityManager): Response
+    {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($categorie);
+            $entityManager->flush();
+
+            return $this->json([
+                'success' => true,
+                'redirect' => $this->generateUrl('app_categorie'),
+                'message' => 'Catégorie créée avec succès !'
+            ]);
+        }
+
+        // Collecte des erreurs par champ
+        $errors = [];
+        foreach ($form->getErrors(true) as $error) {
+            $field = $error->getOrigin()->getName();
+            $errors[$field][] = $error->getMessage();
+        }
+
+        return $this->json([
+            'success' => false,
+            'errors' => $errors
         ]);
     }
 }
