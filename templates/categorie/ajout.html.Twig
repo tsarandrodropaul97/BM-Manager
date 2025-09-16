@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une Catégorie{% endblock %}
+
+{% block body %}
+    <!-- Affichage des messages flash -->
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <!-- En-tête page -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                    <h5 class="mb-0">Nouvelle Catégorie</h5>
+                    <p class="mb-0 fs-11 text-muted">Créez une nouvelle catégorie pour organiser vos biens immobiliers</p>
+                </div>
+                <div class="col-auto ms-auto">
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('app_categorie') }}" class="btn btn-outline-secondary btn-sm">
+                            <span class="fas fa-arrow-left me-1"></span>Retour à la liste
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(form) }}
+    <div class="row g-3">
+        <!-- Colonne principale -->
+        <div class="col-12 col-lg-8">
+            <!-- Informations de base -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Informations de base</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-12">
+                            {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}<span class="text-danger">*</span>
+                            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                            {% if form.nom.vars.help %}
+                                <div class="form-text">{{ form_help(form.nom) }}</div>
+                            {% endif %}
+                            {{ form_errors(form.nom) }}
+                        </div>
+                        <div class="col-12">
+                            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'maxlength': 500, 'rows': 4}}) }}
+                            <div class="form-text">Maximum 500 caractères</div>
+                            {{ form_errors(form.description) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apparence et visuel -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Apparence et visuel</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.couleur, null, {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="d-flex gap-2 align-items-center">
+                                {{ form_widget(form.couleur, {'attr': {'style':'width:60px; height:38px; padding:0;', 'class': 'form-control form-control-color'}}) }}
+                                {% if form.couleurHex is defined %}
+                                    {{ form_widget(form.couleurHex, {'attr': {'class':'form-control', 'placeholder': '#000000'}}) }}
+                                {% endif %}
+                            </div>
+                            {% if form.couleur.vars.help %}
+                                <div class="form-text">{{ form_help(form.couleur) }}</div>
+                            {% endif %}
+                            {{ form_errors(form.couleur) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.icone, null, {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text" id="iconePreview">
+                                    <span class="fas fa-home"></span>
+                                </span>
+                                {{ form_widget(form.icone, {'attr': {'class':'form-control', 'placeholder': 'fa-home'}}) }}
+                            </div>
+                            {{ form_errors(form.icone) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne latérale -->
+        <div class="col-12 col-lg-4">
+            <!-- Statut et actions -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Statut et publication</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form_label(form.statut, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.statut, {'attr': {'class':'form-select'}}) }}
+                        {{ form_errors(form.statut) }}
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="fas fa-save me-1"></span>Enregistrer la catégorie
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('{{ form.statut.vars.id }}').value='brouillon'; this.form.submit();">
+                            <span class="fas fa-file-alt me-1"></span>Sauver comme brouillon
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conseils -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Conseils</h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <span class="fas fa-lightbulb me-2"></span>
+                        <strong>Bonnes pratiques :</strong>
+                        <ul class="mb-0 mt-2 fs-11">
+                            <li>Utilisez des noms clairs et descriptifs</li>
+                            <li>Choisissez des couleurs contrastées</li>
+                            <li>Limitez le nombre de catégories principales</li>
+                            <li>Pensez à la cohérence avec vos autres catégories</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+
+{% endblock %}
