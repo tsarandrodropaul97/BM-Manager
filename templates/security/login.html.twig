@@ -1,118 +1,182 @@
-<!DOCTYPE html>
-<html data-bs-theme="light" lang="en-US" dir="ltr">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Falcon | Login</title>
+{% extends 'base.html.twig' %}
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/favicons/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/img/favicons/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/img/favicons/favicon-16x16.png') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicons/favicon.ico') }}">
-    <link rel="manifest" href="{{ asset('assets/img/favicons/manifest.json') }}">
-    <meta name="msapplication-TileImage" content="{{ asset('assets/img/favicons/mstile-150x150.png') }}">
-    <meta name="theme-color" content="#ffffff">
+{% block title %}Connexion - BM Manager ERP{% endblock %}
 
-    <!-- Stylesheets -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
-    <link href="{{ asset('vendors/simplebar/simplebar.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/theme.min.css') }}" rel="stylesheet" id="style-default">
-    <link href="{{ asset('assets/css/user.min.css') }}" rel="stylesheet" id="user-style-default">
-    <script src="{{ asset('assets/js/config.js') }}"></script>
-</head>
-<body>
-<main class="main" id="top">
-    <div class="container-fluid">
-        <div class="row min-vh-100 bg-100">
-            <!-- Left image for large screens -->
-            <div class="col-6 d-none d-lg-block position-relative">
-                <div class="bg-holder" style="background-image:url({{ asset('assets/img/generic/14.jpg') }});background-position: 50% 20%;"></div>
-            </div>
+{% block body %}
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow-y: hidden; /* empêche le scroll vertical */
+        }
+    </style>
+            <div class="row min-vh-100 bg-100">
+                {# Image latérale simplifiée #}
+                <div class="col-6 d-none d-lg-block position-relative">
+                    <div class="bg-holder" style="background-image:url({{ asset('assets/img/generic/21.jpg') }});background-position: 50% 20%;"></div>
 
-            <!-- Login form -->
-            <div class="col-sm-10 col-md-6 px-sm-0 align-self-center mx-auto py-5">
-                <div class="row justify-content-center g-0">
-                    <div class="col-lg-9 col-xl-8 col-xxl-6">
-                        <div class="card">
-                            <div class="card-header bg-circle-shape bg-shape text-center p-2">
-                                <a class="font-sans-serif fw-bolder fs-5 z-1 position-relative link-light" href="">Falcon</a>
+                    {# Overlay simplifié #}
+                    <div class="position-absolute bottom-0 start-0 w-100 p-4"
+                         style="background: linear-gradient(transparent, rgba(42, 123, 228, 0.9));">
+                        <div class="text-white mb-5">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-building fa-2x me-3"></i>
+                                <h3 class="fw-bold mb-0">Gestion Immobilière Simplifiée</h3>
                             </div>
-                            <div class="card-body p-4">
-                                <div class="row flex-between-center mb-3">
-                                    <div class="col-auto"><h3>Login</h3></div>
-                                    <div class="col-auto fs-10 text-600">
-                                        <span class="mb-0 fw-semi-bold">New User?</span>
-                                        <span><a href="#">Create account</a></span>
-                                    </div>
+                            <p class="mb-0 opacity-90">
+                                Gérez vos biens, locataires et contrats de bail en toute simplicité.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-10 col-md-6 px-sm-0 align-self-center mx-auto">
+                    <div class="row justify-content-center g-0">
+                        <div class="col-lg-9 col-xl-8 col-xxl-6">
+                            <div class="card shadow border-0">
+                                {# En-tête compact #}
+                                <div class="card-header bg-primary text-center py-3 border-0">
+                                    <i class="fas fa-building text-white fa-lg mb-2"></i>
+                                    <h4 class="text-white fw-bold mb-1">BM Manager</h4>
+                                    <small class="text-white opacity-75">ERP Gestion Immobilière</small>
                                 </div>
 
-                                <!-- Symfony login form -->
-                                {% if error %}
-                                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                                {% endif %}
-
-                                {% if app.user %}
-                                    <div class="mb-3">
-                                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-                                    </div>
-                                {% endif %}
-
-                                <form method="post">
-                                    <div class="mb-3">
-                                        <label class="form-label" for="inputEmail">Email address</label>
-                                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                                <div class="card-body p-4">
+                                    {# Titre simplifié #}
+                                    <div class="text-center mb-3">
+                                        <h5 class="fw-bold text-primary mb-1">Accès à votre espace</h5>
+                                        <small class="text-muted">Connectez-vous pour gérer votre portefeuille immobilier</small>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label" for="inputPassword">Password</label>
-                                        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-                                    </div>
+                                    {# Messages d'erreur compacts #}
+                                    {% if error %}
+                                        <div class="alert alert-danger border-0 py-2 mb-3" role="alert">
+                                            <small><i class="fas fa-exclamation-triangle me-1"></i>
+                                                {{ error.messageKey|trans(error.messageData, 'security') }}</small>
+                                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    {% endif %}
 
-                                    <div class="row flex-between-center mb-3">
-                                        <div class="col-auto">
-                                            <div class="form-check mb-0">
-                                                <input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me">
-                                                <label class="form-check-label mb-0" for="remember_me">Remember me</label>
+                                    {# Messages flash compacts #}
+                                    {% for label, messages in app.flashes %}
+                                        {% for message in messages %}
+                                            <div class="alert alert-{{ label == 'error' ? 'danger' : (label == 'success' ? 'success' : 'info') }} border-0 py-2 mb-3" role="alert">
+                                                <small><i class="fas fa-info-circle me-1"></i> {{ message }}</small>
+                                                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+
+                                    {# Message si déjà connecté - compact #}
+                                    {% if app.user %}
+                                        <div class="alert alert-success border-0 text-center py-3">
+                                            <i class="fas fa-user-check fa-lg text-success mb-2"></i>
+                                            <h6 class="mb-2">Connecté : {{ app.user.userIdentifier }}</h6>
+                                            <div class="d-grid gap-2 d-md-flex justify-content-center">
+                                                <a href="{{ path('app_dashboard') }}" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                                                </a>
+                                                <a href="{{ path('app_logout') }}" class="btn btn-outline-secondary btn-sm">
+                                                    Déconnexion
+                                                </a>
                                             </div>
                                         </div>
-                                        <div class="col-auto"><a class="fs-10" href="#">Forgot Password?</a></div>
-                                    </div>
+                                    {% else %}
 
-                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                    <button class="btn btn-primary d-block w-100 mt-3" type="submit">Log in</button>
-                                </form>
+                                        {# Formulaire compact #}
+                                        <form method="post" action="{{ path('app_login') }}">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold small" for="inputEmail">
+                                                    <i class="fas fa-envelope me-1 text-muted"></i> Email professionnel
+                                                </label>
+                                                <input type="email"
+                                                       value="{{ last_username }}"
+                                                       name="email"
+                                                       id="inputEmail"
+                                                       class="form-control"
+                                                       placeholder="votre.email@entreprise.com"
+                                                       autocomplete="email"
+                                                       required
+                                                       autofocus>
+                                            </div>
 
-                                <div class="position-relative mt-4">
-                                    <hr />
-                                    <div class="divider-content-center">or log in with</div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold small" for="inputPassword">
+                                                    <i class="fas fa-lock me-1 text-muted"></i> Mot de passe
+                                                </label>
+                                                <input type="password"
+                                                       name="password"
+                                                       id="inputPassword"
+                                                       class="form-control"
+                                                       placeholder="Votre mot de passe"
+                                                       autocomplete="current-password"
+                                                       required>
+                                            </div>
+
+                                            {# Options sur une ligne #}
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me">
+                                                    <label class="form-check-label small" for="remember_me">
+                                                        Se souvenir de moi
+                                                    </label>
+                                                </div>
+                                                <a class="text-decoration-none small" href="">
+                                                    Mot de passe oublié ?
+                                                </a>
+                                            </div>
+
+                                            {# Token CSRF #}
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                                            {# URL de redirection #}
+                                            {% if target_path is defined %}
+                                                <input type="hidden" name="_target_path" value="{{ target_path }}">
+                                            {% endif %}
+
+                                            <div class="d-grid mb-3">
+                                                <button class="btn btn-primary fw-semibold" type="submit" name="submit">
+                                                    <i class="fas fa-sign-in-alt me-1"></i> Accéder à mon espace
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                        {# Support compact sur 2 colonnes #}
+                                        <div class="bg-gradient rounded p-3 mb-3">
+                                            <h6 class="text-muted mb-2 text-center">
+                                                <i class="fas fa-headset me-1"></i> Besoin d'aide ?
+                                            </h6>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <a href="mailto:support@bmmanager.com" class="btn btn-outline-secondary btn-sm w-100">
+                                                        <i class="fas fa-envelope"></i> Support
+                                                    </a>
+                                                </div>
+                                                <div class="col-6">
+                                                    <a href="tel:+33123456789" class="btn btn-outline-secondary btn-sm w-100">
+                                                        <i class="fas fa-phone"></i> Appeler
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Nouveau compte - compact #}
+                                        <div class="text-center border-top pt-3">
+                                            <small class="text-muted d-block mb-2">
+                                                Première connexion ?
+                                            </small>
+                                            <a href="{{ path('app_register') }}" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-user-plus me-1"></i> Créer un compte
+                                            </a>
+                                        </div>
+
+                                    {% endif %}
+
                                 </div>
-
-                                <div class="row g-2 mt-2">
-                                    <div class="col-sm-6">
-                                        <a class="btn btn-outline-google-plus btn-sm d-block w-100" href="#"><span class="fab fa-google-plus-g me-2"></span> Google</a>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <a class="btn btn-outline-facebook btn-sm d-block w-100" href="#"><span class="fab fa-facebook-square me-2"></span> Facebook</a>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
-
-        </div>
-    </div>
-</main>
-
-<!-- JS Scripts -->
-<script src="{{ asset('vendors/popper/popper.min.js') }}"></script>
-<script src="{{ asset('vendors/bootstrap/bootstrap.min.js') }}"></script>
-<script src="{{ asset('vendors/simplebar/simplebar.min.js') }}"></script>
-<script src="{{ asset('vendors/fontawesome/all.min.js') }}"></script>
-<script src="{{ asset('assets/js/theme.js') }}"></script>
-</body>
-</html>
+{% endblock %}

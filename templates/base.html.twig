@@ -58,11 +58,12 @@
                 container.classList.add('container-fluid');
             }
         </script>
-        {% include 'Layout/Base/sidebar.html.twig' %}
-        {% include 'Layout/Base/navbar.html.twig' %}
+        {% if app.user is defined and app.user %}
+            {% include 'Layout/Base/sidebar.html.twig' %}
+            {% include 'Layout/Base/navbar.html.twig' %}
+        {% endif %}
         {% block body %}{% endblock %}
     </div> {# Fermeture de la div .content #}
-    </div>
 </main>
 
 <!-- Script de navigation -->
