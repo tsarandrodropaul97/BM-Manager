@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Biens{% endblock %}
+
+{% block body %}
+    <h1>Biens</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ bien.id }}</td>
+            </tr>
+            <tr>
+                <th>Designation</th>
+                <td>{{ bien.designation }}</td>
+            </tr>
+            <tr>
+                <th>Reference</th>
+                <td>{{ bien.reference }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ bien.statut }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ bien.adresse }}</td>
+            </tr>
+            <tr>
+                <th>Code_postal</th>
+                <td>{{ bien.codePostal }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ bien.ville }}</td>
+            </tr>
+            <tr>
+                <th>Secteur</th>
+                <td>{{ bien.secteur }}</td>
+            </tr>
+            <tr>
+                <th>Pays</th>
+                <td>{{ bien.pays }}</td>
+            </tr>
+            <tr>
+                <th>Surface_habitable</th>
+                <td>{{ bien.surfaceHabitable }}</td>
+            </tr>
+            <tr>
+                <th>Surface_total</th>
+                <td>{{ bien.surfaceTotal }}</td>
+            </tr>
+            <tr>
+                <th>Nbr_piece</th>
+                <td>{{ bien.nbrPiece }}</td>
+            </tr>
+            <tr>
+                <th>Nbr_chambre</th>
+                <td>{{ bien.nbrChambre }}</td>
+            </tr>
+            <tr>
+                <th>Salle_bain</th>
+                <td>{{ bien.salleBain }}</td>
+            </tr>
+            <tr>
+                <th>Wc</th>
+                <td>{{ bien.wc }}</td>
+            </tr>
+            <tr>
+                <th>Etage</th>
+                <td>{{ bien.etage }}</td>
+            </tr>
+            <tr>
+                <th>Ascenseur</th>
+                <td>{{ bien.ascenseur }}</td>
+            </tr>
+            <tr>
+                <th>Balcon</th>
+                <td>{{ bien.balcon }}</td>
+            </tr>
+            <tr>
+                <th>Typechauffage</th>
+                <td>{{ bien.typechauffage }}</td>
+            </tr>
+            <tr>
+                <th>Eau</th>
+                <td>{{ bien.eau }}</td>
+            </tr>
+            <tr>
+                <th>Cuisine</th>
+                <td>{{ bien.cuisine }}</td>
+            </tr>
+            <tr>
+                <th>Is_parking</th>
+                <td>{{ bien.isParking ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is_interphone</th>
+                <td>{{ bien.isInterphone ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is_connexion</th>
+                <td>{{ bien.isConnexion ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is_garage</th>
+                <td>{{ bien.isGarage ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is_jardin</th>
+                <td>{{ bien.isJardin ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is_gardien</th>
+                <td>{{ bien.isGardien ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is_chemine</th>
+                <td>{{ bien.isChemine ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is_meuble</th>
+                <td>{{ bien.isMeuble ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ bien.description }}</td>
+            </tr>
+            <tr>
+                <th>Notes_interne</th>
+                <td>{{ bien.notesInterne }}</td>
+            </tr>
+            <tr>
+                <th>Points_attention</th>
+                <td>{{ bien.pointsAttention }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_biens_index') }}">back to list</a>
+
+    <a href="{{ path('app_biens_edit', {'id': bien.id}) }}">edit</a>
+
+    {{ include('biens/_delete_form.html.twig') }}
+{% endblock %}

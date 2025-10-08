@@ -606,7 +606,7 @@
 
             // Créer et télécharger le CSV
             const csv = 'data:text/csv;charset=utf-8,' +
-                'Nom,Type,Description,Nombre de biens,Statut\n' +
+                'Nom,Type,Description,Nombre de biens1,Statut\n' +
                 donnees.map(row => Object.values(row).join(',')).join('\n');
 
             const lien = document.createElement('a');

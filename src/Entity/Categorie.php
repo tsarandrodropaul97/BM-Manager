@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategorieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -46,12 +48,19 @@ class Categorie
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    /**
+     * @var Collection<int, Biens>
+     */
+    #[ORM\OneToMany(targetEntity: Biens::class, mappedBy: 'categorie')]
+    private Collection $biens;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->statut = 'active';
         $this->couleur = '#0d6efd';
         $this->icone = 'fa-home';
+        $this->biens = new ArrayCollection();
     }
 
     #[ORM\PreUpdate]
@@ -163,5 +172,35 @@ class Categorie
             'office' => 'badge-subtle-dark',
             default => 'badge-subtle-primary'
         };
+    }
+
+    /**
+     * @return Collection<int, Biens>
+     */
+    public function getBiens(): Collection
+    {
+        return $this->biens;
+    }
+
+    public function addBien(Biens $bien): static
+    {
+        if (!$this->biens->contains($bien)) {
+            $this->biens->add($bien);
+            $bien->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBien(Biens $bien): static
+    {
+        if ($this->biens->removeElement($bien)) {
+            // set the owning side to null (unless already changed)
+            if ($bien->getCategorie() === $this) {
+                $bien->setCategorie(null);
+            }
+        }
+
+        return $this;
     }
 }
