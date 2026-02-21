@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
             {% if app.user %}
-                <p>Bonjour <strong>{{ app.user.username }}</strong> !</p>
+                <p>Bonjour <strong>{{ app.user.userIdentifier }}</strong> !</p>
                 <p class="text-muted mb-0">Voici un aperçu de votre portefeuille immobilier</p>
             {% else %}
                 <p>Bienvenue sur notre application.</p>
