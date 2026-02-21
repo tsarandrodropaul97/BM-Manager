@@ -1,515 +1,262 @@
-{#{% extends 'base.html.twig' %}#}
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Biens{% endblock %}
-
-{% block body %}
-    <!-- En-tête page -->
-    <div class="card mb-3">
-        <div class="card-header">
-            <div class="row flex-between-end">
-                <div class="col-auto align-self-center">
-                    <h5 class="mb-0">Liste des Biens Immobiliers</h5>
-                    <p class="mb-0 fs-11 text-muted">Gestion et suivi de votre patrimoine immobilier</p>
-                </div>
-                <div class="col-auto ms-auto">
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-primary btn-sm" type="button">
-                            <span class="fas fa-download me-1"></span>Exporter
-                        </button>
-                        <a href="{{ path('app_bien_ajouter') }}" class="btn btn-success btn-sm">
-                            <span class="fas fa-plus me-1"></span>Ajouter un bien
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Filtres et recherche -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <label class="form-label fs-11">Recherche</label>
-                    <div class="input-group input-group-sm">
-                        <input class="form-control" type="text" placeholder="Adresse, référence..." />
-                        <button class="btn btn-outline-secondary" type="button">
-                            <span class="fas fa-search"></span>
-                        </button>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label fs-11">Type</label>
-                    <select class="form-select form-select-sm">
-                        <option value="">Tous types</option>
-                        <option value="appartement">Appartement</option>
-                        <option value="maison">Maison</option>
-                        <option value="studio">Studio</option>
-                        <option value="commerce">Commerce</option>
-                        <option value="garage">Garage</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label fs-11">Statut</label>
-                    <select class="form-select form-select-sm">
-                        <option value="">Tous statuts</option>
-                        <option value="occupe">Occupé</option>
-                        <option value="vacant">Vacant</option>
-                        <option value="maintenance">En maintenance</option>
-                        <option value="travaux">En travaux</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label fs-11">Ville</label>
-                    <select class="form-select form-select-sm">
-                        <option value="">Toutes villes</option>
-                        <option value="paris">Paris</option>
-                        <option value="lyon">Lyon</option>
-                        <option value="marseille">Marseille</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-outline-secondary btn-sm w-100" type="button">
-                        <span class="fas fa-filter me-1"></span>Plus de filtres
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistiques rapides -->
-    <div class="row g-3 mb-3">
-        <div class="col-sm-6 col-lg-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-primary">24</div>
-                    <h6 class="text-muted mb-0">Total Biens</h6>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-success">22</div>
-                    <h6 class="text-muted mb-0">Occupés</h6>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-warning">1</div>
-                    <h6 class="text-muted mb-0">En Transition</h6>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-danger">1</div>
-                    <h6 class="text-muted mb-0">Vacants</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Liste des biens1 -->
-    <div class="card">
-        <div class="card-header">
-            <div class="row flex-between-end">
-                <div class="col-auto">
-                    <h6 class="mb-0">Biens Immobiliers (24)</h6>
-                </div>
-                <div class="col-auto">
-                    <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" name="viewMode" id="grid" checked>
-                        <label class="btn btn-outline-secondary" for="grid">
-                            <span class="fas fa-th"></span>
-                        </label>
-                        <input type="radio" class="btn-check" name="viewMode" id="list">
-                        <label class="btn btn-outline-secondary" for="list">
-                            <span class="fas fa-list"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body p-0">
-            <!-- Mode grille -->
-            <div class="row g-3 p-3" id="gridView">
-                <!-- Bien 1 -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100">
-                        <div class="position-relative">
-                            <div style="height: 200px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); display: flex; align-items: center; justify-content: center;">
-                                <span class="fas fa-image fa-2x text-muted"></span>
-                            </div>
-                            <span class="badge badge-subtle-success position-absolute top-0 start-0 m-2">Occupé</span>
-                            <div class="position-absolute top-0 end-0 m-2">
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-light btn-sm" title="Modifier">
-                                        <span class="fas fa-edit"></span>
-                                    </button>
-                                    <button class="btn btn-light btn-sm" title="Plus d'options">
-                                        <span class="fas fa-ellipsis-v"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title mb-1">15 Rue Victor Hugo</h6>
-                            <p class="card-text fs-11 text-muted mb-2">Paris 15e - T3, 75m²</p>
-                            <div class="row g-0 mb-2">
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Loyer</div>
-                                    <div class="fw-semi-bold">1 850€</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Charges</div>
-                                    <div class="fw-semi-bold">150€</div>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="fs-11 text-muted">Locataire</div>
-                                <div class="fw-semi-bold fs-11">Marie Dubois</div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-light py-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Réf: BM001</small>
-                                <a href="#" class="btn btn-primary btn-sm">Détails</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bien 2 -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100">
-                        <div class="position-relative">
-                            <div style="height: 200px; background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); display: flex; align-items: center; justify-content: center;">
-                                <span class="fas fa-image fa-2x text-muted"></span>
-                            </div>
-                            <span class="badge badge-subtle-success position-absolute top-0 start-0 m-2">Occupé</span>
-                            <div class="position-absolute top-0 end-0 m-2">
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-light btn-sm" title="Modifier">
-                                        <span class="fas fa-edit"></span>
-                                    </button>
-                                    <button class="btn btn-light btn-sm" title="Plus d'options">
-                                        <span class="fas fa-ellipsis-v"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title mb-1">8 Avenue de la République</h6>
-                            <p class="card-text fs-11 text-muted mb-2">Lyon 3e - T2, 45m²</p>
-                            <div class="row g-0 mb-2">
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Loyer</div>
-                                    <div class="fw-semi-bold">950€</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Charges</div>
-                                    <div class="fw-semi-bold">80€</div>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="fs-11 text-muted">Locataire</div>
-                                <div class="fw-semi-bold fs-11">Pierre Martin</div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-light py-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Réf: BM002</small>
-                                <a href="#" class="btn btn-primary btn-sm">Détails</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bien 3 - Vacant -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100">
-                        <div class="position-relative">
-                            <div style="height: 200px; background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); display: flex; align-items: center; justify-content: center;">
-                                <span class="fas fa-image fa-2x text-muted"></span>
-                            </div>
-                            <span class="badge badge-subtle-danger position-absolute top-0 start-0 m-2">Vacant</span>
-                            <div class="position-absolute top-0 end-0 m-2">
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-light btn-sm" title="Modifier">
-                                        <span class="fas fa-edit"></span>
-                                    </button>
-                                    <button class="btn btn-light btn-sm" title="Plus d'options">
-                                        <span class="fas fa-ellipsis-v"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title mb-1">5 Rue Pasteur</h6>
-                            <p class="card-text fs-11 text-muted mb-2">Paris 11e - Studio, 30m²</p>
-                            <div class="row g-0 mb-2">
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Loyer</div>
-                                    <div class="fw-semi-bold">750€</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Charges</div>
-                                    <div class="fw-semi-bold">100€</div>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="fs-11 text-muted">Vacant depuis</div>
-                                <div class="fw-semi-bold fs-11 text-danger">45 jours</div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-light py-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Réf: BM003</small>
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-success btn-sm" title="Publier">
-                                        <span class="fas fa-bullhorn"></span>
-                                    </button>
-                                    <a href="#" class="btn btn-primary btn-sm">Détails</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bien 4 -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100">
-                        <div class="position-relative">
-                            <div style="height: 200px; background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%); display: flex; align-items: center; justify-content: center;">
-                                <span class="fas fa-image fa-2x text-muted"></span>
-                            </div>
-                            <span class="badge badge-subtle-success position-absolute top-0 start-0 m-2">Occupé</span>
-                            <div class="position-absolute top-0 end-0 m-2">
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-light btn-sm" title="Modifier">
-                                        <span class="fas fa-edit"></span>
-                                    </button>
-                                    <button class="btn btn-light btn-sm" title="Plus d'options">
-                                        <span class="fas fa-ellipsis-v"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title mb-1">12 Place du Marché</h6>
-                            <p class="card-text fs-11 text-muted mb-2">Marseille - Maison, 90m²</p>
-                            <div class="row g-0 mb-2">
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Loyer</div>
-                                    <div class="fw-semi-bold">1 200€</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Charges</div>
-                                    <div class="fw-semi-bold">200€</div>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="fs-11 text-muted">Locataire</div>
-                                <div class="fw-semi-bold fs-11">Famille Rousseau</div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-light py-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Réf: BM004</small>
-                                <a href="#" class="btn btn-primary btn-sm">Détails</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bien 5 - En transition -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100">
-                        <div class="position-relative">
-                            <div style="height: 200px; background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); display: flex; align-items: center; justify-content: center;">
-                                <span class="fas fa-image fa-2x text-muted"></span>
-                            </div>
-                            <span class="badge badge-subtle-warning position-absolute top-0 start-0 m-2">En transition</span>
-                            <div class="position-absolute top-0 end-0 m-2">
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-light btn-sm" title="Modifier">
-                                        <span class="fas fa-edit"></span>
-                                    </button>
-                                    <button class="btn btn-light btn-sm" title="Plus d'options">
-                                        <span class="fas fa-ellipsis-v"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title mb-1">22 Boulevard Jean Jaurès</h6>
-                            <p class="card-text fs-11 text-muted mb-2">Paris 19e - Studio, 25m²</p>
-                            <div class="row g-0 mb-2">
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Loyer</div>
-                                    <div class="fw-semi-bold">650€</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="fs-11 text-muted">Charges</div>
-                                    <div class="fw-semi-bold">80€</div>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="fs-11 text-muted">État</div>
-                                <div class="fw-semi-bold fs-11 text-warning">Préparation relocation</div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-light py-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">Réf: BM005</small>
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-info btn-sm" title="Candidatures">
-                                        <span class="fas fa-users"></span>
-                                    </button>
-                                    <a href="#" class="btn btn-primary btn-sm">Détails</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bien 6 - Placeholder pour plus de biens1 -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 border-dashed">
-                        <div class="card-body d-flex align-items-center justify-content-center text-center">
-                            <div>
-                                <span class="fas fa-plus fa-2x text-muted mb-3 d-block"></span>
-                                <p class="text-muted mb-2">Ajouter un nouveau bien</p>
-                                <a href="{{ path('app_bien_ajouter') }}" class="btn btn-outline-primary btn-sm">
-                                    <span class="fas fa-plus me-1"></span>Ajouter
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pagination -->
-        <div class="card-footer bg-light">
-            <div class="row align-items-center">
-                <div class="col">
-                    <span class="fs-11 text-muted">Affichage 6 biens sur 24</span>
-                </div>
-                <div class="col-auto">
-                    <nav aria-label="Pagination biens">
-                        <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">›</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+{% block title %}Gestion des Biens Immobilier
 {% endblock %}
 
+{% block body %}
+	<!-- En-tête page -->
+	<div class="card mb-3">
+		<div class="card-header">
+			<div class="row flex-between-end">
+				<div class="col-auto align-self-center">
+					<h5 class="mb-0">Gestion des Biens Immobilier</h5>
+					<p class="mb-0 fs-11 text-muted">Aperçu et gestion de votre parc immobilier</p>
+				</div>
+				<div class="col-auto ms-auto">
+					<div class="d-flex gap-2">
+						<a href="{{ path('app_biens_export', app.request.query.all) }}" class="btn btn-outline-secondary btn-sm">
+							<span class="fas fa-file-export me-1"></span>Exporter
+						</a>
+						<a href="{{ path('app_biens_new') }}" class="btn btn-primary btn-sm">
+							<span class="fas fa-plus me-1"></span>Ajouter un bien
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
+	<!-- Filtres et Stats rapide -->
+	<div class="row g-3 mb-3">
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-body">
+					<form method="get" action="{{ path('app_biens_index') }}" class="row g-2 align-items-center">
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-text bg-200 border-end-0">
+									<span class="fas fa-search text-600"></span>
+								</span>
+								<input type="text" name="search" value="{{ filters.search }}" class="form-control border-start-0 ps-0" placeholder="Rechercher par désignation ou ville...">
+							</div>
+						</div>
+						<div class="col-md-2">
+							<select name="statut" class="form-select">
+								<option value="">Tous les statuts</option>
+								<option value="vacant" {{ filters.statut == 'vacant' ? 'selected' : '' }}>Vacants</option>
+								<option value="occupe" {{ filters.statut == 'occupe' ? 'selected' : '' }}>Occupés</option>
+								<option value="travaux" {{ filters.statut == 'travaux' ? 'selected' : '' }}>En travaux</option>
+							</select>
+						</div>
+						<div class="col-md-2">
+							<input type="text" name="ville" value="{{ filters.ville }}" class="form-control" placeholder="Ville">
+						</div>
+						<input type="hidden" name="viewMode" value="{{ viewMode }}">
+						<div class="col-auto ms-auto">
+							<button type="submit" class="btn btn-primary">Filtrer</button>
+							<a href="{{ path('app_biens_index') }}" class="btn btn-link py-0 text-muted">Réinitialiser</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
-{#{% block title %}Biens index{% endblock %}#}
+	<div class="row g-3 mb-3">
+		<div class="col-sm-6 col-lg-3">
+			<div class="card border-0 h-100 bg-subtle-primary">
+				<div class="card-body text-center py-4">
+					<div class="fs-4 fw-bold text-primary mb-1">{{ stats.total }}</div>
+					<h6 class="text-primary mb-0 opacity-75 fw-semi-bold">Total Biens</h6>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+			<div class="card border-0 h-100 bg-subtle-success">
+				<div class="card-body text-center py-4">
+					<div class="fs-4 fw-bold text-success mb-1">{{ stats.occupes }}</div>
+					<h6 class="text-success mb-0 opacity-75 fw-semi-bold">Occupés</h6>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+			<div class="card border-0 h-100 bg-subtle-warning">
+				<div class="card-body text-center py-4">
+					<div class="fs-4 fw-bold text-warning mb-1">{{ stats.enTravaux }}</div>
+					<h6 class="text-warning mb-0 opacity-75 fw-semi-bold">En travaux</h6>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+			<div class="card border-0 h-100 bg-subtle-danger">
+				<div class="card-body text-center py-4">
+					<div class="fs-4 fw-bold text-danger mb-1">{{ stats.vacants }}</div>
+					<h6 class="text-danger mb-0 opacity-75 fw-semi-bold">Vacants</h6>
+				</div>
+			</div>
+		</div>
+	</div>
 
-{#{% block body %}#}
-{#    <h1>Biens index</h1>#}
+	<!-- Liste des biens -->
+	<div class="card mb-3">
+		<div class="card-header border-bottom">
+			<div class="row flex-between-center">
+				<div class="col-auto">
+					<h6 class="mb-0">Résultats de la recherche ({{ pagination.getTotalItemCount }})</h6>
+				</div>
+				<div class="col-auto">
+					<div class="btn-group btn-group-sm" role="group">
+						<a href="{{ path('app_biens_index', app.request.query.all|merge({'viewMode': 'grid'})) }}" class="btn {% if viewMode == 'grid' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
+							<span class="fas fa-th"></span>
+						</a>
+						<a href="{{ path('app_biens_index', app.request.query.all|merge({'viewMode': 'list'})) }}" class="btn {% if viewMode == 'list' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
+							<span class="fas fa-list"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body p-0">
+			{% if viewMode == 'grid' %}
+				<!-- Mode grille -->
+				<div class="row g-3 p-3">
+					{% for bien in pagination %}
+						<div class="col-md-6 col-lg-4">
+							<div class="card h-100 shadow-none border">
+								<div class="position-relative">
+									<div style="height: 180px; background: #eaedf2; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+										{% if bien.image %}
+											<img src="{{ asset('uploads/biens/' ~ bien.image) }}" alt="{{ bien.designation }}" style="width: 100%; height: 100%; object-fit: cover;">
+										{% else %}
+											<span class="fas fa-image fa-2x text-300"></span>
+										{% endif %}
+									</div>
+									<div class="position-absolute top-0 start-0 m-2">
+										{% if bien.statut == 'occupe' %}
+											<span class="badge rounded-pill bg-success">Occupé</span>
+										{% elseif bien.statut == 'vacant' %}
+											<span class="badge rounded-pill bg-danger">Vacant</span>
+										{% else %}
+											<span class="badge rounded-pill bg-warning">{{ bien.statut|capitalize }}</span>
+										{% endif %}
+									</div>
+								</div>
+								<div class="card-body pb-2">
+									<h6 class="mb-1 text-truncate">{{ bien.designation }}</h6>
+									<p class="fs-11 text-muted mb-2">
+										<span class="fas fa-map-marker-alt me-1"></span>
+										{{ bien.ville }}</p>
+									<div class="d-flex justify-content-between mb-2">
+										<span class="fs-11 text-muted">
+											<span class="fas fa-ruler-combined me-1"></span>
+											{{ bien.surfaceHabitable }}m²</span>
+										<span class="fs-11 text-muted">
+											<span class="fas fa-door-open me-1"></span>
+											{{ bien.nbrPiece }}
+											pcs</span>
+									</div>
+								</div>
+								<div class="card-footer py-2 border-top">
+									<div class="d-flex justify-content-between align-items-center">
+										<small class="text-600 fw-semi-bold">{{ bien.reference }}</small>
+										<a href="{{ path('app_biens_show', {'id': bien.id}) }}" class="btn btn-link btn-sm p-0">Gérer
+											<span class="fas fa-chevron-right ms-1 fs-11"></span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<div class="col-12 text-center py-5">
+							<span class="fas fa-search-minus fa-4x text-200 mb-3"></span>
+							<p class="text-600 fs-4 fw-semi-bold">Aucun bien trouvé.</p>
+							<p class="text-500 fs-11">Essayez de modifier vos critères de recherche.</p>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<!-- Mode liste (Table) -->
+				<div class="table-responsive scrollbar">
+					<table class="table table-sm table-striped fs-11 mb-0">
+						<thead class="bg-200 text-900">
+							<tr>
+								<th class="align-middle ps-3">Bien</th>
+								<th class="align-middle">Référence</th>
+								<th class="align-middle">Ville</th>
+								<th class="align-middle">Statut</th>
+								<th class="align-middle text-center">Surface</th>
+								<th class="align-middle text-center">Pièces</th>
+								<th class="align-middle text-end pe-3">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for bien in pagination %}
+								<tr>
+									<td class="align-middle ps-3">
+										<div class="d-flex align-items-center">
+											<div class="avatar avatar-l me-2">
+												{% if bien.image %}
+													<img src="{{ asset('uploads/biens/' ~ bien.image) }}" alt="" class="rounded" style="width: 40px; height: 40px; object-fit: cover;">
+												{% else %}
+													<div class="bg-subtle-primary text-primary d-flex align-items-center justify-content-center rounded" style="width: 40px; height: 40px;">
+														<span class="fas fa-image fs-11"></span>
+													</div>
+												{% endif %}
+											</div>
+											<div>
+												<h6 class="mb-0 text-nowrap">{{ bien.designation }}</h6>
+												<p class="mb-0 fs-11 text-muted text-nowrap">{{ bien.categorie ? bien.categorie.nom : 'Non classé' }}</p>
+											</div>
+										</div>
+									</td>
+									<td class="align-middle fw-semi-bold">{{ bien.reference }}</td>
+									<td class="align-middle">{{ bien.ville }}</td>
+									<td class="align-middle">
+										{% if bien.statut == 'occupe' %}
+											<span class="badge badge-subtle-success">Occupé</span>
+										{% elseif bien.statut == 'vacant' %}
+											<span class="badge badge-subtle-danger">Vacant</span>
+										{% else %}
+											<span class="badge badge-subtle-warning">{{ bien.statut|capitalize }}</span>
+										{% endif %}
+									</td>
+									<td class="align-middle text-center">{{ bien.surfaceHabitable }}
+										m²</td>
+									<td class="align-middle text-center">{{ bien.nbrPiece }}</td>
+									<td class="align-middle text-end pe-3">
+										<div class="btn-group btn-group-sm">
+											<a href="{{ path('app_biens_show', {'id': bien.id}) }}" class="btn btn-light" title="Détails">
+												<span class="fas fa-eye"></span>
+											</a>
+											<a href="{{ path('app_biens_edit', {'id': bien.id}) }}" class="btn btn-light" title="Modifier">
+												<span class="fas fa-edit"></span>
+											</a>
+										</div>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="7" class="text-center py-5">
+										<span class="fas fa-search-minus fa-3x text-200 mb-3"></span>
+										<p class="text-600 fs-4 fw-semi-bold">Aucun bien trouvé.</p>
+										<p class="text-500 fs-11">Essayez de modifier vos critères de recherche.</p>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
+		</div>
 
-{#    <table class="table">#}
-{#        <thead>#}
-{#            <tr>#}
-{#                <th>Id</th>#}
-{#                <th>Designation</th>#}
-{#                <th>Reference</th>#}
-{#                <th>Statut</th>#}
-{#                <th>Adresse</th>#}
-{#                <th>Code_postal</th>#}
-{#                <th>Ville</th>#}
-{#                <th>Secteur</th>#}
-{#                <th>Pays</th>#}
-{#                <th>Surface_habitable</th>#}
-{#                <th>Surface_total</th>#}
-{#                <th>Nbr_piece</th>#}
-{#                <th>Nbr_chambre</th>#}
-{#                <th>Salle_bain</th>#}
-{#                <th>Wc</th>#}
-{#                <th>Etage</th>#}
-{#                <th>Ascenseur</th>#}
-{#                <th>Balcon</th>#}
-{#                <th>Typechauffage</th>#}
-{#                <th>Eau</th>#}
-{#                <th>Cuisine</th>#}
-{#                <th>Is_parking</th>#}
-{#                <th>Is_interphone</th>#}
-{#                <th>Is_connexion</th>#}
-{#                <th>Is_garage</th>#}
-{#                <th>Is_jardin</th>#}
-{#                <th>Is_gardien</th>#}
-{#                <th>Is_chemine</th>#}
-{#                <th>Is_meuble</th>#}
-{#                <th>Description</th>#}
-{#                <th>Notes_interne</th>#}
-{#                <th>Points_attention</th>#}
-{#                <th>actions</th>#}
-{#            </tr>#}
-{#        </thead>#}
-{#        <tbody>#}
-{#        {% for bien in biens %}#}
-{#            <tr>#}
-{#                <td>{{ bien.id }}</td>#}
-{#                <td>{{ bien.designation }}</td>#}
-{#                <td>{{ bien.reference }}</td>#}
-{#                <td>{{ bien.statut }}</td>#}
-{#                <td>{{ bien.adresse }}</td>#}
-{#                <td>{{ bien.codePostal }}</td>#}
-{#                <td>{{ bien.ville }}</td>#}
-{#                <td>{{ bien.secteur }}</td>#}
-{#                <td>{{ bien.pays }}</td>#}
-{#                <td>{{ bien.surfaceHabitable }}</td>#}
-{#                <td>{{ bien.surfaceTotal }}</td>#}
-{#                <td>{{ bien.nbrPiece }}</td>#}
-{#                <td>{{ bien.nbrChambre }}</td>#}
-{#                <td>{{ bien.salleBain }}</td>#}
-{#                <td>{{ bien.wc }}</td>#}
-{#                <td>{{ bien.etage }}</td>#}
-{#                <td>{{ bien.ascenseur }}</td>#}
-{#                <td>{{ bien.balcon }}</td>#}
-{#                <td>{{ bien.typechauffage }}</td>#}
-{#                <td>{{ bien.eau }}</td>#}
-{#                <td>{{ bien.cuisine }}</td>#}
-{#                <td>{{ bien.isParking ? 'Yes' : 'No' }}</td>#}
-{#                <td>{{ bien.isInterphone ? 'Yes' : 'No' }}</td>#}
-{#                <td>{{ bien.isConnexion ? 'Yes' : 'No' }}</td>#}
-{#                <td>{{ bien.isGarage ? 'Yes' : 'No' }}</td>#}
-{#                <td>{{ bien.isJardin ? 'Yes' : 'No' }}</td>#}
-{#                <td>{{ bien.isGardien ? 'Yes' : 'No' }}</td>#}
-{#                <td>{{ bien.isChemine ? 'Yes' : 'No' }}</td>#}
-{#                <td>{{ bien.isMeuble ? 'Yes' : 'No' }}</td>#}
-{#                <td>{{ bien.description }}</td>#}
-{#                <td>{{ bien.notesInterne }}</td>#}
-{#                <td>{{ bien.pointsAttention }}</td>#}
-{#                <td>#}
-{#                    <a href="{{ path('app_biens_show', {'id': bien.id}) }}">show</a>#}
-{#                    <a href="{{ path('app_biens_edit', {'id': bien.id}) }}">edit</a>#}
-{#                </td>#}
-{#            </tr>#}
-{#        {% else %}#}
-{#            <tr>#}
-{#                <td colspan="33">no records found</td>#}
-{#            </tr>#}
-{#        {% endfor %}#}
-{#        </tbody>#}
-{#    </table>#}
-
-{#    <a href="{{ path('app_biens_new') }}">Create new</a>#}
-{#{% endblock %}#}
+		<!-- Pagination -->
+		<div class="card-footer d-flex align-items-center justify-content-between py-2 border-top">
+			<span class="fs-11 text-600">Affiche
+				{{ pagination|length }}
+				sur
+				{{ pagination.getTotalItemCount }}
+				résultats</span>
+			{{ knp_pagination_render(pagination) }}
+		</div>
+	</div>
+{% endblock %}

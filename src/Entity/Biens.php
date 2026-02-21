@@ -17,8 +17,8 @@ class Biens
     #[ORM\Column(length: 255)]
     private ?string $designation = null;
 
-    #[ORM\Column]
-    private ?int $reference = null;
+    #[ORM\Column(length: 50, unique: true)]
+    private ?string $reference = null;
 
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
@@ -107,6 +107,9 @@ class Biens
     #[ORM\Column(length: 255)]
     private ?string $points_attention = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
     #[ORM\ManyToOne(inversedBy: 'biens1')]
     private ?Categorie $categorie = null;
 
@@ -127,12 +130,12 @@ class Biens
         return $this;
     }
 
-    public function getReference(): ?int
+    public function getReference(): ?string
     {
         return $this->reference;
     }
 
-    public function setReference(int $reference): static
+    public function setReference(string $reference): static
     {
         $this->reference = $reference;
 
@@ -495,6 +498,18 @@ class Biens
     public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

@@ -16,28 +16,27 @@ class CategorieRepository extends ServiceEntityRepository
         parent::__construct($registry, Categorie::class);
     }
 
-    //    /**
-    //     * @return Categorie[] Returns an array of Categorie objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getFilteredQueryBuilder(?string $search, ?string $statut, ?string $type)
+    {
+        $qb = $this->createQueryBuilder('c');
 
-    //    public function findOneBySomeField($value): ?Categorie
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($search) {
+            $qb->andWhere('c.nom LIKE :search OR c.description LIKE :search OR c.type LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($statut) {
+            $qb->andWhere('c.statut = :statut')
+               ->setParameter('statut', $statut);
+        }
+
+        if ($type) {
+            $qb->andWhere('c.type = :type')
+               ->setParameter('type', $type);
+        }
+
+        $qb->orderBy('c.createdAt', 'DESC');
+
+        return $qb;
+    }
 }

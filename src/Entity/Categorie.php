@@ -25,6 +25,9 @@ class Categorie
     #[Assert\Length(max: 255, maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères')]
     private ?string $nom = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $type = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(max: 500, maxMessage: 'La description ne peut pas dépasser {{ limit }} caractères')]
     private ?string $description = null;
@@ -163,7 +166,7 @@ class Categorie
     }
     public function getTypeBadgeClass(): string
     {
-        return match($this->type) {
+        return match ($this->type) {
             'residential' => 'badge-subtle-primary',
             'commercial' => 'badge-subtle-success',
             'industrial' => 'badge-subtle-warning',

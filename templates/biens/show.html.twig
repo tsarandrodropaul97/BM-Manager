@@ -1,146 +1,202 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Biens{% endblock %}
+{% block title %}Détails du Bien -
+	{{ bien.designation }}
+{% endblock %}
 
 {% block body %}
-    <h1>Biens</h1>
+<!-- En-tête page -->
+<div class="card mb-3">
+	<div class="card-header">
+		<div class="row flex-between-end">
+			<div class="col-auto align-self-center">
+				<h5 class="mb-0">Détails du Bien Immobilier</h5>
+				<p class="mb-0 fs-11 text-muted">Consultation complète de la fiche du bien</p>
+			</div>
+			<div class="col-auto ms-auto d-flex gap-2">
+				<a href="{{ path('app_biens_index') }}" class="btn btn-outline-secondary btn-sm">
+					<span class="fas fa-arrow-left me-1"></span>Retour
+				</a>
+				<a href="{{ path('app_biens_edit', {'id': bien.id}) }}" class="btn btn-primary btn-sm">
+					<span class="fas fa-edit me-1"></span>Modifier
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div
+	class="row g-3">
+	<!-- Colonne Gauche : Image et Infos Principales -->
+	<div class="col-lg-8">
+		<div class="card mb-3">
+			<div class="card-body p-0 overflow-hidden">
+				<div style="height: 400px; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; position: relative;">
+					{% if bien.image %}
+						<img src="{{ asset('uploads/biens/' ~ bien.image) }}" alt="{{ bien.designation }}" style="width: 100%; height: 100%; object-fit: cover;">
+					{% else %}
+						<div class="text-center">
+							<span class="fas fa-image fa-4x text-muted mb-3"></span>
+							<p class="text-muted">Aucune image disponible</p>
+						</div>
+					{% endif %}
+					<div class="position-absolute top-0 start-0 m-3">
+						{% if bien.statut == 'occupe' %}
+							<span class="badge rounded-pill bg-success px-3">Occupé</span>
+						{% elseif bien.statut == 'vacant' %}
+							<span class="badge rounded-pill bg-danger px-3">Vacant</span>
+						{% else %}
+							<span class="badge rounded-pill bg-warning px-3">{{ bien.statut|capitalize }}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-8">
+						<h3 class="mb-1">{{ bien.designation }}</h3>
+						<p class="text-muted mb-3">
+							<span class="fas fa-map-marker-alt me-2"></span>
+							{{ bien.adresse }},
+							{{ bien.codePostal }}
+							{{ bien.ville }}</p>
+					</div>
+					<div class="col-md-4 text-md-end">
+						<div class="fs-11 text-muted">Référence</div>
+						<h5 class="fw-bold">{{ bien.reference }}</h5>
+					</div>
+				</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ bien.id }}</td>
-            </tr>
-            <tr>
-                <th>Designation</th>
-                <td>{{ bien.designation }}</td>
-            </tr>
-            <tr>
-                <th>Reference</th>
-                <td>{{ bien.reference }}</td>
-            </tr>
-            <tr>
-                <th>Statut</th>
-                <td>{{ bien.statut }}</td>
-            </tr>
-            <tr>
-                <th>Adresse</th>
-                <td>{{ bien.adresse }}</td>
-            </tr>
-            <tr>
-                <th>Code_postal</th>
-                <td>{{ bien.codePostal }}</td>
-            </tr>
-            <tr>
-                <th>Ville</th>
-                <td>{{ bien.ville }}</td>
-            </tr>
-            <tr>
-                <th>Secteur</th>
-                <td>{{ bien.secteur }}</td>
-            </tr>
-            <tr>
-                <th>Pays</th>
-                <td>{{ bien.pays }}</td>
-            </tr>
-            <tr>
-                <th>Surface_habitable</th>
-                <td>{{ bien.surfaceHabitable }}</td>
-            </tr>
-            <tr>
-                <th>Surface_total</th>
-                <td>{{ bien.surfaceTotal }}</td>
-            </tr>
-            <tr>
-                <th>Nbr_piece</th>
-                <td>{{ bien.nbrPiece }}</td>
-            </tr>
-            <tr>
-                <th>Nbr_chambre</th>
-                <td>{{ bien.nbrChambre }}</td>
-            </tr>
-            <tr>
-                <th>Salle_bain</th>
-                <td>{{ bien.salleBain }}</td>
-            </tr>
-            <tr>
-                <th>Wc</th>
-                <td>{{ bien.wc }}</td>
-            </tr>
-            <tr>
-                <th>Etage</th>
-                <td>{{ bien.etage }}</td>
-            </tr>
-            <tr>
-                <th>Ascenseur</th>
-                <td>{{ bien.ascenseur }}</td>
-            </tr>
-            <tr>
-                <th>Balcon</th>
-                <td>{{ bien.balcon }}</td>
-            </tr>
-            <tr>
-                <th>Typechauffage</th>
-                <td>{{ bien.typechauffage }}</td>
-            </tr>
-            <tr>
-                <th>Eau</th>
-                <td>{{ bien.eau }}</td>
-            </tr>
-            <tr>
-                <th>Cuisine</th>
-                <td>{{ bien.cuisine }}</td>
-            </tr>
-            <tr>
-                <th>Is_parking</th>
-                <td>{{ bien.isParking ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Is_interphone</th>
-                <td>{{ bien.isInterphone ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Is_connexion</th>
-                <td>{{ bien.isConnexion ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Is_garage</th>
-                <td>{{ bien.isGarage ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Is_jardin</th>
-                <td>{{ bien.isJardin ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Is_gardien</th>
-                <td>{{ bien.isGardien ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Is_chemine</th>
-                <td>{{ bien.isChemine ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Is_meuble</th>
-                <td>{{ bien.isMeuble ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ bien.description }}</td>
-            </tr>
-            <tr>
-                <th>Notes_interne</th>
-                <td>{{ bien.notesInterne }}</td>
-            </tr>
-            <tr>
-                <th>Points_attention</th>
-                <td>{{ bien.pointsAttention }}</td>
-            </tr>
-        </tbody>
-    </table>
+				<div class="row mt-4 pt-4 border-top g-3">
+					<div class="col-6 col-md-3 text-center border-end">
+						<div class="fs-11 text-muted text-uppercase fw-semi-bold">Surface</div>
+						<div class="fs-4 fw-bold text-primary">{{ bien.surfaceHabitable }}
+							m²</div>
+					</div>
+					<div class="col-6 col-md-3 text-center border-end">
+						<div class="fs-11 text-muted text-uppercase fw-semi-bold">Pièces</div>
+						<div class="fs-4 fw-bold text-primary">{{ bien.nbrPiece }}</div>
+					</div>
+					<div class="col-6 col-md-3 text-center border-end">
+						<div class="fs-11 text-muted text-uppercase fw-semi-bold">Chambres</div>
+						<div class="fs-4 fw-bold text-primary">{{ bien.nbrChambre }}</div>
+					</div>
+					<div class="col-6 col-md-3 text-center">
+						<div class="fs-11 text-muted text-uppercase fw-semi-bold">Étage</div>
+						{# CORRECTION : gestion correcte du suffixe ordinal français #}
+						{% if bien.etage == 0 %}
+							<div class="fs-4 fw-bold text-primary">RDC</div>
+						{% else %}
+							<div class="fs-4 fw-bold text-primary">{{ bien.etage }}{{ bien.etage == 1 ? 'er' : 'ème' }}</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <a href="{{ path('app_biens_index') }}">back to list</a>
+		<div class="card mb-3">
+			<div class="card-header border-bottom">
+				<h6 class="mb-0">Description du bien</h6>
+			</div>
+			<div class="card-body">
+				<p class="mb-0" style="white-space: pre-line;">{{ bien.description|default('Aucune description fournie.') }}</p>
+			</div>
+		</div>
 
-    <a href="{{ path('app_biens_edit', {'id': bien.id}) }}">edit</a>
+		<div class="card mb-3">
+			<div class="card-header border-bottom">
+				<h6 class="mb-0">Équipements et Caractéristiques</h6>
+			</div>
+			<div class="card-body">
+				<div class="row g-3">
+					<div class="col-md-6">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+								<span>Type de chauffage</span>
+								<span class="fw-semi-bold">{{ bien.typechauffage|capitalize }}</span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+								<span>Eau chaude</span>
+								<span class="fw-semi-bold">{{ bien.eau|capitalize }}</span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+								<span>Cuisine</span>
+								<span class="fw-semi-bold">{{ bien.cuisine|capitalize }}</span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+								<span>Ascenseur</span>
+								<span class="fw-semi-bold">{{ bien.ascenseur|default('Non spécifié')|capitalize }}</span>
+							</li>
+						</ul>
+					</div>
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-6 mb-2">
+								<span class="fas {{ bien.isParking ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' }} me-2"></span>Parking
+							</div>
+							<div class="col-6 mb-2">
+								<span class="fas {{ bien.isGarage ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' }} me-2"></span>Garage
+							</div>
+							<div class="col-6 mb-2">
+								<span class="fas {{ bien.isInterphone ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' }} me-2"></span>Interphone
+							</div>
+							<div class="col-6 mb-2">
+								<span class="fas {{ bien.isGardien ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' }} me-2"></span>Gardien
+							</div>
+							<div class="col-6 mb-2">
+								<span class="fas {{ bien.isConnexion ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' }} me-2"></span>Internet
+							</div>
+							<div class="col-6 mb-2">
+								<span class="fas {{ bien.isMeuble ? 'fa-check-circle text-success' : 'fa-times-circle text-muted' }} me-2"></span>Meublé
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    {{ include('biens/_delete_form.html.twig') }}
-{% endblock %}
+	<!-- Colonne Droite -->
+	<div class="col-lg-4">
+		<div class="card mb-3">
+			<div class="card-body">
+				<h6 class="fs-11 text-muted text-uppercase fw-semi-bold mb-3">Catégorie</h6>
+				<div class="d-flex align-items-center">
+					<div class="avatar avatar-l me-2">
+						<div class="avatar-name rounded-circle bg-subtle-primary text-primary">
+							<span class="fas fa-home"></span>
+						</div>
+					</div>
+					<div>
+						<h6 class="mb-0">{{ bien.categorie ? bien.categorie.nom : 'Non classé' }}</h6>
+						<p class="fs-11 text-muted mb-0">Patrimoine immobilier</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-3">
+			<div class="card-header border-bottom">
+				<h6 class="mb-0">Notes Internes</h6>
+			</div>
+			<div class="card-body">
+				<div class="mb-3">
+					<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-1">Observations</label>
+					<p class="fs-11 mb-0">{{ bien.notesInterne|default('Aucune note.') }}</p>
+				</div>
+				<div>
+					<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-1 text-danger">Points d'attention</label>
+					<p class="fs-11 mb-0 text-danger">{{ bien.pointsAttention|default('Aucun point d\'attention particulier.') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 bg-subtle-danger">
+            <div class="card-body text-center">
+                <p class="fs-11 text-danger mb-3">Zone dangereuse : suppression irréversible.</p>
+                {{ include('biens/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}  

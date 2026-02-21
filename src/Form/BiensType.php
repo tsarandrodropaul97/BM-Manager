@@ -30,12 +30,13 @@ class BiensType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('reference', IntegerType::class, [
+            ->add('reference', TextType::class, [
                 'label' => 'Référence interne',
                 'attr' => [
-                    'placeholder' => 'Auto-généré',
+                    'placeholder' => 'Auto-généré (ex: BM-0001)',
                 ],
                 'required' => false,
+                'disabled' => true,
             ])
             ->add('statut', ChoiceType::class, [
                 'label' => 'Statut',
@@ -46,7 +47,7 @@ class BiensType extends AbstractType
                     'En maintenance' => 'maintenance',
                 ],
                 'placeholder' => 'Sélectionnez le statut',
-                'required' => false,
+                'required' => true,
             ])
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
@@ -84,14 +85,14 @@ class BiensType extends AbstractType
                 'attr' => [
                     'placeholder' => 'France',
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('secteur', TextType::class, [
                 'label' => 'Quartier/Secteur',
                 'attr' => [
                     'placeholder' => 'Centre-ville, Belleville...',
                 ],
-                'required' => false,
+                'required' => true,
             ])
 
             // Section 3: Caractéristiques techniques
@@ -109,7 +110,7 @@ class BiensType extends AbstractType
                     'placeholder' => '85',
                     'step' => '0.01',
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('nbr_piece', IntegerType::class, [
                 'label' => 'Nombre de pièces',
@@ -125,7 +126,7 @@ class BiensType extends AbstractType
                     'placeholder' => '2',
                     'min' => 0,
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('salle_bain', IntegerType::class, [
                 'label' => 'Salles de bain',
@@ -133,7 +134,7 @@ class BiensType extends AbstractType
                     'placeholder' => '1',
                     'min' => 0,
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('wc', IntegerType::class, [
                 'label' => 'WC séparés',
@@ -141,7 +142,7 @@ class BiensType extends AbstractType
                     'placeholder' => '1',
                     'min' => 0,
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('etage', IntegerType::class, [
                 'label' => 'Étage',
@@ -149,7 +150,7 @@ class BiensType extends AbstractType
                     'placeholder' => '3',
                     'min' => 0,
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('ascenseur', ChoiceType::class, [
                 'label' => 'Ascenseur',
@@ -171,7 +172,7 @@ class BiensType extends AbstractType
                     'Jardin privatif' => 'jardin',
                 ],
                 'placeholder' => 'Sélectionnez',
-                'required' => false,
+                'required' => true,
             ])
 
             // Section 4: Équipements
@@ -186,7 +187,7 @@ class BiensType extends AbstractType
                     'Autre' => 'autre',
                 ],
                 'placeholder' => 'Sélectionnez',
-                'required' => false,
+                'required' => true,
             ])
             ->add('eau', ChoiceType::class, [
                 'label' => 'Eau chaude',
@@ -197,7 +198,7 @@ class BiensType extends AbstractType
                     'Gaz' => 'gaz',
                 ],
                 'placeholder' => 'Sélectionnez',
-                'required' => false,
+                'required' => true,
             ])
             ->add('cuisine', ChoiceType::class, [
                 'label' => 'Cuisine',
@@ -208,7 +209,7 @@ class BiensType extends AbstractType
                     'Kitchenette' => 'kitchenette',
                 ],
                 'placeholder' => 'Sélectionnez',
-                'required' => false,
+                'required' => true,
             ])
 
             // Équipements (checkboxes)
@@ -252,7 +253,7 @@ class BiensType extends AbstractType
                     'rows' => 4,
                     'placeholder' => 'Description complète du bien, ses atouts, particularités...',
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('notes_interne', TextareaType::class, [
                 'label' => 'Notes internes',
@@ -260,7 +261,7 @@ class BiensType extends AbstractType
                     'rows' => 3,
                     'placeholder' => 'Notes privées, points d\'attention, historique...',
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('points_attention', TextareaType::class, [
                 'label' => 'Points d\'attention',
@@ -268,7 +269,23 @@ class BiensType extends AbstractType
                     'rows' => 3,
                     'placeholder' => 'Éléments à surveiller, défauts connus...',
                 ],
+                'required' => true,
+            ])
+            ->add('image', \Symfony\Component\Form\Extension\Core\Type\FileType::class, [
+                'label' => 'Image principale du bien',
+                'mapped' => false,
                 'required' => false,
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp'
+                        ],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPEG, PNG, WEBP)',
+                    ])
+                ],
             ])
         ;
     }

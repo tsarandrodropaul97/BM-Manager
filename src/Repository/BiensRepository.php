@@ -16,28 +16,33 @@ class BiensRepository extends ServiceEntityRepository
         parent::__construct($registry, Biens::class);
     }
 
-//    /**
-//     * @return Biens[] Returns an array of Biens objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('b.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getFilteredQueryBuilder(?string $search, ?string $type, ?string $statut, ?string $ville)
+    {
+        $qb = $this->createQueryBuilder('b');
 
-//    public function findOneBySomeField($value): ?Biens
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($search) {
+            $qb->andWhere('b.designation LIKE :search OR b.reference LIKE :search OR b.adresse LIKE :search OR b.description LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($type) {
+            $qb->join('b.categorie', 'c')
+               ->andWhere('c.type = :type')
+               ->setParameter('type', $type);
+        }
+
+        if ($statut) {
+            $qb->andWhere('b.statut = :statut')
+               ->setParameter('statut', $statut);
+        }
+
+        if ($ville) {
+            $qb->andWhere('b.ville = :ville')
+               ->setParameter('ville', $ville);
+        }
+
+        $qb->orderBy('b.id', 'DESC');
+
+        return $qb;
+    }
 }
