@@ -3,103 +3,137 @@
 {% block title %}Modifier Contrat{% endblock %}
 
 {% block body %}
-    <div class="card mb-3">
-        <div class="card-header border-bottom">
-            <h5 class="mb-0">Modifier le Contrat : {{ contrat.reference }}</h5>
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="card border-0 shadow-none bg-transparent">
+                <div class="card-body p-0">
+                    <h4 class="mb-3 fw-bold text-white">
+                        <span class="fas fa-file-signature me-2 text-primary"></span>
+                        Édition du Contrat : <span class="text-primary">{{ contrat.reference }}</span>
+                    </h4>
+                </div>
+            </div>
         </div>
-        <div class="card-body bg-light">
-            {{ form_start(form) }}
-            <div class="row g-3">
-                <div class="col-lg-8">
-                    <div class="card shadow-none border mb-3">
-                        <div class="card-header border-bottom bg-subtle-primary">
-                            <h6 class="mb-0 text-primary">Informations du Bail</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-12">
-                                    {{ form_label(form.reference) }}
-                                    {{ form_widget(form.reference, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.locataire) }}
-                                    {{ form_widget(form.locataire, {'attr': {'class': 'form-select'}}) }}
-                                </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.bien) }}
-                                    {{ form_widget(form.bien, {'attr': {'class': 'form-select'}}) }}
-                                </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.dateDebut) }}
-                                    {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.dateFin) }}
-                                    {{ form_widget(form.dateFin, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="card shadow-none border">
-                        <div class="card-header border-bottom bg-subtle-success">
-                            <h6 class="mb-0 text-success">Conditions Financières</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    {{ form_label(form.loyerHorsCharges) }}
-                                    {{ form_widget(form.loyerHorsCharges, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                                <div class="col-md-4">
-                                    {{ form_label(form.charges) }}
-                                    {{ form_widget(form.charges, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                                <div class="col-md-4">
-                                    {{ form_label(form.depotGarantie) }}
-                                    {{ form_widget(form.depotGarantie, {'attr': {'class': 'form-control'}}) }}
-                                </div>
+        {{ form_start(form) }}
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <!-- Section Informations -->
+                <div class="card border-0 shadow-sm mb-3 bg-dark-card overflow-hidden">
+                    <div class="card-header bg-subtle-primary py-3 border-0">
+                        <h6 class="mb-0 fw-bold d-flex align-items-center text-primary">
+                            <span class="fas fa-info-circle me-2"></span>Paramètres du Bail
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12 mb-2">
+                                {{ form_label(form.reference, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                                {{ form_widget(form.reference, {'attr': {'class': 'form-control custom-form-dark shadow-none'}}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_label(form.locataire, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                                {{ form_widget(form.locataire, {'attr': {'class': 'form-select custom-form-dark shadow-none'}}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_label(form.bien, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                                {{ form_widget(form.bien, {'attr': {'class': 'form-select custom-form-dark shadow-none'}}) }}
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                {{ form_label(form.dateDebut, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                                {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control custom-form-dark shadow-none'}}) }}
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                {{ form_label(form.dateFin, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                                {{ form_widget(form.dateFin, {'attr': {'class': 'form-control custom-form-dark shadow-none'}}) }}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4">
-                    <div class="card shadow-none border mb-3">
-                        <div class="card-header border-bottom">
-                            <h6 class="mb-0">Statut & Document</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                {{ form_label(form.statut) }}
-                                {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form_label(form.documentPdf) }}
-                                {{ form_widget(form.documentPdf, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                {% if contrat.documentPdf %}
-                                    <div class="mt-2 fs-11">
-                                        <span class="fas fa-file-pdf text-danger"></span> 
-                                        Document actuel : {{ contrat.documentPdf }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
+                <!-- Section Financière -->
+                <div class="card border-0 shadow-sm bg-dark-card overflow-hidden">
+                    <div class="card-header bg-subtle-success py-3 border-0">
+                        <h6 class="mb-0 fw-bold d-flex align-items-center text-success">
+                            <span class="fas fa-coins me-2"></span>Conditions Financières (MGA)
+                        </h6>
                     </div>
-
-                    <div class="card border">
-                        <div class="card-body">
-                            <button type="submit" class="btn btn-primary d-block w-100 mb-2">
-                                <span class="fas fa-save me-2"></span>Mettre à jour
-                            </button>
-                            <a href="{{ path('app_contrat_index') }}" class="btn btn-outline-secondary d-block w-100">
-                                Annuler
-                            </a>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                {{ form_label(form.loyerHorsCharges, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                                {{ form_widget(form.loyerHorsCharges, {'attr': {'class': 'form-control custom-form-dark shadow-none'}}) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_label(form.charges, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                                {{ form_widget(form.charges, {'attr': {'class': 'form-control custom-form-dark shadow-none'}}) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_label(form.depotGarantie, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                                {{ form_widget(form.depotGarantie, {'attr': {'class': 'form-control custom-form-dark shadow-none'}}) }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {{ form_end(form) }}
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm bg-dark-card mb-3 overflow-hidden">
+                    <div class="card-header bg-subtle-warning py-3 border-0">
+                        <h6 class="mb-0 fw-bold d-flex align-items-center text-warning">
+                            <span class="fas fa-shield-alt me-2"></span>Statut & Validité
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            {{ form_label(form.statut, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                            {{ form_widget(form.statut, {'attr': {'class': 'form-select custom-form-dark shadow-none'}}) }}
+                        </div>
+                        <div class="mb-0">
+                            {{ form_label(form.documentPdf, null, {'label_attr': {'class': 'fs-11 text-uppercase fw-bold text-600 mb-1'}}) }}
+                            {{ form_widget(form.documentPdf, {'attr': {'class': 'form-control form-control-sm custom-form-dark shadow-none'}}) }}
+                            {% if contrat.documentPdf %}
+                                <div class="mt-2 bg-subtle-danger p-2 rounded border border-danger-subtle d-flex align-items-center">
+                                    <span class="fas fa-file-pdf text-danger me-2"></span>
+                                    <span class="fs-11 text-danger text-truncate">Fichier actuel rattaché</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm bg-dark-card overflow-hidden">
+                    <div class="card-body p-4">
+                        <button type="submit" class="btn btn-primary d-block w-100 mb-3 fw-bold">
+                            <span class="fas fa-save me-2"></span>Valider les modifications
+                        </button>
+                        <a href="{{ path('app_contrat_show', {'id': contrat.id}) }}" class="btn btn-falcon-default d-block w-100 fw-bold">
+                            Annuler
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
+        {{ form_end(form) }}
     </div>
+
+    <style>
+        .bg-dark-card {
+            background-color: #121e2d !important;
+        }
+        .custom-form-dark {
+            background-color: #0b1727 !important;
+            border-color: #2c3e50 !important;
+            color: #d1d8e0 !important;
+        }
+        .custom-form-dark:focus {
+            background-color: #101d2d !important;
+            border-color: #3498db !important;
+            color: #ffffff !important;
+        }
+        .custom-form-dark option {
+            background-color: #0b1727;
+            color: #ffffff;
+        }
+    </style>
 {% endblock %}
