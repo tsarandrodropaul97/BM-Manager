@@ -128,13 +128,13 @@ document.querySelector('.navbar-vertical').classList.add(`navbar-${navbarStyle}`
 			</a>
 			<ul class="nav collapse" id="locataires">
 				<li class="nav-item">
-					<a class="nav-link" href="locataires/liste.html">
+					<a class="nav-link" href="{{ path('app_locataire_index') }}">
 						<div class="d-flex align-items-center">
 							<span class="nav-link-text ps-1">Liste des locataires</span>
 						</div>
 					</a><!-- more inner pages--></li>
 				<li class="nav-item">
-					<a class="nav-link" href="locataires/ajouter.html">
+					<a class="nav-link" href="{{ path('app_locataire_new') }}">
 						<div class="d-flex align-items-center">
 							<span class="nav-link-text ps-1">Ajouter locataire</span>
 						</div>

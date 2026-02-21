@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le Locataire - {{ locataire.nomComplet }}
+{% endblock %}
+
+{% block body %}
+	<div class="card mb-3">
+		<div class="card-header border-bottom">
+			<div class="row flex-between-end">
+				<div class="col-auto align-self-center">
+					<h5 class="mb-0">Modifier le Locataire</h5>
+					<p class="mb-0 fs-11 text-muted">Mise à jour des informations du dossier locataire</p>
+				</div>
+				<div class="col-auto ms-auto d-flex gap-2">
+					<a href="{{ path('app_locataire_index') }}" class="btn btn-outline-secondary btn-sm">
+						<span class="fas fa-arrow-left me-1"></span>Retour
+					</a>
+                    <a href="{{ path('app_locataire_show', {'id': locataire.id}) }}" class="btn btn-outline-info btn-sm">
+						<span class="fas fa-eye me-1"></span>Voir fiche
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{{ include('locataire/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+{% endblock %}

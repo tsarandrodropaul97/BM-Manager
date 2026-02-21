@@ -1,0 +1,140 @@
+{{ form_start(form) }}
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <!-- Section 1: Informations personnelles -->
+        <div class="card mb-3">
+            <div class="card-header border-bottom">
+                <h6 class="mb-0">
+                    <span class="fas fa-user me-2 text-primary"></span>
+                    Informations Personnelles
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form_row(form.nom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.dateNaissance, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.lieuNaissance, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.nationalite, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.statut, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Contact et Profession -->
+        <div class="card mb-3">
+            <div class="card-header border-bottom">
+                <h6 class="mb-0">
+                    <span class="fas fa-briefcase me-2 text-success"></span>
+                    Contact et Situation Professionnelle
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form_row(form.telephone, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-12">
+                        {{ form_row(form.adresseActuelle, {'attr': {'class': 'form-control', 'rows': 2}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.profession, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.employeur, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Location -->
+        <div class="card mb-3">
+            <div class="card-header border-bottom">
+                <h6 class="mb-0">
+                    <span class="fas fa-key me-2 text-warning"></span>
+                    Détails de la Location
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form_row(form.bien, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.dateEntree, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Section Photos et Documents -->
+        <div class="card mb-3">
+            <div class="card-header border-bottom">
+                <h6 class="mb-0">
+                    <span class="fas fa-file-alt me-2 text-danger"></span>
+                    Documents et Photos
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form_row(form.photo) }}
+                    {% if locataire.photo %}
+                        <div class="mt-2 text-center">
+                            <img src="{{ asset('uploads/locataires/' ~ locataire.photo) }}" alt="Photo" class="img-thumbnail" style="max-height: 150px;">
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3 border-top pt-3">
+                    {{ form_row(form.cinRecto) }}
+                    {% if locataire.cinRecto %}
+                        <div class="mt-2">
+                            <small class="text-muted">Document actuel : {{ locataire.cinRecto }}</small>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3 border-top pt-3">
+                    {{ form_row(form.cinVerso) }}
+                    {% if locataire.cinVerso %}
+                        <div class="mt-2">
+                            <small class="text-muted">Document actuel : {{ locataire.cinVerso }}</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fas fa-save me-1"></span>{{ button_label|default('Enregistrer') }}
+                    </button>
+                    <a href="{{ path('app_locataire_index') }}" class="btn btn-outline-secondary">
+                        <span class="fas fa-times me-1"></span>Annuler
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ form_end(form) }}

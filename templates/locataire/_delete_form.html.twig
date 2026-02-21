@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('app_locataire_delete', {'id': locataire.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce locataire et ses documents ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ locataire.id) }}">
+    <button class="btn btn-danger btn-sm">
+        <span class="fas fa-trash me-1"></span>Supprimer le locataire
+    </button>
+</form>
