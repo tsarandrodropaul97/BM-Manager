@@ -17,9 +17,11 @@
 				<a href="{{ path('app_biens_index') }}" class="btn btn-outline-secondary btn-sm">
 					<span class="fas fa-arrow-left me-1"></span>Retour
 				</a>
-				<a href="{{ path('app_biens_edit', {'id': bien.id}) }}" class="btn btn-primary btn-sm">
-					<span class="fas fa-edit me-1"></span>Modifier
-				</a>
+				{% if is_granted('ROLE_ADMIN') %}
+					<a href="{{ path('app_biens_edit', {'id': bien.id}) }}" class="btn btn-primary btn-sm">
+						<span class="fas fa-edit me-1"></span>Modifier
+					</a>
+				{% endif %}
 			</div>
 		</div>
 	</div>
@@ -61,8 +63,13 @@
 							{{ bien.ville }}</p>
 					</div>
 					<div class="col-md-4 text-md-end">
-						<div class="fs-11 text-muted">Référence</div>
-						<h5 class="fw-bold">{{ bien.reference }}</h5>
+						{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) %}
+							<div class="fs-11 text-muted">Prix du loyer</div>
+							<h3 class="fw-bold text-primary mb-1">
+								{{ bien.prix ? bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}
+							</h3>
+						{% endif %}
+						<div class="fs-11 text-muted">Référence : {{ bien.reference }}</div>
 					</div>
 				</div>
 
@@ -190,12 +197,14 @@
             </div>
         </div>
 
-        <div class="card border-0 bg-subtle-danger">
-            <div class="card-body text-center">
-                <p class="fs-11 text-danger mb-3">Zone dangereuse : suppression irréversible.</p>
-                {{ include('biens/_delete_form.html.twig') }}
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="card border-0 bg-subtle-danger">
+                <div class="card-body text-center">
+                    <p class="fs-11 text-danger mb-3">Zone dangereuse : suppression irréversible.</p>
+                    {{ include('biens/_delete_form.html.twig') }}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 

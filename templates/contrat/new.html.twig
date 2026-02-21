@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Contrat{% endblock %}
+
+{% block body %}
+    <div class="card mb-3">
+        <div class="card-header border-bottom">
+            <h5 class="mb-0">Créer un Nouveau Contrat de Location</h5>
+        </div>
+        <div class="card-body bg-light">
+            {{ form_start(form) }}
+            <div class="row g-3">
+                <div class="col-lg-8">
+                    <div class="card shadow-none border mb-3">
+                        <div class="card-header border-bottom bg-subtle-primary">
+                            <h6 class="mb-0 text-primary">Informations du Bail</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    {{ form_label(form.reference) }}
+                                    {{ form_widget(form.reference, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_label(form.locataire) }}
+                                    {{ form_widget(form.locataire, {'attr': {'class': 'form-select'}}) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_label(form.bien) }}
+                                    {{ form_widget(form.bien, {'attr': {'class': 'form-select'}}) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_label(form.dateDebut) }}
+                                    {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_label(form.dateFin) }}
+                                    {{ form_widget(form.dateFin, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-none border">
+                        <div class="card-header border-bottom bg-subtle-success">
+                            <h6 class="mb-0 text-success">Conditions Financières</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    {{ form_label(form.loyerHorsCharges) }}
+                                    {{ form_widget(form.loyerHorsCharges, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_label(form.charges) }}
+                                    {{ form_widget(form.charges, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_label(form.depotGarantie) }}
+                                    {{ form_widget(form.depotGarantie, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-none border mb-3">
+                        <div class="card-header border-bottom">
+                            <h6 class="mb-0">Statut & Document</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                {{ form_label(form.statut) }}
+                                {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.documentPdf) }}
+                                {{ form_widget(form.documentPdf, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                <div class="fs-11 text-muted mt-1 italic">Uploadez le scan du contrat signé si disponible.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border">
+                        <div class="card-body">
+                            <button type="submit" class="btn btn-primary d-block w-100 mb-2">
+                                <span class="fas fa-save me-2"></span>Enregistrer le Contrat
+                            </button>
+                            <a href="{{ path('app_contrat_index') }}" class="btn btn-outline-secondary d-block w-100">
+                                Annuler
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

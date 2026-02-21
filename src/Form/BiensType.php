@@ -56,6 +56,14 @@ class BiensType extends AbstractType
                 'placeholder' => 'Sélectionnez la catégorie',
                 'required' => true,
             ])
+            ->add('prix', NumberType::class, [
+                'label' => 'Prix du loyer',
+                'attr' => [
+                    'placeholder' => 'ex: 1200',
+                    'step' => '0.01',
+                ],
+                'required' => false,
+            ])
 
             // Section 2: Adresse et localisation
             ->add('adresse', TextType::class, [

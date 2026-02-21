@@ -1,0 +1,191 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contrat - {{ contrat.reference }}{% endblock %}
+
+{% block body %}
+    <!-- Header Premium -->
+    <div class="card mb-3 border-0 shadow-sm">
+        <div class="card-body p-3">
+            <div class="row flex-between-center">
+                <div class="col-auto">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar avatar-3xl me-3">
+                            <div class="avatar-name rounded-circle bg-subtle-primary text-primary">
+                                <span class="fas fa-file-contract"></span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-bold d-flex align-items-center">
+                                {{ contrat.reference }}
+                                {% set badgeClass = 'bg-subtle-secondary text-secondary' %}
+                                {% if contrat.statut == 'actif' %}{% set badgeClass = 'bg-subtle-success text-success' %}
+                                {% elseif contrat.statut == 'termine' %}{% set badgeClass = 'bg-subtle-info text-info' %}
+                                {% elseif contrat.statut == 'resilie' %}{% set badgeClass = 'bg-subtle-danger text-danger' %}{% endif %}
+                                <span class="badge rounded-pill {{ badgeClass }} ms-3 fs-11 text-uppercase letter-spacing-1">
+                                    {{ contrat.statut }}
+                                </span>
+                            </h4>
+                            <p class="mb-0 fs-11 text-muted">Créé le {{ contrat.createdAt|date('d/m/Y') }} • Gestion administrative du bail</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto d-flex gap-2">
+                    <a href="{{ path('app_contrat_index') }}" class="btn btn-falcon-default btn-sm shadow-none">
+                        <span class="fas fa-arrow-left me-1"></span>Retour
+                    </a>
+                    <a href="{{ path('app_contrat_edit', {'id': contrat.id}) }}" class="btn btn-falcon-primary btn-sm shadow-none">
+                        <span class="fas fa-edit me-1"></span>Modifier
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Informations Détails -->
+        <div class="col-lg-5">
+            <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                <div class="card-header bg-subtle-primary py-3">
+                    <h6 class="mb-0 fw-bold d-flex align-items-center text-primary">
+                        <span class="fas fa-info-circle me-2"></span>Synthèse du Contrat
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <!-- Section Locataire & Bien -->
+                    <div class="p-4 border-bottom">
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <label class="fs-11 text-uppercase fw-bold mb-2 text-600">Locataire titulaire</label>
+                                <div class="d-flex align-items-center p-3 rounded-3 border bg-100 dark__bg-1100">
+                                    <div class="avatar avatar-3xl me-3">
+                                        {% if contrat.locataire.photo %}
+                                            <img src="{{ asset('uploads/locataires/' ~ contrat.locataire.photo) }}" alt="" class="rounded-circle shadow-sm">
+                                        {% else %}
+                                            <div class="avatar-name rounded-circle bg-subtle-primary text-primary"><span class="fas fa-user"></span></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mb-0 fw-bold text-900">{{ contrat.locataire.nomComplet }}</h6>
+                                        <p class="fs-11 text-600 mb-0">{{ contrat.locataire.email }}</p>
+                                        <a href="{{ path('app_locataire_show', {'id': contrat.locataire.id}) }}" class="fs-11 fw-semi-bold">Voir le profil</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="fs-11 text-uppercase fw-bold mb-2 text-600">Bien immobilier</label>
+                                <div class="d-flex align-items-center p-3 rounded-3 border bg-100 dark__bg-1100">
+                                    <div class="avatar avatar-3xl me-3">
+                                        {% if contrat.bien.image %}
+                                            <img src="{{ asset('uploads/biens/' ~ contrat.bien.image) }}" alt="" class="rounded shadow-sm">
+                                        {% else %}
+                                            <div class="avatar-name rounded-circle bg-subtle-primary text-primary"><span class="fas fa-home"></span></div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mb-0 fw-bold text-900">{{ contrat.bien.designation }}</h6>
+                                        <p class="fs-11 text-600 mb-0">{{ contrat.bien.ville }} • {{ contrat.bien.surfaceHabitable }}m²</p>
+                                        <a href="{{ path('app_biens_show', {'id': contrat.bien.id}) }}" class="fs-11 fw-semi-bold text-primary">Accéder au bien</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section Dates -->
+                    <div class="p-4 border-bottom bg-200 dark__bg-1000">
+                        <div class="row text-center g-3">
+                            <div class="col-6 border-end border-300">
+                                <div class="fs-11 text-uppercase fw-bold mb-1 text-600">Entrée en vigueur</div>
+                                <h5 class="mb-0 fw-bold text-900">{{ contrat.dateDebut|date('d/m/Y') }}</h5>
+                            </div>
+                            <div class="col-6">
+                                <div class="fs-11 text-uppercase fw-bold mb-1 text-600">Échéance finale</div>
+                                <h5 class="mb-0 fw-bold {{ contrat.dateFin and "now"|date('Y-m-d') > contrat.dateFin|date('Y-m-d') ? 'text-danger' : 'text-900' }}">
+                                    {{ contrat.dateFin ? contrat.dateFin|date('d/m/Y') : 'Bail illimité' }}
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section Financière -->
+                    <div class="p-4">
+                        <h6 class="fs-11 text-uppercase fw-bold mb-3 d-flex align-items-center text-700">
+                            <span class="fas fa-coins me-2"></span>Conditions financières
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless fs-11 mb-2">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-700 ps-0">Loyer de base (HC)</td>
+                                        <td class="text-end pe-0 fw-semi-bold text-900">{{ contrat.loyerHorsCharges|number_format(0, ',', ' ') }} Ar</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-700 ps-0">Provision sur charges</td>
+                                        <td class="text-end pe-0 fw-semi-bold text-900">{{ contrat.charges|number_format(0, ',', ' ') }} Ar</td>
+                                    </tr>
+                                    <tr class="border-top border-300">
+                                        <td class="ps-0 pt-3">
+                                            <h5 class="mb-0 fw-bold text-primary">LOYER TOTAL</h5>
+                                            <small class="text-600">(Net à payer par mois)</small>
+                                        </td>
+                                        <td class="text-end pe-0 pt-3 text-primary">
+                                            <h3 class="mb-0 fw-bold">{{ (contrat.loyerHorsCharges + contrat.charges)|number_format(0, ',', ' ') }} Ar</h3>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bg-subtle-secondary p-3 rounded-3 mt-3 border">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fs-11 text-uppercase fw-bold text-700">Dépôt de garantie :</span>
+                                <span class="fw-bold text-900">{{ contrat.depotGarantie|number_format(0, ',', ' ') }} Ar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light dark__bg-1000 border-top text-center py-3">
+                    <form method="post" action="{{ path('app_contrat_delete', {'id': contrat.id}) }}" onsubmit="return confirm('Attention ! Cette action supprimera définitivement ce contrat.');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contrat.id) }}">
+                        <button class="btn btn-link text-danger btn-sm p-0 fs-11">
+                            <span class="fas fa-trash-alt me-1"></span>Résilier et supprimer ce contrat
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visionneuse PDF -->
+        <div class="col-lg-7">
+            <div class="card h-100 border-0 shadow-sm overflow-hidden bg-dark">
+                <div class="card-header bg-dark dark__bg-1100 py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 text-white d-flex align-items-center">
+                        <span class="fas fa-file-pdf me-2 text-danger"></span>Document Contractuel Signé
+                    </h6>
+                    {% if contrat.documentPdf %}
+                        <a href="{{ asset('uploads/contrats/' ~ contrat.documentPdf) }}" target="_blank" class="btn btn-falcon-default btn-xs">
+                             <span class="fas fa-expand me-1"></span>Agrandir
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="card-body p-0 bg-dark dark__bg-1000">
+                    {% if contrat.documentPdf %}
+                        <iframe src="{{ asset('uploads/contrats/' ~ contrat.documentPdf) }}#toolbar=0" 
+                                width="100%" height="800px" 
+                                style="border: none;"
+                                class="bg-dark">
+                        </iframe>
+                    {% else %}
+                        <div class="d-flex flex-column align-items-center justify-content-center h-100 py-6 text-center">
+                            <div class="bg-subtle-warning p-4 rounded-circle mb-3">
+                                <span class="fas fa-file-signature text-warning fs-3"></span>
+                            </div>
+                            <h5 class="text-white">Scan non disponible</h5>
+                            <p class="text-400 fs-11 px-4">Veuillez uploader la version signée du PDF pour l'afficher ici.</p>
+                            <a href="{{ path('app_contrat_edit', {'id': contrat.id}) }}" class="btn btn-primary btn-sm shadow-none">Uploader maintenant</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

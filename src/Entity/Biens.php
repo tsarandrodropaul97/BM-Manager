@@ -113,6 +113,9 @@ class Biens
     #[ORM\ManyToOne(inversedBy: 'biens1')]
     private ?Categorie $categorie = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 15, scale: 2, nullable: true)]
+    private ?string $prix = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -510,6 +513,18 @@ class Biens
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getPrix(): ?string
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(?string $prix): static
+    {
+        $this->prix = $prix;
 
         return $this;
     }

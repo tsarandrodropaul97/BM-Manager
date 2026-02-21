@@ -34,6 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Locataire::class)]
+    private ?Locataire $locataire = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,9 +107,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
+    }
+
+    public function getLocataire(): ?Locataire
+    {
+        return $this->locataire;
     }
 
     #[\Deprecated]

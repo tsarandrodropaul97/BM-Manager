@@ -14,12 +14,14 @@
 				</div>
 				<div class="col-auto ms-auto">
 					<div class="d-flex gap-2">
-						<a href="{{ path('app_biens_export', app.request.query.all) }}" class="btn btn-outline-secondary btn-sm">
-							<span class="fas fa-file-export me-1"></span>Exporter
-						</a>
-						<a href="{{ path('app_biens_new') }}" class="btn btn-primary btn-sm">
-							<span class="fas fa-plus me-1"></span>Ajouter un bien
-						</a>
+						{% if is_granted('ROLE_ADMIN') %}
+							<a href="{{ path('app_biens_export', app.request.query.all) }}" class="btn btn-outline-secondary btn-sm">
+								<span class="fas fa-file-export me-1"></span>Exporter
+							</a>
+							<a href="{{ path('app_biens_new') }}" class="btn btn-primary btn-sm">
+								<span class="fas fa-plus me-1"></span>Ajouter un bien
+							</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -158,8 +160,14 @@
 								</div>
 								<div class="card-footer py-2 border-top">
 									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-600 fw-semi-bold">{{ bien.reference }}</small>
-										<a href="{{ path('app_biens_show', {'id': bien.id}) }}" class="btn btn-link btn-sm p-0">Gérer
+										<div class="d-flex flex-column">
+											<small class="text-600 fw-semi-bold">{{ bien.reference }}</small>
+											{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) %}
+												<div class="text-primary fw-bold fs-10">{{ bien.prix ? bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}</div>
+											{% endif %}
+										</div>
+										<a href="{{ path('app_biens_show', {'id': bien.id}) }}" class="btn btn-link btn-sm p-0">
+											{{ is_granted('ROLE_ADMIN') ? 'Gérer' : 'Détails' }}
 											<span class="fas fa-chevron-right ms-1 fs-11"></span>
 										</a>
 									</div>
@@ -186,6 +194,7 @@
 								<th class="align-middle">Statut</th>
 								<th class="align-middle text-center">Surface</th>
 								<th class="align-middle text-center">Pièces</th>
+								<th class="align-middle text-center">Loyer</th>
 								<th class="align-middle text-end pe-3">Actions</th>
 							</tr>
 						</thead>
@@ -223,14 +232,23 @@
 									<td class="align-middle text-center">{{ bien.surfaceHabitable }}
 										m²</td>
 									<td class="align-middle text-center">{{ bien.nbrPiece }}</td>
+									<td class="align-middle text-center fw-bold text-primary">
+										{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) %}
+											{{ bien.prix ? bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}
+										{% else %}
+											<span class="text-300">-</span>
+										{% endif %}
+									</td>
 									<td class="align-middle text-end pe-3">
 										<div class="btn-group btn-group-sm">
-											<a href="{{ path('app_biens_show', {'id': bien.id}) }}" class="btn btn-light" title="Détails">
+											<a href="{{ path('app_biens_show', {'id': bien.id}) }}" class="btn btn-light" title="{{ is_granted('ROLE_ADMIN') ? 'Gérer' : 'Détails' }}">
 												<span class="fas fa-eye"></span>
 											</a>
-											<a href="{{ path('app_biens_edit', {'id': bien.id}) }}" class="btn btn-light" title="Modifier">
-												<span class="fas fa-edit"></span>
-											</a>
+											{% if is_granted('ROLE_ADMIN') %}
+												<a href="{{ path('app_biens_edit', {'id': bien.id}) }}" class="btn btn-light" title="Modifier">
+													<span class="fas fa-edit"></span>
+												</a>
+											{% endif %}
 										</div>
 									</td>
 								</tr>

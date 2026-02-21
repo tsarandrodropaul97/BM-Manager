@@ -155,8 +155,8 @@
 								<span class="fw-bold">{{ locataire.dateEntree|date('d/m/Y') }}</span>
 							</div>
                             <div class="d-flex justify-content-between mb-2">
-								<span class="text-700 fs-11">Référence Bien :</span>
-								<span class="fw-bold">{{ locataire.bien.reference }}</span>
+								<span class="text-700 fs-11">Loyer mensuel :</span>
+								<span class="fw-bold text-primary">{{ locataire.bien.prix ? locataire.bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}</span>
 							</div>
 							<a href="{{ path('app_biens_show', {'id': locataire.bien.id}) }}" class="btn btn-link btn-sm p-0">Gérer le bien
 								<span class="fas fa-chevron-right ms-1 fs-11"></span>

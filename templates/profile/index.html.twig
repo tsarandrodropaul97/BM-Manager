@@ -138,6 +138,10 @@
                                                     <span class="fs-11 text-700">Date d'arrivée :</span>
                                                     <span class="fs-11 fw-bold">{{ locataire.dateEntree|date('d/m/Y') }}</span>
                                                 </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span class="fs-11 text-700">Loyer mensuel :</span>
+                                                    <span class="fs-11 fw-bold text-primary">{{ locataire.bien.prix ? locataire.bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}</span>
+                                                </div>
                                                 <div class="d-flex justify-content-between mb-0">
                                                     <span class="fs-11 text-700">Statut bail :</span>
                                                     <span class="badge badge-subtle-success fs-10 px-2">{{ locataire.statut|capitalize }}</span>

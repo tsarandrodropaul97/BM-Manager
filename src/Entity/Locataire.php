@@ -62,8 +62,16 @@ class Locataire
     #[ORM\ManyToOne]
     private ?Biens $bien = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'locataire', cascade: ['persist', 'remove'])]
     private ?User $user = null;
+
+    #[ORM\OneToMany(mappedBy: 'locataire', targetEntity: Contrat::class)]
+    private $contrats;
+
+    public function __construct()
+    {
+        $this->contrats = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -260,5 +268,13 @@ class Locataire
     {
         $this->user = $user;
         return $this;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection<int, Contrat>
+     */
+    public function getContrats(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->contrats;
     }
 }
