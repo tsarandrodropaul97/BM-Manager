@@ -1,206 +1,458 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Tableau de Bord Locataire{% endblock %}
 
 {% block body %}
     <!-- En-tête de bienvenue -->
-    <div class="card mb-3">
-        <div class="card-header bg-subtle-primary">
-            <h5 class="mb-0">Tableau de bord</h5>
-        </div>
-        <div class="card-body">
-            {% if app.user %}
-                <h4 class="mb-1">Bonjour, <strong>{{ app.user.userIdentifier }}</strong> !</h4>
-                <p class="text-muted mb-0">
-                    {% if is_granted('ROLE_ADMIN') %}
-                        Voici l'état actuel de votre parc immobilier.
-                    {% else %}
-                        Bienvenue dans votre espace locataire BailManager.
-                    {% endif %}
-                </p>
-            {% else %}
-                <p>Bienvenue sur notre application.</p>
-            {% endif %}
+    <div class="card mb-3 border-0 shadow-sm bg-subtle-primary">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-auto">
+                    <div class="avatar avatar-4xl shadow-sm border border-white border-2">
+                        <div class="avatar-name rounded-circle bg-white text-primary fs-3 d-flex align-items-center justify-content-center">
+                            <span class="fas fa-user-graduate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md mt-3 mt-md-0">
+                    <h3 class="mb-1 text-primary">Bonjour, <strong>{{ app.user.userIdentifier }}</strong> !</h3>
+                    <p class="mb-0 text-700">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            Gestionnaire de parc immobilier
+                        {% else %}
+                            <span class="fas fa-home me-2"></span>Bienvenue dans votre espace locataire premium.
+                        {% endif %}
+                    </p>
+                </div>
+                {% if not is_granted('ROLE_ADMIN') and stats %}
+                <div class="col-md-auto mt-3 mt-md-0">
+                    <div class="badge badge-subtle-success p-2 px-3 rounded-pill border border-success-subtle">
+                        <span class="fas fa-shield-alt me-2"></span>Contrat Actif : {{ stats.contrat.reference }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 
     {% if is_granted('ROLE_ADMIN') %}
+        <!-- FILTRE AVANCÉ POUR ADMIN -->
+        <div class="card mb-3 border-0 shadow-sm overflow-hidden">
+            <div class="card-body py-2 bg-subtle-primary">
+                <form action="{{ path('app_dashboard') }}" method="GET" class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <span class="fas fa-filter text-primary me-2"></span>
+                        <span class="fs-11 fw-bold text-primary text-uppercase">Filtrer les Stats par :</span>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="bienId" class="form-select form-select-sm border-primary" onchange="this.form.submit()">
+                            <option value="">Tous les Biens & Résidences</option>
+                            {% for bien in adminStats.biens %}
+                                <option value="{{ bien.id }}" {{ adminStats.filters.bienId == bien.id ? 'selected' : '' }}>
+                                    {{ bien.designation }} ({{ bien.ville }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% if adminStats.filters.bienId %}
+                        <div class="col-auto">
+                            <a href="{{ path('app_dashboard') }}" class="btn btn-link btn-sm text-muted p-0 fs-11">
+                                <span class="fas fa-times-circle me-1"></span>Réinitialiser
+                            </a>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
         <!-- STATS POUR ADMINISTRATEUR -->
         <div class="row g-3 mb-3">
             <div class="col-sm-6 col-md-3">
-                <div class="card overflow-hidden" style="min-height: 12rem">
-                    <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-1.png);"></div>
-                    <div class="card-body position-relative">
-                        <h6>Total Biens</h6>
-                        <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-primary" data-countup='{"endValue":24}'>24</div>
+                <div class="card overflow-hidden border-0 shadow-sm h-100" style="min-height: 10rem">
+                    <div class="bg-holder bg-card" style="background-image:url({{ asset('assets/img/icons/spot-illustrations/corner-1.png') }});"></div>
+                    <div class="card-body position-relative p-3">
+                        <h6 class="text-uppercase fs-11 fw-bold text-muted mb-3">Total Biens</h6>
+                        <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-primary">{{ adminStats.totalBiens }}</div>
                         <div class="d-flex align-items-center">
-                            <span class="badge badge-subtle-success rounded-pill fs-11">+2</span>
-                            <span class="fs-11 ms-1">ce mois</span>
+                            <span class="badge badge-subtle-primary rounded-pill fs-11">Référencés</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-md-3">
-                <div class="card overflow-hidden" style="min-height: 12rem">
-                    <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-2.png);"></div>
-                    <div class="card-body position-relative">
-                        <h6>Locataires Actifs</h6>
-                        <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-success" data-countup='{"endValue":22}'>22</div>
+                <div class="card overflow-hidden border-0 shadow-sm h-100" style="min-height: 10rem">
+                    <div class="bg-holder bg-card" style="background-image:url({{ asset('assets/img/icons/spot-illustrations/corner-2.png') }});"></div>
+                    <div class="card-body position-relative p-3">
+                        <h6 class="text-uppercase fs-11 fw-bold text-muted mb-3">Locataires Actifs</h6>
+                        <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-success">{{ adminStats.activeLocataires }}</div>
                         <div class="d-flex align-items-center">
-                            <span class="badge badge-subtle-success rounded-pill fs-11">91.7%</span>
-                            <span class="fs-11 ms-1">occupé</span>
+                            <span class="badge badge-subtle-success rounded-pill fs-11">{{ adminStats.tauxOccupation }}%</span>
+                            <span class="fs-11 ms-1 text-muted small">taux d'occupation</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-md-3">
-                <div class="card overflow-hidden" style="min-height: 12rem">
-                    <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-3.png);"></div>
-                    <div class="card-body position-relative">
-                        <h6>Revenus Mensuel</h6>
-                        <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info">€18,500</div>
+                <div class="card overflow-hidden border-0 shadow-sm h-100" style="min-height: 10rem">
+                    <div class="bg-holder bg-card" style="background-image:url({{ asset('assets/img/icons/spot-illustrations/corner-3.png') }});"></div>
+                    <div class="card-body position-relative p-3">
+                        <h6 class="text-uppercase fs-11 fw-bold text-muted mb-3">Revenu Mensuel Théo.</h6>
+                        <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-info">{{ adminStats.revenuMensuel|number_format(0, ',', ' ') }} Ar</div>
                         <div class="d-flex align-items-center">
-                            <span class="badge badge-subtle-success rounded-pill fs-11">+5.2%</span>
-                            <span class="fs-11 ms-1">vs mois dernier</span>
+                            <span class="badge badge-subtle-info rounded-pill fs-11">Estimé</span>
+                            <span class="fs-11 ms-1 text-muted small">via contrats</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-md-3">
-                <div class="card overflow-hidden" style="min-height: 12rem">
-                    <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-4.png);"></div>
-                    <div class="card-body position-relative">
-                        <h6>Impayés</h6>
-                        <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-warning">€1,200</div>
-                        <div class="d-flex align-items-center">
-                            <span class="badge badge-subtle-warning rounded-pill fs-11">2</span>
-                            <span class="fs-11 ms-1">locataires</span>
+                <div class="card h-100 border-0 shadow-sm bg-primary text-white overflow-hidden">
+                    <div class="card-body position-relative p-3">
+                        <div class="position-relative z-index-1">
+                            <h6 class="text-white opacity-75 fs-11 text-uppercase fw-bold mb-3">Actions Rapides</h6>
+                            <div class="d-grid gap-2">
+                                <a href="{{ path('app_avance_index') }}" class="btn btn-link text-white btn-sm p-0 text-start fs-11">
+                                    <span class="fas fa-plus-circle me-1"></span>Déclarer une avance
+                                </a>
+                                <a href="{{ path('app_biens_new') }}" class="btn btn-link text-white btn-sm p-0 text-start fs-11">
+                                    <span class="fas fa-building me-1"></span>Ajouter un bâtiment
+                                </a>
+                                <a href="{{ path('app_locataire_new') }}" class="btn btn-link text-white btn-sm p-0 text-start fs-11">
+                                    <span class="fas fa-user-plus me-1"></span>Nouveau locataire
+                                </a>
+                            </div>
                         </div>
+                        <span class="fas fa-bolt fa-5x position-absolute end-0 bottom-0 me-n2 mb-n3 opacity-25"></span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row g-3 mb-3">
+        <div class="row g-3 mb-4">
+            <!-- Activités Récentes -->
             <div class="col-lg-8">
-                <div class="card h-100">
-                    <div class="card-header border-bottom">
-                        <div class="row flex-between-end">
-                            <div class="col-auto align-self-center">
-                                <h6 class="mb-0">Notifications Récentes</h6>
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-light py-3 border-0">
+                        <div class="row flex-between-center">
+                            <div class="col-auto">
+                                <h6 class="mb-0 text-900 fw-bold">
+                                    <span class="fas fa-history me-2 text-primary"></span>Activités Récentes d'Avances
+                                </h6>
                             </div>
-                            <div class="col-auto ms-auto">
-                                <button class="btn btn-link btn-sm p-0 fs-11" type="button">Voir tout</button>
+                            <div class="col-auto">
+                                <a class="btn btn-link btn-sm p-0 fs-11" href="{{ path('app_avance_index') }}">Voir tout <span class="fas fa-chevron-right ms-1"></span></a>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="timeline-simple">
-                            <div class="timeline-item">
-                                <div class="timeline-icon"><span class="fas fa-exclamation-triangle text-warning"></span></div>
-                                <div class="timeline-content">
-                                    <p class="fs-11 mb-1"><strong>Loyer en retard</strong> - Appartement 15 Rue Victor Hugo</p>
-                                    <p class="fs-11 text-muted mb-0">Il y a 2 jours</p>
-                                </div>
-                            </div>
-                            <!-- ... autres items admin ... -->
+                    <div class="card-body p-0">
+                        <div class="table-responsive scrollbar">
+                            <table class="table table-sm table-striped fs-11 mb-0 border-0">
+                                <thead class="bg-200">
+                                    <tr>
+                                        <th class="ps-3 py-2 text-uppercase">Locataire</th>
+                                        <th class="py-2 text-uppercase">Bien</th>
+                                        <th class="py-2 text-uppercase text-center">Date</th>
+                                        <th class="py-2 text-uppercase text-end">Montant</th>
+                                        <th class="pe-3 py-2 text-center text-uppercase">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for avance in adminStats.recentActivities %}
+                                        <tr class="align-middle">
+                                            <td class="ps-3 py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar avatar-l me-2">
+                                                        <div class="avatar-name rounded-circle bg-subtle-primary text-primary">
+                                                            <span>{{ avance.locataire.nom|slice(0, 1) }}{{ avance.locataire.prenom|slice(0, 1) }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        <h6 class="mb-0 fs-11 fw-bold text-900">{{ avance.locataire.prenom }} {{ avance.locataire.nom }}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 text-muted">{{ avance.locataire.bien ? avance.locataire.bien.designation : 'N/A' }}</td>
+                                            <td class="py-3 text-center">{{ avance.dateAccord|date('d/m/Y') }}</td>
+                                            <td class="py-3 text-end fw-bold text-primary">{{ avance.montantTotal|number_format(0, ',', ' ') }} Ar</td>
+                                            <td class="pe-3 py-3 text-center">
+                                                <a href="{{ path('app_avance_show', {'id': avance.id}) }}" class="btn btn-info btn-sm rounded-circle" title="Détails">
+                                                    <span class="fas fa-eye fs-12"></span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center py-5 text-muted small italic">
+                                                <span class="fas fa-info-circle me-2"></span>Aucune activité récente.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Raccourcis et Widgets -->
             <div class="col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">Actions Rapides</h6>
+                <div class="card border-0 shadow-sm bg-dark text-white mb-3">
+                    <div class="card-header bg-transparent border-bottom border-secondary py-3">
+                        <h6 class="mb-0 text-white fw-bold"><span class="fas fa-thumbtack me-2"></span>Raccourcis de Gestion</h6>
                     </div>
                     <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a class="btn btn-primary btn-sm" href="{{ path('app_contrat_new') }}">
-                                <span class="fas fa-plus me-1"></span>Nouveau Contrat
-                            </a>
-                            <a class="btn btn-success btn-sm" href="#">
-                                <span class="fas fa-money-bill-wave me-1"></span>Encaisser Loyer
-                            </a>
-                            <a class="btn btn-info btn-sm" href="{{ path('app_biens_new') }}">
-                                <span class="fas fa-building me-1"></span>Ajouter un Bien
-                            </a>
-                            <a class="btn btn-secondary btn-sm" href="{{ path('app_locataire_new') }}">
-                                <span class="fas fa-user-plus me-1"></span>Ajouter Locataire
-                            </a>
+                        <div class="d-grid gap-3">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-l me-3">
+                                    <div class="avatar-name rounded-circle bg-subtle-success text-success"><span class="fas fa-file-invoice"></span></div>
+                                </div>
+                                <div class="flex-1">
+                                    <a href="{{ path('app_revenu_locatif') }}" class="text-white fs-11 d-block fw-bold stretched-link">Générer Quittances</a>
+                                    <p class="fs-12 mb-0 opacity-50 small">Édition automatique en masse</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-l me-3">
+                                    <div class="avatar-name rounded-circle bg-subtle-warning text-warning"><span class="fas fa-tools"></span></div>
+                                </div>
+                                <div class="flex-1">
+                                    <a href="{{ path('app_maintenance') }}" class="text-white fs-11 d-block fw-bold stretched-link">Maintenance</a>
+                                    <p class="fs-12 mb-0 opacity-50 small">Suivi des demandes d'intervention</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-l me-3">
+                                    <div class="avatar-name rounded-circle bg-subtle-info text-info"><span class="fas fa-chart-pie"></span></div>
+                                </div>
+                                <div class="flex-1">
+                                    <a href="{{ path('app_finance') }}" class="text-white fs-11 d-block fw-bold stretched-link">Analyse Financière</a>
+                                    <p class="fs-12 mb-0 opacity-50 small">Bilan annuel et projections</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm overflow-hidden bg-subtle-success">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="fas fa-check-double fa-3x text-success opacity-25"></span>
+                            </div>
+                            <div class="col">
+                                <h5 class="text-success mb-1">Système à jour</h5>
+                                <p class="mb-0 fs-11 text-success-emphasis">Toutes les données sont synchronisées en temps réel.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     {% else %}
-        <!-- STATS POUR LOCATAIRE -->
-        <div class="row g-3 mb-3">
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="avatar avatar-3xl mb-3">
-                            <div class="avatar-name rounded-circle bg-subtle-primary text-primary fs-3">
-                                <span class="fas fa-file-contract"></span>
+        {% if stats %}
+            <!-- STATS FINANCIÈRES LOCATAIRE -->
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        <div class="bg-holder bg-card" style="background-image:url({{ asset('assets/img/icons/spot-illustrations/corner-1.png') }});"></div>
+                        <div class="card-body position-relative p-3">
+                            <h6 class="text-uppercase fs-11 fw-bold text-muted mb-2">Loyer Mensuel Total</h6>
+                            <h3 class="text-primary mb-1 fw-bolder">{{ stats.loyerTotal|number_format(0, ',', ' ') }} Ar</h3>
+                            <p class="fs-11 text-muted mb-0">
+                                <span class="fw-semi-bold">{{ stats.loyerHC|number_format(0, ',', ' ') }}</span> HC + 
+                                <span class="fw-semi-bold">{{ stats.charges|number_format(0, ',', ' ') }}</span> Ch.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        <div class="bg-holder bg-card" style="background-image:url({{ asset('assets/img/icons/spot-illustrations/corner-2.png') }});"></div>
+                        <div class="card-body position-relative p-3">
+                            <h6 class="text-uppercase fs-11 fw-bold text-muted mb-2">Crédit Avance</h6>
+                            <h3 class="text-success mb-1 fw-bolder">{{ stats.creditRestant|number_format(0, ',', ' ') }} Ar</h3>
+                            <div class="d-flex align-items-center">
+                                <span class="badge badge-subtle-success rounded-pill fs-11">En cours</span>
+                                <span class="fs-11 ms-2 text-muted italic">Solde déductible</span>
                             </div>
                         </div>
-                        <h5>Mon Contrat</h5>
-                        <p class="fs-11 text-muted">Consultez les détails de votre bail actuel.</p>
-                        {% if app.user and app.user.locataire and app.user.locataire.contrats|length > 0 %}
-                            <a class="btn btn-outline-primary btn-sm" href="{{ path('app_contrat_show', {'id': app.user.locataire.contrats.first.id}) }}">Voir mon contrat</a>
-                        {% else %}
-                            <span class="badge badge-subtle-warning">Aucun contrat actif</span>
-                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        <div class="bg-holder bg-card" style="background-image:url({{ asset('assets/img/icons/spot-illustrations/corner-3.png') }});"></div>
+                        <div class="card-body position-relative p-3">
+                            <h6 class="text-uppercase fs-11 fw-bold text-muted mb-2">Couverture</h6>
+                            <h3 class="text-info mb-1 fw-bolder">{{ stats.nbMoisCouverts }} Mois</h3>
+                            <p class="fs-11 text-muted mb-0 italic">Prochain frais : {{ stats.dateReprise ? stats.dateReprise|date('M Y') : 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        <div class="bg-holder bg-card" style="background-image:url({{ asset('assets/img/icons/spot-illustrations/corner-4.png') }});"></div>
+                        <div class="card-body position-relative p-3">
+                            <h6 class="text-uppercase fs-11 fw-bold text-muted mb-2">Mon Logement</h6>
+                            <h3 class="text-warning mb-1 fw-bolder text-truncate">{{ stats.bien.designation }}</h3>
+                            <p class="fs-11 text-muted mb-0"><span class="fas fa-map-marker-alt me-1"></span>{{ stats.bien.ville }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="avatar avatar-3xl mb-3">
-                            <div class="avatar-name rounded-circle bg-subtle-success text-success fs-3">
-                                <span class="fas fa-receipt"></span>
-                            </div>
-                        </div>
-                        <h5>Mes Quittances</h5>
-                        <p class="fs-11 text-muted">Téléchargez vos dernières quittances de loyer.</p>
-                        <a class="btn btn-outline-success btn-sm" href="#">Accéder aux documents</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="avatar avatar-3xl mb-3">
-                            <div class="avatar-name rounded-circle bg-subtle-warning text-warning fs-3">
-                                <span class="fas fa-tools"></span>
-                            </div>
-                        </div>
-                        <h5>Maintenance</h5>
-                        <p class="fs-11 text-muted">Un problème ? Signalez une intervention.</p>
-                        <a class="btn btn-outline-warning btn-sm" href="#">Signaler un problème</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="row g-3">
-            <div class="col-lg-12">
-                <div class="card bg-dark text-white overflow-hidden">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-1">
-                            <h3>Découvrez d'autres biens !</h3>
-                            <p class="mb-0 opacity-75">Nous avons de nouvelles opportunités pour vous ou vos proches.</p>
-                            <a class="btn btn-link text-white ps-0 mt-2" href="{{ path('app_biens_index') }}">
-                                Voir le catalogue <span class="fas fa-chevron-right ms-1 fs-11"></span>
-                            </a>
+            <div class="row g-3">
+                <!-- Tableau des prévisions par mois -->
+                <div class="col-lg-8">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header bg-subtle-info py-3 border-0">
+                            <div class="row flex-between-center">
+                                <div class="col-auto">
+                                    <h6 class="mb-0 text-info fw-bold">
+                                        <span class="fas fa-chart-line me-2"></span>Prévisions de Paiement & Déductions
+                                    </h6>
+                                </div>
+                                <div class="col-auto">
+                                    <span class="fs-11 text-muted italic">Calculé sur les 6 prochains mois</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="ms-3 d-none d-md-block">
-                            <span class="fas fa-search-location fa-5x opacity-25"></span>
+                        <div class="card-body p-0">
+                            <div class="table-responsive scrollbar">
+                                <table class="table table-sm table-striped fs-11 mb-0 border-0">
+                                    <thead class="bg-200">
+                                        <tr>
+                                            <th class="ps-3 py-2 text-uppercase">Mois</th>
+                                            <th class="py-2 text-uppercase">Loyer Total</th>
+                                            <th class="py-2 text-uppercase text-center">Utilisation Avance</th>
+                                            <th class="py-2 text-uppercase text-end">Reste à payer</th>
+                                            <th class="pe-3 py-2 text-center text-uppercase">Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for prev in previsions %}
+                                            <tr class="align-middle">
+                                                <td class="ps-3 py-3 fw-bold">{{ prev.date|date('F Y') }}</td>
+                                                <td class="py-3">{{ prev.loyer|number_format(0, ',', ' ') }} Ar</td>
+                                                <td class="py-3 text-center">
+                                                    {% if prev.deduction > 0 %}
+                                                        <span class="badge badge-subtle-success">- {{ prev.deduction|number_format(0, ',', ' ') }} Ar</span>
+                                                    {% else %}
+                                                        <span class="text-300">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="py-3 text-end fw-bolder text-primary">
+                                                    {{ prev.aPayer|number_format(0, ',', ' ') }} Ar
+                                                </td>
+                                                <td class="pe-3 py-3 text-center">
+                                                    {% if prev.aPayer == 0 %}
+                                                        <span class="badge rounded-pill badge-subtle-success">
+                                                            <span class="fas fa-check-circle me-1"></span>Couvert
+                                                        </span>
+                                                    {% elseif prev.deduction > 0 %}
+                                                        <span class="badge rounded-pill badge-subtle-warning">
+                                                            <span class="fas fa-exclamation-circle me-1"></span>Partiel
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="badge rounded-pill badge-subtle-info">
+                                                            <span class="fas fa-clock me-1"></span>À prévoir
+                                                        </span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light py-2 text-center">
+                            <p class="mb-0 fs-11 text-muted italic">Les déductions sont appliquées automatiquement sur la base de votre crédit d'avance actuel.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions & Aide -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-header bg-subtle-primary py-3">
+                            <h6 class="mb-0 text-primary fw-bold">Actions Rapides</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{{ path('app_avance_index') }}" class="btn btn-outline-primary btn-sm text-start">
+                                    <span class="fas fa-history me-2"></span>Historique de mes Avances
+                                </a>
+                                <a href="{{ path('app_contrat_show', {'id': stats.contrat.id}) }}" class="btn btn-outline-info btn-sm text-start">
+                                    <span class="fas fa-file-contract me-2"></span>Consulter mon Bail
+                                </a>
+                                <a href="#" class="btn btn-outline-success btn-sm text-start">
+                                    <span class="fas fa-receipt me-2"></span>Dernières Quittances
+                                </a>
+                                <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#modalAssistance">
+                                    <span class="fas fa-headset me-2"></span>Signaler un Problème
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm bg-dark text-white overflow-hidden">
+                        <div class="card-body position-relative p-4">
+                            <div class="position-relative z-index-1">
+                                <h5 class="text-white">Besoin d'aide ?</h5>
+                                <p class="fs-11 opacity-75">Notre équipe de maintenance est à votre disposition pour toute intervention dans votre logement.</p>
+                                <a href="tel:+261340000000" class="btn btn-link text-white p-0 fs-11">
+                                    Contacter l'agence <span class="fas fa-chevron-right ms-1"></span>
+                                </a>
+                            </div>
+                            <span class="fas fa-question-circle fa-5x position-absolute end-0 bottom-0 me-n3 mb-n3 opacity-25"></span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% else %}
+            <!-- Cas où le locataire n'a pas encore de contrat configuré -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <span class="fas fa-user-clock fa-4x text-200 mb-3"></span>
+                    <h4>Configuration en cours</h4>
+                    <p class="text-muted mx-auto" style="max-width: 400px;">
+                        Votre profil locataire est en cours de validation. Une fois votre contrat activé, vous retrouverez ici toutes vos statistiques financières.
+                    </p>
+                    <a href="{{ path('app_biens_index') }}" class="btn btn-primary">Explorer les biens disponibles</a>
+                </div>
+            </div>
+        {% endif %}
     {% endif %}
 
+    <!-- Modal Assistance (Placeholder) -->
+    <div class="modal fade" id="modalAssistance" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Signaler un Incident</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="fs-11 text-muted mb-4">Décrivez brièvement le problème rencontré dans votre logement. Une équipe interviendra dans les plus brefs délais.</p>
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label fs-11 text-uppercase fw-bold">Type de problème</label>
+                            <select class="form-select fs-11">
+                                <option>Plomberie</option>
+                                <option>Électricité</option>
+                                <option>Serrurerie</option>
+                                <option>Autre</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fs-11 text-uppercase fw-bold">Description</label>
+                            <textarea class="form-control fs-11" rows="3" placeholder="Ex: Fuite d'eau sous l'évier..."></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Envoyer la demande</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
