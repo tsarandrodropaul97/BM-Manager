@@ -196,6 +196,7 @@
 							<th class="align-middle">Bien & Résidence</th>
 							<th class="align-middle text-end">Montant Versé</th>
 							<th class="align-middle text-center">Justificatifs</th>
+							<th class="align-middle text-center">Statut</th>
 							<th class="align-middle text-end pe-3">Actions</th>
 						</tr>
 					</thead>
@@ -246,8 +247,34 @@
                                         </span>
                                     {% endif %}
 								</td>
+								<td class="align-middle text-center">
+									{% if avance.status == 'validée' %}
+										<span class="badge badge-subtle-success fs-10">
+											<span class="fas fa-check-circle me-1"></span>Validée
+										</span>
+									{% else %}
+										<span class="badge badge-subtle-warning fs-10">
+											<span class="fas fa-clock me-1"></span>En attente
+										</span>
+									{% endif %}
+								</td>
 								<td class="align-middle text-end pe-3">
 									<div class="btn-group btn-group-sm">
+										{% set canApprove = false %}
+										{% if is_granted('ROLE_ADMIN') and not avance.isApprovedByAdmin %}
+											{% set canApprove = true %}
+										{% elseif not is_granted('ROLE_ADMIN') and app.user.locataire and avance.locataire.id == app.user.locataire.id and not avance.isApprovedByLocataire %}
+											{% set canApprove = true %}
+										{% endif %}
+
+										{% if canApprove %}
+											<form action="{{ path('app_avance_approve', {id: avance.id}) }}" method="POST" class="d-inline">
+												<button type="submit" class="btn btn-success me-1" title="Valider">
+													<span class="fas fa-check"></span>
+												</button>
+											</form>
+										{% endif %}
+
 										<a href="{{ path('app_avance_show', {'id': avance.id}) }}" class="btn btn-light" title="Détails">
 											<span class="fas fa-eye"></span>
 										</a>
@@ -256,7 +283,7 @@
 							</tr>
 						{% else %}
 							<tr>
-								<td colspan="{{ is_granted('ROLE_ADMIN') ? 6 : 5 }}" class="text-center py-5">
+								<td colspan="{{ is_granted('ROLE_ADMIN') ? 7 : 6 }}" class="text-center py-5">
 									<span class="fas fa-search-minus fa-3x text-200 mb-3"></span>
 									<p class="text-600 fs-4 fw-semi-bold">Aucune avance trouvée.</p>
 								</td>

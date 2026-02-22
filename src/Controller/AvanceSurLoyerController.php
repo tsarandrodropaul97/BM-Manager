@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Service\NotificationService;
+use App\Entity\User;
 
 #[Route('/avances')]
 class AvanceSurLoyerController extends AbstractController
@@ -21,6 +23,7 @@ class AvanceSurLoyerController extends AbstractController
     #[Route('', name: 'app_avance_index', methods: ['GET', 'POST'])]
     public function index(AvanceSurLoyerRepository $avanceRepository, \App\Repository\BiensRepository $biensRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
         $search = $request->query->get('search');
@@ -89,7 +92,11 @@ class AvanceSurLoyerController extends AbstractController
         if (count($uniqueLocataires) === 1) {
             $locataire = reset($uniqueLocataires);
             $stats['locataireStats'] = $locataire;
-            $totalHistorique = (float)$avanceRepository->getTotalAvancesByLocataire($locataire->getId());
+            // Ne compter que les avances validées dans le total historique pour les stats
+            $totalHistorique = 0;
+            foreach ($avanceRepository->findBy(['locataire' => $locataire, 'status' => 'validée']) as $v) {
+                $totalHistorique += (float)$v->getMontantTotal();
+            }
 
             // Date de début : Soit définie manuellement, soit la plus ancienne avance
             $dateDebut = $locataire->getDateDebutDeduction();
@@ -147,7 +154,9 @@ class AvanceSurLoyerController extends AbstractController
             // Stats globales simples pour Admin sans locataire précis
             $totalGlobal = 0;
             foreach ($avances as $a) {
-                $totalGlobal += (float)$a->getMontantTotal();
+                if ($a->getStatus() === 'validée') {
+                    $totalGlobal += (float)$a->getMontantTotal();
+                }
             }
             $stats['totalAvance'] = $totalGlobal;
         }
@@ -174,9 +183,10 @@ class AvanceSurLoyerController extends AbstractController
     }
 
     #[Route('/new', name: 'app_avance_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, NotificationService $notificationService): Response
     {
         $avance = new AvanceSurLoyer();
+        /** @var User $user */
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
@@ -195,10 +205,16 @@ class AvanceSurLoyerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Récupérer les détails des montants (JSON)
             $detailsJson = $form->get('montantDetails')->getData();
             if ($detailsJson) {
                 $avance->setMontantDetails(json_decode($detailsJson, true));
+            }
+
+            $avance->setCreatedBy($user);
+            if ($isAdmin) {
+                $avance->setIsApprovedByAdmin(true);
+            } else {
+                $avance->setIsApprovedByLocataire(true);
             }
 
             $entityManager->persist($avance);
@@ -228,6 +244,15 @@ class AvanceSurLoyerController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', 'L\'avance sur loyer a été enregistrée.');
 
+            // Notifications par email
+            if ($isAdmin) {
+                // Créé par admin -> Notifier le locataire
+                $notificationService->notifyTenantOnNewAvance($avance);
+            } else {
+                // Créé par locataire -> Notifier le propriétaire
+                $notificationService->notifyOwnerOnNewAvance($avance);
+            }
+
             return $this->redirectToRoute('app_avance_index');
         }
 
@@ -240,8 +265,10 @@ class AvanceSurLoyerController extends AbstractController
     #[Route('/{id}', name: 'app_avance_show', methods: ['GET', 'POST'])]
     public function show(AvanceSurLoyer $avance, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
         if (!$this->isGranted('ROLE_ADMIN')) {
-            $locataire = $this->getUser()->getLocataire();
+            $locataire = $user->getLocataire();
             if (!$locataire || $avance->getLocataire()->getId() !== $locataire->getId()) {
                 throw $this->createAccessDeniedException('Accès refusé.');
             }
@@ -293,5 +320,35 @@ class AvanceSurLoyerController extends AbstractController
             ],
             'contrat' => $contrat
         ]);
+    }
+
+    #[Route('/{id}/approve', name: 'app_avance_approve', methods: ['POST'])]
+    public function approve(AvanceSurLoyer $avance, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $locataire = $user->getLocataire();
+
+        if ($isAdmin) {
+            $avance->setIsApprovedByAdmin(true);
+        } elseif ($locataire && $avance->getLocataire()->getId() === $locataire->getId()) {
+            $avance->setIsApprovedByLocataire(true);
+        } else {
+            throw $this->createAccessDeniedException('Accès refusé.');
+        }
+
+        if ($avance->isApprovedByAdmin() && $avance->isApprovedByLocataire()) {
+            $avance->setStatus('validée');
+            $entityManager->flush(); // S'assurer que le statut est en base avant d'envoyer le reçu
+
+            // Envoyer le reçu au locataire
+            $notificationService->sendReceiptToTenant($avance);
+        }
+
+        $entityManager->flush();
+        $this->addFlash('success', 'Validation enregistrée.');
+
+        return $this->redirectToRoute('app_avance_index');
     }
 }

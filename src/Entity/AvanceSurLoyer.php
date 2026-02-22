@@ -35,6 +35,19 @@ class AvanceSurLoyer
     #[ORM\OneToMany(mappedBy: 'avance', targetEntity: AvanceDocument::class, orphanRemoval: true)]
     private Collection $documents;
 
+    #[ORM\Column(length: 20)]
+    private ?string $status = 'en_attente';
+
+    #[ORM\Column]
+    private bool $isApprovedByAdmin = false;
+
+    #[ORM\Column]
+    private bool $isApprovedByLocataire = false;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $createdBy = null;
+
     public function __construct()
     {
         $this->dateAccord = new \DateTime();
@@ -128,6 +141,50 @@ class AvanceSurLoyer
             }
         }
 
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function isApprovedByAdmin(): bool
+    {
+        return $this->isApprovedByAdmin;
+    }
+
+    public function setIsApprovedByAdmin(bool $isApprovedByAdmin): static
+    {
+        $this->isApprovedByAdmin = $isApprovedByAdmin;
+        return $this;
+    }
+
+    public function isApprovedByLocataire(): bool
+    {
+        return $this->isApprovedByLocataire;
+    }
+
+    public function setIsApprovedByLocataire(bool $isApprovedByLocataire): static
+    {
+        $this->isApprovedByLocataire = $isApprovedByLocataire;
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
         return $this;
     }
 }
