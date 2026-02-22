@@ -37,8 +37,31 @@
 					</a>
 				</li>
 
+				<!-- SECTION 2: PATRIMOINE (Visible par tous, mais options limitées pour locataires) -->
+				<li class="nav-item">
+					<div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+						<div class="col-auto navbar-vertical-label">{{ is_granted('ROLE_ADMIN') ? 'Gestion Locative' : 'Découvrir' }}</div>
+						<div class="col ps-0"><hr class="mb-0 navbar-vertical-divider"/></div>
+					</div>
+					
+					<!-- Biens -->
+					<a class="nav-link dropdown-indicator" href="#biens" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="biens">
+						<div class="d-flex align-items-center">
+							<span class="nav-link-icon"><span class="fas fa-building"></span></span>
+							<span class="nav-link-text ps-1">{{ is_granted('ROLE_ADMIN') ? 'Patrimoine' : 'Biens Disponibles' }}</span>
+						</div>
+					</a>
+					<ul class="nav collapse" id="biens">
+						<li class="nav-item"><a class="nav-link" href="{{ path('app_biens_index') }}">Liste des biens</a></li>
+						{% if is_granted('ROLE_ADMIN') %}
+							<li class="nav-item"><a class="nav-link" href="{{ path('app_biens_new') }}">Ajouter un bien</a></li>
+							<li class="nav-item"><a class="nav-link" href="{{ path('app_categorie') }}">Catégories</a></li>
+						{% endif %}
+					</ul>
+				</li>
+
 				{% if is_granted('ROLE_ADMIN') %}
-					<!-- SECTION 2: ANALYSE & RAPPORTS (PRO) -->
+					<!-- SECTION 3: ANALYSE & RAPPORTS (PRO) -->
 					<li class="nav-item">
 						<div class="row navbar-vertical-label-wrapper mt-3 mb-2">
 							<div class="col-auto navbar-vertical-label">Pilotage</div>
@@ -57,26 +80,13 @@
 						</ul>
 					</li>
 
-					<!-- SECTION 3: PARC IMMOBILIER & LOCATAIRE (PRO) -->
+					<!-- SECTION 4: GESTION CLIENTS (PRO) -->
 					<li class="nav-item">
 						<div class="row navbar-vertical-label-wrapper mt-3 mb-2">
-							<div class="col-auto navbar-vertical-label">Gestion Locative</div>
+							<div class="col-auto navbar-vertical-label">Relation Client</div>
 							<div class="col ps-0"><hr class="mb-0 navbar-vertical-divider"/></div>
 						</div>
 						
-						<!-- Biens -->
-						<a class="nav-link dropdown-indicator" href="#biens" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="biens">
-							<div class="d-flex align-items-center">
-								<span class="nav-link-icon"><span class="fas fa-building"></span></span>
-								<span class="nav-link-text ps-1">Patrimoine</span>
-							</div>
-						</a>
-						<ul class="nav collapse" id="biens">
-							<li class="nav-item"><a class="nav-link" href="{{ path('app_biens_index') }}">Liste des biens</a></li>
-							<li class="nav-item"><a class="nav-link" href="{{ path('app_biens_new') }}">Ajouter un bien</a></li>
-							<li class="nav-item"><a class="nav-link" href="{{ path('app_categorie') }}">Catégories</a></li>
-						</ul>
-
 						<!-- Locataires & Contrats -->
 						<a class="nav-link dropdown-indicator" href="#locataires-contrats" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="locataires-contrats">
 							<div class="d-flex align-items-center">
@@ -107,6 +117,7 @@
 						</a>
 						<ul class="nav collapse" id="loyers">
 							<li class="nav-item"><a class="nav-link" href="#">Encaissements</a></li>
+							<li class="nav-item"><a class="nav-link" href="{{ path('app_avance_index') }}">Avances sur Loyer</a></li>
 							<li class="nav-item"><a class="nav-link" href="#">Suivi des Impayés</a></li>
 							<li class="nav-item"><a class="nav-link" href="#">Quittances & Avis</a></li>
 						</ul>
@@ -194,6 +205,13 @@
 							<div class="d-flex align-items-center">
 								<span class="nav-link-icon"><span class="fas fa-receipt"></span></span>
 								<span class="nav-link-text ps-1">Mes Quittances</span>
+							</div>
+						</a>
+
+						<a class="nav-link" href="{{ path('app_avance_index') }}" role="button">
+							<div class="d-flex align-items-center">
+								<span class="nav-link-icon"><span class="fas fa-hand-holding-usd"></span></span>
+								<span class="nav-link-text ps-1">Mes Avances</span>
 							</div>
 						</a>
 

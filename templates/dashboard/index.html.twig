@@ -5,346 +5,202 @@
 {% block body %}
     <!-- En-tête de bienvenue -->
     <div class="card mb-3">
-        <div class="card-header">
-            <h5 class="mb-0">Bienvenue</h5>
+        <div class="card-header bg-subtle-primary">
+            <h5 class="mb-0">Tableau de bord</h5>
         </div>
         <div class="card-body">
             {% if app.user %}
-                <p>Bonjour <strong>{{ app.user.userIdentifier }}</strong> !</p>
-                <p class="text-muted mb-0">Voici un aperçu de votre portefeuille immobilier</p>
+                <h4 class="mb-1">Bonjour, <strong>{{ app.user.userIdentifier }}</strong> !</h4>
+                <p class="text-muted mb-0">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        Voici l'état actuel de votre parc immobilier.
+                    {% else %}
+                        Bienvenue dans votre espace locataire BailManager.
+                    {% endif %}
+                </p>
             {% else %}
                 <p>Bienvenue sur notre application.</p>
             {% endif %}
         </div>
     </div>
 
-    <!-- Statistiques principales -->
-    <div class="row g-3 mb-3">
-        <div class="col-sm-6 col-md-3">
-            <div class="card overflow-hidden" style="min-height: 12rem">
-                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-1.png);"></div>
-                <div class="card-body position-relative">
-                    <h6>Total Biens</h6>
-                    <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-primary" data-countup='{"endValue":24}'>24</div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge badge-subtle-success rounded-pill fs-11">+2</span>
-                        <span class="fs-11 ms-1">ce mois</span>
+    {% if is_granted('ROLE_ADMIN') %}
+        <!-- STATS POUR ADMINISTRATEUR -->
+        <div class="row g-3 mb-3">
+            <div class="col-sm-6 col-md-3">
+                <div class="card overflow-hidden" style="min-height: 12rem">
+                    <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-1.png);"></div>
+                    <div class="card-body position-relative">
+                        <h6>Total Biens</h6>
+                        <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-primary" data-countup='{"endValue":24}'>24</div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge badge-subtle-success rounded-pill fs-11">+2</span>
+                            <span class="fs-11 ms-1">ce mois</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card overflow-hidden" style="min-height: 12rem">
+                    <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-2.png);"></div>
+                    <div class="card-body position-relative">
+                        <h6>Locataires Actifs</h6>
+                        <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-success" data-countup='{"endValue":22}'>22</div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge badge-subtle-success rounded-pill fs-11">91.7%</span>
+                            <span class="fs-11 ms-1">occupé</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card overflow-hidden" style="min-height: 12rem">
+                    <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-3.png);"></div>
+                    <div class="card-body position-relative">
+                        <h6>Revenus Mensuel</h6>
+                        <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info">€18,500</div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge badge-subtle-success rounded-pill fs-11">+5.2%</span>
+                            <span class="fs-11 ms-1">vs mois dernier</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card overflow-hidden" style="min-height: 12rem">
+                    <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-4.png);"></div>
+                    <div class="card-body position-relative">
+                        <h6>Impayés</h6>
+                        <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-warning">€1,200</div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge badge-subtle-warning rounded-pill fs-11">2</span>
+                            <span class="fs-11 ms-1">locataires</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="card overflow-hidden" style="min-height: 12rem">
-                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-2.png);"></div>
-                <div class="card-body position-relative">
-                    <h6>Locataires Actifs</h6>
-                    <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-success" data-countup='{"endValue":22}'>22</div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge badge-subtle-success rounded-pill fs-11">91.7%</span>
-                        <span class="fs-11 ms-1">occupé</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="card overflow-hidden" style="min-height: 12rem">
-                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-3.png);"></div>
-                <div class="card-body position-relative">
-                    <h6>Revenus Mensuel</h6>
-                    <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info">€18,500</div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge badge-subtle-success rounded-pill fs-11">+5.2%</span>
-                        <span class="fs-11 ms-1">vs mois dernier</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="card overflow-hidden" style="min-height: 12rem">
-                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-4.png);"></div>
-                <div class="card-body position-relative">
-                    <h6>Impayés</h6>
-                    <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-warning">€1,200</div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge badge-subtle-warning rounded-pill fs-11">2</span>
-                        <span class="fs-11 ms-1">locataires</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Alertes et notifications -->
-    <div class="row g-3 mb-3">
-        <div class="col-lg-8">
-            <div class="card h-100">
-                <div class="card-header">
-                    <div class="row flex-between-end">
-                        <div class="col-auto align-self-center">
-                            <h6 class="mb-0">Notifications Récentes</h6>
+        <div class="row g-3 mb-3">
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-header border-bottom">
+                        <div class="row flex-between-end">
+                            <div class="col-auto align-self-center">
+                                <h6 class="mb-0">Notifications Récentes</h6>
+                            </div>
+                            <div class="col-auto ms-auto">
+                                <button class="btn btn-link btn-sm p-0 fs-11" type="button">Voir tout</button>
+                            </div>
                         </div>
-                        <div class="col-auto ms-auto">
-                            <button class="btn btn-link btn-sm p-0 fs-11" type="button">Voir tout</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline-simple">
+                            <div class="timeline-item">
+                                <div class="timeline-icon"><span class="fas fa-exclamation-triangle text-warning"></span></div>
+                                <div class="timeline-content">
+                                    <p class="fs-11 mb-1"><strong>Loyer en retard</strong> - Appartement 15 Rue Victor Hugo</p>
+                                    <p class="fs-11 text-muted mb-0">Il y a 2 jours</p>
+                                </div>
+                            </div>
+                            <!-- ... autres items admin ... -->
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="timeline-simple">
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <span class="fas fa-exclamation-triangle text-warning"></span>
-                            </div>
-                            <div class="timeline-content">
-                                <p class="fs-11 mb-1"><strong>Loyer en retard</strong> - Appartement 15 Rue Victor Hugo</p>
-                                <p class="fs-11 text-muted mb-0">Il y a 2 jours</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <span class="fas fa-tools text-info"></span>
-                            </div>
-                            <div class="timeline-content">
-                                <p class="fs-11 mb-1"><strong>Demande de maintenance</strong> - Chaudière Studio 8 Rue Pasteur</p>
-                                <p class="fs-11 text-muted mb-0">Il y a 4 jours</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <span class="fas fa-file-contract text-success"></span>
-                            </div>
-                            <div class="timeline-content">
-                                <p class="fs-11 mb-1"><strong>Renouvellement de bail</strong> - T2 Avenue de la République</p>
-                                <p class="fs-11 text-muted mb-0">Il y a 1 semaine</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <span class="fas fa-user-plus text-primary"></span>
-                            </div>
-                            <div class="timeline-content">
-                                <p class="fs-11 mb-1"><strong>Nouveau locataire</strong> - T3 Boulevard Jean Jaurès</p>
-                                <p class="fs-11 text-muted mb-0">Il y a 1 semaine</p>
-                            </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">Actions Rapides</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-primary btn-sm" href="{{ path('app_contrat_new') }}">
+                                <span class="fas fa-plus me-1"></span>Nouveau Contrat
+                            </a>
+                            <a class="btn btn-success btn-sm" href="#">
+                                <span class="fas fa-money-bill-wave me-1"></span>Encaisser Loyer
+                            </a>
+                            <a class="btn btn-info btn-sm" href="{{ path('app_biens_new') }}">
+                                <span class="fas fa-building me-1"></span>Ajouter un Bien
+                            </a>
+                            <a class="btn btn-secondary btn-sm" href="{{ path('app_locataire_new') }}">
+                                <span class="fas fa-user-plus me-1"></span>Ajouter Locataire
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h6 class="mb-0">Actions Rapides</h6>
+    {% else %}
+        <!-- STATS POUR LOCATAIRE -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="avatar avatar-3xl mb-3">
+                            <div class="avatar-name rounded-circle bg-subtle-primary text-primary fs-3">
+                                <span class="fas fa-file-contract"></span>
+                            </div>
+                        </div>
+                        <h5>Mon Contrat</h5>
+                        <p class="fs-11 text-muted">Consultez les détails de votre bail actuel.</p>
+                        {% if app.user and app.user.locataire and app.user.locataire.contrats|length > 0 %}
+                            <a class="btn btn-outline-primary btn-sm" href="{{ path('app_contrat_show', {'id': app.user.locataire.contrats.first.id}) }}">Voir mon contrat</a>
+                        {% else %}
+                            <span class="badge badge-subtle-warning">Aucun contrat actif</span>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a class="btn btn-outline-primary btn-sm" href="contrats/nouveau.html">
-                            <span class="fas fa-plus me-1"></span>Nouveau Contrat
-                        </a>
-                        <a class="btn btn-outline-success btn-sm" href="loyers/encaissements.html">
-                            <span class="fas fa-money-bill-wave me-1"></span>Encaisser Loyer
-                        </a>
-                        <a class="btn btn-outline-info btn-sm" href=".html">
-                            <span class="fas fa-tools me-1"></span>Demande Maintenance
-                        </a>
-                        <a class="btn btn-outline-secondary btn-sm" href="locataires/ajouter.html">
-                            <span class="fas fa-user-plus me-1"></span>Ajouter Locataire
-                        </a>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="avatar avatar-3xl mb-3">
+                            <div class="avatar-name rounded-circle bg-subtle-success text-success fs-3">
+                                <span class="fas fa-receipt"></span>
+                            </div>
+                        </div>
+                        <h5>Mes Quittances</h5>
+                        <p class="fs-11 text-muted">Téléchargez vos dernières quittances de loyer.</p>
+                        <a class="btn btn-outline-success btn-sm" href="#">Accéder aux documents</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="avatar avatar-3xl mb-3">
+                            <div class="avatar-name rounded-circle bg-subtle-warning text-warning fs-3">
+                                <span class="fas fa-tools"></span>
+                            </div>
+                        </div>
+                        <h5>Maintenance</h5>
+                        <p class="fs-11 text-muted">Un problème ? Signalez une intervention.</p>
+                        <a class="btn btn-outline-warning btn-sm" href="#">Signaler un problème</a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Tableaux de bord détaillés -->
-    <div class="row g-3 mb-3">
-        <div class="col-lg-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <div class="row flex-between-end">
-                        <div class="col-auto">
-                            <h6 class="mb-0">Biens par Statut</h6>
+        <div class="row g-3">
+            <div class="col-lg-12">
+                <div class="card bg-dark text-white overflow-hidden">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="flex-1">
+                            <h3>Découvrez d'autres biens !</h3>
+                            <p class="mb-0 opacity-75">Nous avons de nouvelles opportunités pour vous ou vos proches.</p>
+                            <a class="btn btn-link text-white ps-0 mt-2" href="{{ path('app_biens_index') }}">
+                                Voir le catalogue <span class="fas fa-chevron-right ms-1 fs-11"></span>
+                            </a>
                         </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row align-items-end">
-                        <div class="col">
-                            <div class="progress-stacked" style="height: 20px">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 91%" aria-valuenow="91" aria-valuemin="0" aria-valuemax="100"></div>
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 4%" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
-                                <div class="progress-bar bg-danger" role="progressbar" style="width: 5%" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-4 text-center">
-                                    <div class="fs-11 text-success"><span class="fas fa-square"></span> Occupé</div>
-                                    <div class="fs-10 fw-semi-bold">22 biens</div>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <div class="fs-11 text-warning"><span class="fas fa-square"></span> Preavis</div>
-                                    <div class="fs-10 fw-semi-bold">1 bien</div>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <div class="fs-11 text-danger"><span class="fas fa-square"></span> Vacant</div>
-                                    <div class="fs-10 fw-semi-bold">1 bien</div>
-                                </div>
-                            </div>
+                        <div class="ms-3 d-none d-md-block">
+                            <span class="fas fa-search-location fa-5x opacity-25"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h6 class="mb-0">Revenus par Type de Bien</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="border-bottom border-200 pb-2 mb-2">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="mb-0 fs-11">Appartements</p>
-                                    <p class="mb-0 fs-11 fw-semi-bold">€12,400</p>
-                                </div>
-                                <div class="progress" style="height: 5px">
-                                    <div class="progress-bar bg-primary" style="width: 67%"></div>
-                                </div>
-                            </div>
-                            <div class="border-bottom border-200 pb-2 mb-2">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="mb-0 fs-11">Studios</p>
-                                    <p class="mb-0 fs-11 fw-semi-bold">€4,200</p>
-                                </div>
-                                <div class="progress" style="height: 5px">
-                                    <div class="progress-bar bg-info" style="width: 23%"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="border-bottom border-200 pb-2 mb-2">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="mb-0 fs-11">Maisons</p>
-                                    <p class="mb-0 fs-11 fw-semi-bold">€1,900</p>
-                                </div>
-                                <div class="progress" style="height: 5px">
-                                    <div class="progress-bar bg-success" style="width: 10%"></div>
-                                </div>
-                            </div>
-                            <div class="pb-2">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="mb-0 fs-11 fw-semi-bold">Total</p>
-                                    <p class="mb-0 fs-11 fw-bold text-primary">€18,500</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% endif %}
 
-    <!-- Contrats à échéance et maintenance -->
-    <div class="row g-3">
-        <div class="col-lg-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <div class="row flex-between-end">
-                        <div class="col-auto">
-                            <h6 class="mb-0">Contrats à Échéance (3 mois)</h6>
-                        </div>
-                        <div class="col-auto">
-                            <a class="btn btn-link btn-sm p-0 fs-11" href="contrats/renouvellements.html">Voir tout</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body py-2">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-sm fs-11 mb-0">
-                            <tbody>
-                            <tr>
-                                <td class="align-middle py-1">
-                                    <strong>T2 Rue de la Paix</strong><br>
-                                    <span class="text-muted">M. Dupont</span>
-                                </td>
-                                <td class="align-middle text-end py-1">
-                                    <span class="badge badge-subtle-warning rounded-pill">15 Jan 2026</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle py-1">
-                                    <strong>Studio Centre-ville</strong><br>
-                                    <span class="text-muted">Mme Martin</span>
-                                </td>
-                                <td class="align-middle text-end py-1">
-                                    <span class="badge badge-subtle-warning rounded-pill">22 Feb 2026</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle py-1">
-                                    <strong>T3 Avenue Foch</strong><br>
-                                    <span class="text-muted">M. Bernard</span>
-                                </td>
-                                <td class="align-middle text-end py-1">
-                                    <span class="badge badge-subtle-danger rounded-pill">05 Mar 2026</span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <div class="row flex-between-end">
-                        <div class="col-auto">
-                            <h6 class="mb-0">Maintenance Programmée</h6>
-                        </div>
-                        <div class="col-auto">
-                            <a class="btn btn-link btn-sm p-0 fs-11" href="maintenance/planning.html">Planning complet</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body py-2">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-sm fs-11 mb-0">
-                            <tbody>
-                            <tr>
-                                <td class="align-middle py-1">
-                                    <span class="fas fa-fire text-danger me-2"></span>
-                                    <strong>Révision chaudière</strong><br>
-                                    <span class="text-muted">Résidence Les Tilleuls</span>
-                                </td>
-                                <td class="align-middle text-end py-1">
-                                    <span class="badge badge-subtle-info rounded-pill">15 Sept</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle py-1">
-                                    <span class="fas fa-tint text-info me-2"></span>
-                                    <strong>Plomberie</strong><br>
-                                    <span class="text-muted">Apt 12 Rue Victor Hugo</span>
-                                </td>
-                                <td class="align-middle text-end py-1">
-                                    <span class="badge badge-subtle-warning rounded-pill">18 Sept</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle py-1">
-                                    <span class="fas fa-brush text-success me-2"></span>
-                                    <strong>Rafraîchissement</strong><br>
-                                    <span class="text-muted">Studio Centre-ville</span>
-                                </td>
-                                <td class="align-middle text-end py-1">
-                                    <span class="badge badge-subtle-success rounded-pill">25 Sept</span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}

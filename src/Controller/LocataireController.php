@@ -13,8 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/locataires')]
+#[IsGranted('ROLE_ADMIN')]
 final class LocataireController extends AbstractController
 {
     #[Route(name: 'app_locataire_index', methods: ['GET'])]

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LocataireRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -68,9 +69,43 @@ class Locataire
     #[ORM\OneToMany(mappedBy: 'locataire', targetEntity: Contrat::class)]
     private $contrats;
 
+    #[ORM\OneToMany(mappedBy: 'locataire', targetEntity: AvanceSurLoyer::class, orphanRemoval: true)]
+    private Collection $avances;
+
     public function __construct()
     {
         $this->contrats = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->avances = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, AvanceSurLoyer>
+     */
+    public function getAvances(): Collection
+    {
+        return $this->avances;
+    }
+
+    public function addAvance(AvanceSurLoyer $avance): static
+    {
+        if (!$this->avances->contains($avance)) {
+            $this->avances->add($avance);
+            $avance->setLocataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvance(AvanceSurLoyer $avance): static
+    {
+        if ($this->avances->removeElement($avance)) {
+            // set the owning side to null (unless already changed)
+            if ($avance->getLocataire() === $this) {
+                $avance->setLocataire(null);
+            }
+        }
+
+        return $this;
     }
 
     public function getId(): ?int

@@ -63,7 +63,7 @@
 							{{ bien.ville }}</p>
 					</div>
 					<div class="col-md-4 text-md-end">
-						{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) %}
+						{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) or bien.statut == 'vacant' or bien.statut == 'travaux' %}
 							<div class="fs-11 text-muted">Prix du loyer</div>
 							<h3 class="fw-bold text-primary mb-1">
 								{{ bien.prix ? bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}

@@ -7,6 +7,7 @@ parameters:
     biens_images_directory: '%kernel.project_dir%/public/uploads/biens'
     locataires_directory: '%kernel.project_dir%/public/uploads/locataires'
     contrats_directory: '%kernel.project_dir%/public/uploads/contrats'
+    avances_directory: '%kernel.project_dir%/public/uploads/avances'
 
 services:
     # default configuration for services in *this* file

@@ -9,12 +9,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 use App\Repository\CategorieRepository;
 use App\Repository\BiensRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+#[IsGranted('ROLE_ADMIN')]
 final class CategorieController extends AbstractController
 {
     #[Route('/categorie', name: 'app_categorie')]

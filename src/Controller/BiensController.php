@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/biens')]
 final class BiensController extends AbstractController
@@ -61,6 +62,7 @@ final class BiensController extends AbstractController
     }
 
     #[Route('/export', name: 'app_biens_export', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function export(Request $request, BiensRepository $biensRepository): StreamedResponse
     {
         $search = $request->query->get('search');
@@ -97,6 +99,7 @@ final class BiensController extends AbstractController
     }
 
     #[Route('/new', name: 'app_biens_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager, BiensRepository $biensRepository, SluggerInterface $slugger): Response
     {
         $bien = new Biens();
@@ -161,6 +164,7 @@ final class BiensController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_biens_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Biens $bien, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(BiensType::class, $bien);
@@ -206,6 +210,7 @@ final class BiensController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_biens_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Biens $bien, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $bien->getId(), $request->getPayload()->getString('_token'))) {

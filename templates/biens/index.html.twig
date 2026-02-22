@@ -162,7 +162,7 @@
 									<div class="d-flex justify-content-between align-items-center">
 										<div class="d-flex flex-column">
 											<small class="text-600 fw-semi-bold">{{ bien.reference }}</small>
-											{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) %}
+											{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) or bien.statut == 'vacant' or bien.statut == 'travaux' %}
 												<div class="text-primary fw-bold fs-10">{{ bien.prix ? bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}</div>
 											{% endif %}
 										</div>
@@ -233,7 +233,7 @@
 										m²</td>
 									<td class="align-middle text-center">{{ bien.nbrPiece }}</td>
 									<td class="align-middle text-center fw-bold text-primary">
-										{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) %}
+										{% if is_granted('ROLE_ADMIN') or (app.user.locataire and app.user.locataire.bien and app.user.locataire.bien.id == bien.id) or bien.statut == 'vacant' or bien.statut == 'travaux' %}
 											{{ bien.prix ? bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}
 										{% else %}
 											<span class="text-300">-</span>
