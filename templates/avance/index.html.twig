@@ -27,19 +27,40 @@
 	<div class="card mb-3">
 		<div class="card-body">
 			<form method="get" action="{{ path('app_avance_index') }}" class="row g-2 align-items-center">
-				<div class="col-md-4">
-					<div class="input-group">
-						<span class="input-group-text bg-200 border-end-0">
-							<span class="fas fa-search text-600"></span>
-						</span>
-						<input type="text" name="search" value="{{ filters.search|default('') }}" class="form-control border-start-0 ps-0" placeholder="Rechercher un locataire ou un bien...">
-					</div>
+				{% if is_granted('ROLE_ADMIN') %}
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-200 border-end-0">
+                                <span class="fas fa-user text-600"></span>
+                            </span>
+                            <input type="text" name="search" value="{{ filters.search|default('') }}" class="form-control border-start-0 ps-0" placeholder="Nom du locataire...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="bienId" class="form-select" aria-label="Choisir un bien">
+                            <option value="">Tous les biens</option>
+                            {% for bien in biens %}
+                                <option value="{{ bien.id }}" {{ filters.bienId == bien.id ? 'selected' : '' }}>
+                                    {{ bien.designation }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+                
+                <div class="{{ is_granted('ROLE_ADMIN') ? 'col-md-2' : 'col-md-4' }}">
+                    <div class="input-group">
+                        <span class="input-group-text bg-200 border-end-0 fs-11">
+                            <span class="fas fa-calendar-alt text-600"></span>
+                        </span>
+					    <input type="date" name="date" value="{{ filters.date|default('') }}" class="form-control border-start-0 ps-0" title="Filtrer par date de versement">
+                    </div>
 				</div>
-                <div class="col-md-3">
-					<input type="date" name="date" value="{{ filters.date|default('') }}" class="form-control" title="Filtrer par date">
-				</div>
+                
 				<div class="col-auto ms-auto">
-					<button type="submit" class="btn btn-primary">Filtrer</button>
+					<button type="submit" class="btn btn-primary">
+                        <span class="fas fa-filter me-1"></span>Filtrer
+                    </button>
 					<a href="{{ path('app_avance_index') }}" class="btn btn-link py-0 text-muted">Réinitialiser</a>
 				</div>
 			</form>
@@ -50,27 +71,46 @@
         <!-- Configuration Déduction -->
         <div class="card mb-3 border-subtle-info bg-subtle-info shadow-none">
             <div class="card-body py-2 px-3">
-                <form action="{{ path('app_avance_index', app.request.query.all) }}" method="POST" class="row g-3 align-items-center">
-                    <input type="hidden" name="locataireId" value="{{ stats.locataireStats.id }}">
-                    <div class="col-auto">
-                        <span class="fas fa-cog text-info me-2"></span>
-                        <span class="fs-11 fw-bold text-700 text-uppercase">Début de déduction automatique :</span>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <form action="{{ path('app_avance_index', app.request.query.all) }}" method="POST" class="row g-3 align-items-center">
+                        <input type="hidden" name="locataireId" value="{{ stats.locataireStats.id }}">
+                        <div class="col-auto">
+                            <span class="fas fa-cog text-info me-2"></span>
+                            <span class="fs-11 fw-bold text-700 text-uppercase">Début de déduction automatique :</span>
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" name="dateDebutDeduction" value="{{ stats.locataireStats.dateDebutDeduction ? stats.locataireStats.dateDebutDeduction|date('Y-m-d') : '' }}" class="form-control form-control-sm border-info" style="width: 160px;">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-info btn-sm px-3">
+                                <span class="fas fa-save me-1"></span>Définir
+                            </button>
+                        </div>
+                        <div class="col">
+                            <p class="mb-0 fs-11 text-muted italic">
+                                <span class="fas fa-question-circle me-1"></span>
+                                Par défaut, le calcul commence à la date de la première avance.
+                            </p>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="fas fa-info-circle text-info me-2"></span>
+                            <span class="fs-11 fw-bold text-700 text-uppercase">Point de départ du calcul :</span>
+                        </div>
+                        <div class="col-auto">
+                            <span class="badge badge-subtle-info fs-10">
+                                {{ stats.locataireStats.dateDebutDeduction ? stats.locataireStats.dateDebutDeduction|date('d/m/Y') : (avances|last.dateAccord|default(now)|date('d/m/Y')) }}
+                            </span>
+                        </div>
+                        <div class="col">
+                            <p class="mb-0 fs-11 text-muted italic">
+                                Vos statistiques sont calculées automatiquement à partir de cette date initiale.
+                            </p>
+                        </div>
                     </div>
-                    <div class="col-auto">
-                        <input type="date" name="dateDebutDeduction" value="{{ stats.locataireStats.dateDebutDeduction ? stats.locataireStats.dateDebutDeduction|date('Y-m-d') : '' }}" class="form-control form-control-sm border-info" style="width: 160px;">
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-info btn-sm px-3">
-                            <span class="fas fa-save me-1"></span>Définir
-                        </button>
-                    </div>
-                    <div class="col">
-                        <p class="mb-0 fs-11 text-muted italic">
-                            <span class="fas fa-question-circle me-1"></span>
-                            Par défaut, le calcul commence à la date de la première avance. Définissez une date (ex: Avril 2027) pour décaler le début de consommation.
-                        </p>
-                    </div>
-                </form>
+                {% endif %}
             </div>
         </div>
     {% endif %}
@@ -249,7 +289,7 @@
 					{% if form.locataire is defined %}
 						<div class="mb-3">
 							<label class="form-label text-400 fw-bold fs-11 text-uppercase">{{ form_label(form.locataire) }}</label>
-							{{ form_widget(form.locataire, {'attr': {'class': 'form-select bg-dark text-white border-secondary fs-11'}}) }}
+							{{ form_widget(form.locataire, {'attr': {'class': 'form-select bg-100 text-900 fs-11 border border-300'}}) }}
 						</div>
 					{% endif %}
 
@@ -257,8 +297,8 @@
 						<div class="col">
 							<label class="form-label text-400 fw-bold fs-11 text-uppercase">Ajouter un montant</label>
 							<div class="input-group">
-								<input type="number" id="inputPartialAmount" class="form-control bg-dark text-white border-secondary fs-11" placeholder="Ex: 500000">
-								<span class="input-group-text bg-dark border-secondary text-400 fs-11">Ar</span>
+								<input type="number" id="inputPartialAmount" class="form-control bg-100 text-900 fs-11 border border-300" placeholder="Ex: 500000">
+								<span class="input-group-text bg-200 text-900 fs-11 border border-300">Ar</span>
 							</div>
 						</div>
 						<div class="col-auto">
@@ -284,17 +324,17 @@
 
 					<div class="mb-3">
 						<label class="form-label text-400 fw-bold fs-11 text-uppercase">Date versement</label>
-						{{ form_widget(form.dateAccord, {'attr': {'class': 'form-control bg-dark text-white border-secondary fs-11'}}) }}
+						{{ form_widget(form.dateAccord, {'attr': {'class': 'form-control bg-100 text-900 fs-11 border border-300'}}) }}
 					</div>
 
 					<div class="mb-3">
 						<label class="form-label text-400 fw-bold fs-11 text-uppercase">Preuve de versement (PDF/Image)</label>
-						{{ form_widget(form.document, {'attr': {'class': 'form-control bg-dark text-white border-secondary fs-11'}}) }}
+						{{ form_widget(form.document, {'attr': {'class': 'form-control bg-100 text-900 fs-11 border border-300'}}) }}
 					</div>
 
 					<div class="mb-0">
 						<label class="form-label text-400 fw-bold fs-11 text-uppercase">Observations</label>
-						{{ form_widget(form.motif, {'attr': {'class': 'form-control bg-dark text-white border-secondary fs-11', 'rows': '2'}}) }}
+						{{ form_widget(form.motif, {'attr': {'class': 'form-control bg-100 text-900 fs-11 border border-300', 'rows': '2'}}) }}
 					</div>
 				</div>
 				<div class="modal-footer bg-black bg-opacity-20 border-top border-secondary py-3 px-4">

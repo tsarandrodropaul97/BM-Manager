@@ -19,11 +19,12 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class AvanceSurLoyerController extends AbstractController
 {
     #[Route('', name: 'app_avance_index', methods: ['GET', 'POST'])]
-    public function index(AvanceSurLoyerRepository $avanceRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(AvanceSurLoyerRepository $avanceRepository, \App\Repository\BiensRepository $biensRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
         $search = $request->query->get('search');
+        $bienId = $request->query->get('bienId');
         $dateStr = $request->query->get('date');
 
         // Gérer la mise à jour de la date de début de déduction via POST
@@ -53,9 +54,14 @@ class AvanceSurLoyerController extends AbstractController
         if (!$isAdmin) {
             $locataire = $user->getLocataire();
             $qb->andWhere('a.locataire = :locataire')->setParameter('locataire', $locataire);
-        } elseif ($search) {
-            $qb->andWhere('l.nom LIKE :search OR l.prenom LIKE :search OR b.designation LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
+        } else {
+            if ($search) {
+                $qb->andWhere('l.nom LIKE :search OR l.prenom LIKE :search')
+                    ->setParameter('search', '%' . $search . '%');
+            }
+            if ($bienId) {
+                $qb->andWhere('b.id = :bienId')->setParameter('bienId', $bienId);
+            }
         }
 
         if ($dateStr) {
@@ -162,7 +168,8 @@ class AvanceSurLoyerController extends AbstractController
             'avances' => $avances,
             'form' => $form->createView(),
             'stats' => $stats,
-            'filters' => ['search' => $search, 'date' => $dateStr]
+            'biens' => $biensRepository->findAll(),
+            'filters' => ['search' => $search, 'bienId' => $bienId, 'date' => $dateStr]
         ]);
     }
 
