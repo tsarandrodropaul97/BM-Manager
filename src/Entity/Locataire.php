@@ -72,6 +72,9 @@ class Locataire
     #[ORM\OneToMany(mappedBy: 'locataire', targetEntity: AvanceSurLoyer::class, orphanRemoval: true)]
     private Collection $avances;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $dateDebutDeduction = null;
+
     public function __construct()
     {
         $this->contrats = new \Doctrine\Common\Collections\ArrayCollection();
@@ -311,5 +314,17 @@ class Locataire
     public function getContrats(): \Doctrine\Common\Collections\Collection
     {
         return $this->contrats;
+    }
+
+    public function getDateDebutDeduction(): ?\DateTime
+    {
+        return $this->dateDebutDeduction;
+    }
+
+    public function setDateDebutDeduction(?\DateTime $dateDebutDeduction): static
+    {
+        $this->dateDebutDeduction = $dateDebutDeduction;
+
+        return $this;
     }
 }

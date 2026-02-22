@@ -18,13 +18,31 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/avances')]
 class AvanceSurLoyerController extends AbstractController
 {
-    #[Route('', name: 'app_avance_index', methods: ['GET'])]
-    public function index(AvanceSurLoyerRepository $avanceRepository, Request $request): Response
+    #[Route('', name: 'app_avance_index', methods: ['GET', 'POST'])]
+    public function index(AvanceSurLoyerRepository $avanceRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
         $search = $request->query->get('search');
         $dateStr = $request->query->get('date');
+
+        // Gérer la mise à jour de la date de début de déduction via POST
+        if ($request->isMethod('POST') && $request->request->has('dateDebutDeduction')) {
+            $locataireId = $request->request->get('locataireId');
+            $newDateStr = $request->request->get('dateDebutDeduction');
+
+            $locataireToUpdate = $entityManager->getRepository(\App\Entity\Locataire::class)->find($locataireId);
+            if ($locataireToUpdate && ($isAdmin || ($user->getLocataire() && $user->getLocataire()->getId() == $locataireId))) {
+                if ($newDateStr) {
+                    $locataireToUpdate->setDateDebutDeduction(new \DateTime($newDateStr));
+                } else {
+                    $locataireToUpdate->setDateDebutDeduction(null);
+                }
+                $entityManager->flush();
+                $this->addFlash('success', 'Date de début de déduction mise à jour.');
+                return $this->redirectToRoute('app_avance_index', $request->query->all());
+            }
+        }
 
         // Construction de la requête avec filtres
         $qb = $avanceRepository->createQueryBuilder('a')
@@ -52,16 +70,11 @@ class AvanceSurLoyerController extends AbstractController
             'loyerMensuel' => 0,
             'nbMoisCouverts' => 0,
             'dateReprise' => null,
-            'reliquatGlobal' => 0
+            'reliquatGlobal' => 0,
+            'locataireStats' => null
         ];
 
-        // Calcul du total global des résultats affichés
-        foreach ($avances as $a) {
-            $stats['totalAvance'] += (float)$a->getMontantTotal();
-        }
-
-        // Si on a des résultats et qu'ils appartiennent tous au même locataire (ou si on est un locataire)
-        // On peut calculer la date de reprise et le nombre de mois couvers
+        // Pour les stats globales ou individuelles
         $uniqueLocataires = [];
         foreach ($avances as $a) {
             $uniqueLocataires[$a->getLocataire()->getId()] = $a->getLocataire();
@@ -69,13 +82,16 @@ class AvanceSurLoyerController extends AbstractController
 
         if (count($uniqueLocataires) === 1) {
             $locataire = reset($uniqueLocataires);
+            $stats['locataireStats'] = $locataire;
             $totalHistorique = (float)$avanceRepository->getTotalAvancesByLocataire($locataire->getId());
 
-            // Trouver la date de début (la plus ancienne avance)
-            $dateDebut = null;
-            foreach ($avances as $a) {
-                if (!$dateDebut || $a->getDateAccord() < $dateDebut) {
-                    $dateDebut = $a->getDateAccord();
+            // Date de début : Soit définie manuellement, soit la plus ancienne avance
+            $dateDebut = $locataire->getDateDebutDeduction();
+            if (!$dateDebut) {
+                foreach ($avances as $a) {
+                    if (!$dateDebut || $a->getDateAccord() < $dateDebut) {
+                        $dateDebut = $a->getDateAccord();
+                    }
                 }
             }
 
@@ -92,7 +108,7 @@ class AvanceSurLoyerController extends AbstractController
                 $stats['loyerMensuel'] = $loyer;
 
                 if ($loyer > 0) {
-                    // 1. Calculer la date de reprise finale (Fixe tant qu'on n'ajoute pas d'avance)
+                    // 1. Calculer la date de reprise finale
                     $nbMoisTotauxInitiaux = floor($totalHistorique / $loyer);
                     $dateReprise = clone $dateDebut;
                     if ($nbMoisTotauxInitiaux > 0) {
@@ -111,7 +127,7 @@ class AvanceSurLoyerController extends AbstractController
                         $moisConsommes = ($diff->y * 12) + $diff->m;
                     }
 
-                    // 3. Crédit Restant = Total Historique - (Mois consommés * Loyer)
+                    // 3. Crédit Restant
                     $creditRestant = max(0, $totalHistorique - ($moisConsommes * $loyer));
 
                     $stats['totalAvance'] = $creditRestant;
@@ -121,6 +137,13 @@ class AvanceSurLoyerController extends AbstractController
             } else {
                 $stats['totalAvance'] = $totalHistorique;
             }
+        } else {
+            // Stats globales simples pour Admin sans locataire précis
+            $totalGlobal = 0;
+            foreach ($avances as $a) {
+                $totalGlobal += (float)$a->getMontantTotal();
+            }
+            $stats['totalAvance'] = $totalGlobal;
         }
 
         // Préparation du formulaire pour la modal
@@ -150,7 +173,6 @@ class AvanceSurLoyerController extends AbstractController
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
-        // Initialisation du locataire si c'est un locataire qui crée
         if (!$isAdmin) {
             $locataire = $user->getLocataire();
             if (!$locataire) {
@@ -191,7 +213,7 @@ class AvanceSurLoyerController extends AbstractController
             }
 
             $entityManager->flush();
-            $this->addFlash('success', 'L\'avance sur loyer a été enregistrée. Elle sera déduite de vos futurs loyers.');
+            $this->addFlash('success', 'L\'avance sur loyer a été enregistrée.');
 
             return $this->redirectToRoute('app_avance_index');
         }
@@ -208,7 +230,7 @@ class AvanceSurLoyerController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             $locataire = $this->getUser()->getLocataire();
             if (!$locataire || $avance->getLocataire()->getId() !== $locataire->getId()) {
-                throw $this->createAccessDeniedException('Vous n\'avez pas accès à cette avance.');
+                throw $this->createAccessDeniedException('Accès refusé.');
             }
         }
 
@@ -221,19 +243,16 @@ class AvanceSurLoyerController extends AbstractController
 
                 try {
                     $file->move($this->getParameter('avances_directory'), $newFilename);
-
                     $doc = new AvanceDocument();
                     $doc->setFilename($newFilename);
                     $doc->setOriginalName($file->getClientOriginalName());
                     $doc->setUploadedBy($this->getUser());
                     $doc->setAvance($avance);
-
                     $entityManager->persist($doc);
                     $entityManager->flush();
-
-                    $this->addFlash('success', 'Document ajouté avec succès.');
+                    $this->addFlash('success', 'Document ajouté.');
                 } catch (FileException $e) {
-                    $this->addFlash('danger', 'Erreur lors de l\'upload du document.');
+                    $this->addFlash('danger', 'Erreur upload.');
                 }
             }
             return $this->redirectToRoute('app_avance_show', ['id' => $avance->getId()]);
@@ -251,17 +270,13 @@ class AvanceSurLoyerController extends AbstractController
         $loyerInitial = $contrat ? (float)$contrat->getLoyerHorsCharges() + (float)$contrat->getCharges() : 0;
         $montantAvance = (float)$avance->getMontantTotal();
 
-        $montantDeduitCeMois = min($loyerInitial, $montantAvance);
-        $resteAPayerCeMois = max(0, $loyerInitial - $montantAvance);
-        $soldeAvanceRestant = max(0, $montantAvance - $loyerInitial);
-
         return $this->render('avance/show.html.twig', [
             'avance' => $avance,
             'stats' => [
                 'loyerInitial' => $loyerInitial,
-                'montantDeduit' => $montantDeduitCeMois,
-                'resteAPayer' => $resteAPayerCeMois,
-                'soldeRestant' => $soldeAvanceRestant,
+                'montantDeduit' => min($loyerInitial, $montantAvance),
+                'resteAPayer' => max(0, $loyerInitial - $montantAvance),
+                'soldeRestant' => max(0, $montantAvance - $loyerInitial),
             ],
             'contrat' => $contrat
         ]);

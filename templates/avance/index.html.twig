@@ -46,6 +46,35 @@
 		</div>
 	</div>
 
+    {% if stats.locataireStats %}
+        <!-- Configuration Déduction -->
+        <div class="card mb-3 border-subtle-info bg-subtle-info shadow-none">
+            <div class="card-body py-2 px-3">
+                <form action="{{ path('app_avance_index', app.request.query.all) }}" method="POST" class="row g-3 align-items-center">
+                    <input type="hidden" name="locataireId" value="{{ stats.locataireStats.id }}">
+                    <div class="col-auto">
+                        <span class="fas fa-cog text-info me-2"></span>
+                        <span class="fs-11 fw-bold text-700 text-uppercase">Début de déduction automatique :</span>
+                    </div>
+                    <div class="col-auto">
+                        <input type="date" name="dateDebutDeduction" value="{{ stats.locataireStats.dateDebutDeduction ? stats.locataireStats.dateDebutDeduction|date('Y-m-d') : '' }}" class="form-control form-control-sm border-info" style="width: 160px;">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-info btn-sm px-3">
+                            <span class="fas fa-save me-1"></span>Définir
+                        </button>
+                    </div>
+                    <div class="col">
+                        <p class="mb-0 fs-11 text-muted italic">
+                            <span class="fas fa-question-circle me-1"></span>
+                            Par défaut, le calcul commence à la date de la première avance. Définissez une date (ex: Avril 2027) pour décaler le début de consommation.
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
     <!-- Statistiques Résumées -->
     <div class="row g-3 mb-3">
         <div class="col-sm-6 col-md-3">
@@ -53,7 +82,7 @@
                 <div class="card-body p-3">
                     <div class="d-flex flex-between-center">
                         <div>
-                            <h6 class="text-uppercase fs-11 fw-bold text-muted mb-1">Crédit Total</h6>
+                            <h6 class="text-uppercase fs-11 fw-bold text-muted mb-1">Crédit Actuel</h6>
                             <h4 class="text-white mb-0 fw-bolder">{{ stats.totalAvance|number_format(0, ',', ' ') }} Ar</h4>
                         </div>
                         <div class="p-2 bg-subtle-primary rounded-circle">
@@ -68,7 +97,7 @@
                 <div class="card-body p-3">
                     <div class="d-flex flex-between-center">
                         <div>
-                            <h6 class="text-uppercase fs-11 fw-bold text-muted mb-1">Mois Couverts</h6>
+                            <h6 class="text-uppercase fs-11 fw-bold text-muted mb-1">Mois Restants</h6>
                             <h4 class="text-white mb-0 fw-bolder">{{ stats.nbMoisCouverts }} Mois</h4>
                         </div>
                         <div class="p-2 bg-subtle-primary rounded-circle">
@@ -84,7 +113,7 @@
                     <div class="d-flex flex-between-center">
                         <div>
                             <h6 class="text-uppercase fs-11 fw-bold text-muted mb-1">Date de Reprise</h6>
-                            <h4 class="text-white mb-0 fw-bolder">{{ stats.dateReprise ? stats.dateReprise|date('M Y') : 'Calcul impossible' }}</h4>
+                            <h4 class="text-white mb-0 fw-bolder">{{ stats.dateReprise ? stats.dateReprise|date('M Y') : 'N/A' }}</h4>
                         </div>
                         <div class="p-2 bg-subtle-primary rounded-circle">
                             <span class="fas fa-hourglass-start text-primary fs-11"></span>
@@ -158,9 +187,24 @@
 									{{ avance.montantTotal|number_format(0, ',', ' ') }} Ar
 								</td>
 								<td class="align-middle text-center">
-									<span class="badge badge-subtle-info">
-										<span class="fas fa-file-alt me-1"></span>{{ avance.documents|length }}
-									</span>
+                                    {% if avance.documents|length > 0 %}
+                                        {% for doc in avance.documents %}
+                                            <button class="btn p-0 border-0 btn-preview-doc" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#modalPreviewDoc" 
+                                                    data-filename="{{ doc.filename }}"
+                                                    data-original-name="{{ doc.originalName }}"
+                                                    title="{{ doc.originalName }}">
+                                                <span class="badge badge-subtle-info hover-primary fs-10 cursor-pointer">
+                                                    <span class="fas fa-file-alt me-1"></span>Voir
+                                                </span>
+                                            </button>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span class="badge badge-subtle-secondary fs-10">
+                                            <span class="fas fa-times-circle me-1"></span>0
+                                        </span>
+                                    {% endif %}
 								</td>
 								<td class="align-middle text-end pe-3">
 									<div class="btn-group btn-group-sm">
@@ -246,8 +290,32 @@
 		</div>
 	</div>
 
+    <!-- Modal de visualisation de document -->
+    <div class="modal fade" id="modalPreviewDoc" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content border-0 bg-dark">
+                <div class="modal-header bg-black bg-opacity-20 border-bottom border-secondary py-3 px-4">
+                    <h5 class="modal-title text-white" id="previewDocTitle">Aperçu du justificatif</h5>
+                    <button class="btn-close btn-close-white" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 d-flex justify-content-center align-items-center" style="min-height: 400px; background: #1a1a1a;">
+                    <div id="previewContent" class="w-100 h-100 d-flex justify-content-center">
+                        <!-- Le contenu (img ou iframe) sera injecté ici par JS -->
+                    </div>
+                </div>
+                <div class="modal-footer bg-black bg-opacity-20 border-top border-secondary py-2 px-4">
+                    <a href="#" id="btnDownloadDoc" class="btn btn-primary btn-sm" download>
+                        <span class="fas fa-download me-1"></span>Télécharger
+                    </a>
+                    <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
+            // Spinner logic
             const form = document.getElementById('formAvance');
             const btnSubmit = document.getElementById('btnSubmitAvance');
             const btnSpinner = document.getElementById('btnSpinner');
@@ -260,6 +328,47 @@
                     btnIcon.classList.add('d-none');
                 });
             }
+
+            // Preview logic
+            const previewModal = document.getElementById('modalPreviewDoc');
+            const previewContent = document.getElementById('previewContent');
+            const previewTitle = document.getElementById('previewDocTitle');
+            const btnDownload = document.getElementById('btnDownloadDoc');
+
+            const previewButtons = document.querySelectorAll('.btn-preview-doc');
+            
+            previewButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filename = this.getAttribute('data-filename');
+                    const originalName = this.getAttribute('data-original-name');
+                    const fileUrl = '/uploads/avances/' + filename;
+                    const extension = filename.split('.').pop().toLowerCase();
+
+                    previewTitle.textContent = originalName;
+                    btnDownload.href = fileUrl;
+                    
+                    previewContent.innerHTML = '<div class="text-center p-5"><span class="spinner-border text-primary"></span></div>';
+
+                    setTimeout(() => {
+                        if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
+                            previewContent.innerHTML = `<img src="${fileUrl}" class="img-fluid" style="max-height: 80vh; object-fit: contain;">`;
+                        } else if (extension === 'pdf') {
+                            previewContent.innerHTML = `<iframe src="${fileUrl}" style="width: 100%; height: 75vh; border: none;"></iframe>`;
+                        } else {
+                            previewContent.innerHTML = `<div class="text-center p-5 text-white">
+                                <span class="fas fa-file-download fa-4x mb-3 text-muted"></span>
+                                <p>Ce type de fichier ne peut pas être prévisualisé directement.</p>
+                                <a href="${fileUrl}" class="btn btn-primary" download>Télécharger le fichier</a>
+                            </div>`;
+                        }
+                    }, 300);
+                });
+            });
+
+            // Nettoyage au moment de fermer la modal
+            previewModal.addEventListener('hidden.bs.modal', function () {
+                previewContent.innerHTML = '';
+            });
         });
 	</script>
 {% endblock %}
