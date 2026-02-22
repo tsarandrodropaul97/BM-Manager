@@ -19,16 +19,108 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class AvanceSurLoyerController extends AbstractController
 {
     #[Route('', name: 'app_avance_index', methods: ['GET'])]
-    public function index(AvanceSurLoyerRepository $avanceRepository): Response
+    public function index(AvanceSurLoyerRepository $avanceRepository, Request $request): Response
     {
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $search = $request->query->get('search');
+        $dateStr = $request->query->get('date');
 
-        if ($isAdmin) {
-            $avances = $avanceRepository->findAll();
-        } else {
+        // Construction de la requête avec filtres
+        $qb = $avanceRepository->createQueryBuilder('a')
+            ->leftJoin('a.locataire', 'l')
+            ->leftJoin('l.bien', 'b')
+            ->addSelect('l', 'b');
+
+        if (!$isAdmin) {
             $locataire = $user->getLocataire();
-            $avances = $locataire ? $avanceRepository->findBy(['locataire' => $locataire]) : [];
+            $qb->andWhere('a.locataire = :locataire')->setParameter('locataire', $locataire);
+        } elseif ($search) {
+            $qb->andWhere('l.nom LIKE :search OR l.prenom LIKE :search OR b.designation LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($dateStr) {
+            $qb->andWhere('a.dateAccord = :date')->setParameter('date', $dateStr);
+        }
+
+        $avances = $qb->orderBy('a.dateAccord', 'DESC')->getQuery()->getResult();
+
+        // Initialisation des stats
+        $stats = [
+            'totalAvance' => 0,
+            'loyerMensuel' => 0,
+            'nbMoisCouverts' => 0,
+            'dateReprise' => null,
+            'reliquatGlobal' => 0
+        ];
+
+        // Calcul du total global des résultats affichés
+        foreach ($avances as $a) {
+            $stats['totalAvance'] += (float)$a->getMontantTotal();
+        }
+
+        // Si on a des résultats et qu'ils appartiennent tous au même locataire (ou si on est un locataire)
+        // On peut calculer la date de reprise et le nombre de mois couvers
+        $uniqueLocataires = [];
+        foreach ($avances as $a) {
+            $uniqueLocataires[$a->getLocataire()->getId()] = $a->getLocataire();
+        }
+
+        if (count($uniqueLocataires) === 1) {
+            $locataire = reset($uniqueLocataires);
+            $totalHistorique = (float)$avanceRepository->getTotalAvancesByLocataire($locataire->getId());
+
+            // Trouver la date de début (la plus ancienne avance)
+            $dateDebut = null;
+            foreach ($avances as $a) {
+                if (!$dateDebut || $a->getDateAccord() < $dateDebut) {
+                    $dateDebut = $a->getDateAccord();
+                }
+            }
+
+            $contrat = null;
+            foreach ($locataire->getContrats() as $c) {
+                if ($c->getStatut() === 'actif') {
+                    $contrat = $c;
+                    break;
+                }
+            }
+
+            if ($contrat && $dateDebut) {
+                $loyer = (float)$contrat->getLoyerHorsCharges() + (float)$contrat->getCharges();
+                $stats['loyerMensuel'] = $loyer;
+
+                if ($loyer > 0) {
+                    // 1. Calculer la date de reprise finale (Fixe tant qu'on n'ajoute pas d'avance)
+                    $nbMoisTotauxInitiaux = floor($totalHistorique / $loyer);
+                    $dateReprise = clone $dateDebut;
+                    if ($nbMoisTotauxInitiaux > 0) {
+                        $dateReprise->modify('+' . (int)$nbMoisTotauxInitiaux . ' months');
+                    }
+                    $stats['dateReprise'] = $dateReprise;
+
+                    // 2. Calculer combien de mois ont été consommés depuis le début
+                    $aujourdhui = new \DateTime('first day of this month');
+                    $dateRef = clone $dateDebut;
+                    $dateRef->modify('first day of this month');
+
+                    $moisConsommes = 0;
+                    if ($aujourdhui > $dateRef) {
+                        $diff = $dateRef->diff($aujourdhui);
+                        $moisConsommes = ($diff->y * 12) + $diff->m;
+                    }
+
+                    // 3. Crédit Restant = Total Historique - (Mois consommés * Loyer)
+                    $creditRestant = max(0, $totalHistorique - ($moisConsommes * $loyer));
+
+                    $stats['totalAvance'] = $creditRestant;
+                    $stats['nbMoisCouverts'] = floor($creditRestant / $loyer);
+                    $stats['reliquatGlobal'] = $creditRestant % $loyer;
+                }
+            } else {
+                $stats['totalAvance'] = $totalHistorique;
+            }
         }
 
         // Préparation du formulaire pour la modal
@@ -46,6 +138,8 @@ class AvanceSurLoyerController extends AbstractController
         return $this->render('avance/index.html.twig', [
             'avances' => $avances,
             'form' => $form->createView(),
+            'stats' => $stats,
+            'filters' => ['search' => $search, 'date' => $dateStr]
         ]);
     }
 
@@ -72,10 +166,8 @@ class AvanceSurLoyerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Sauvegarde de l'avance d'abord
             $entityManager->persist($avance);
 
-            // Gestion du document initial (obligatoire)
             $docFile = $form->get('document')->getData();
             if ($docFile) {
                 $originalFilename = pathinfo($docFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -101,19 +193,18 @@ class AvanceSurLoyerController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', 'L\'avance sur loyer a été enregistrée. Elle sera déduite de vos futurs loyers.');
 
-            return $this->redirectToRoute('app_avance_show', ['id' => $avance->getId()]);
+            return $this->redirectToRoute('app_avance_index');
         }
 
         return $this->render('avance/new.html.twig', [
             'avance' => $avance,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_avance_show', methods: ['GET', 'POST'])]
     public function show(AvanceSurLoyer $avance, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
-        // Sécurité : Un locataire ne peut voir que ses avances
         if (!$this->isGranted('ROLE_ADMIN')) {
             $locataire = $this->getUser()->getLocataire();
             if (!$locataire || $avance->getLocataire()->getId() !== $locataire->getId()) {
@@ -121,7 +212,6 @@ class AvanceSurLoyerController extends AbstractController
             }
         }
 
-        // Gestion de l'upload de document supplémentaire (partagé)
         if ($request->isMethod('POST') && $request->files->get('document')) {
             $file = $request->files->get('document');
             if ($file) {
@@ -149,7 +239,6 @@ class AvanceSurLoyerController extends AbstractController
             return $this->redirectToRoute('app_avance_show', ['id' => $avance->getId()]);
         }
 
-        // Calculs des statistiques
         $locataire = $avance->getLocataire();
         $contrat = null;
         foreach ($locataire->getContrats() as $c) {
