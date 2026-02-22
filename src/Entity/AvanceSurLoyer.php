@@ -25,6 +25,9 @@ class AvanceSurLoyer
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $motif = null;
 
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $montantDetails = null;
+
     #[ORM\ManyToOne(inversedBy: 'avances')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Locataire $locataire = null;
@@ -73,6 +76,17 @@ class AvanceSurLoyer
     public function setMotif(?string $motif): static
     {
         $this->motif = $motif;
+        return $this;
+    }
+
+    public function getMontantDetails(): ?array
+    {
+        return $this->montantDetails;
+    }
+
+    public function setMontantDetails(?array $montantDetails): static
+    {
+        $this->montantDetails = $montantDetails;
         return $this;
     }
 

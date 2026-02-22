@@ -188,6 +188,12 @@ class AvanceSurLoyerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer les détails des montants (JSON)
+            $detailsJson = $form->get('montantDetails')->getData();
+            if ($detailsJson) {
+                $avance->setMontantDetails(json_decode($detailsJson, true));
+            }
+
             $entityManager->persist($avance);
 
             $docFile = $form->get('document')->getData();

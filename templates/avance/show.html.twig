@@ -38,6 +38,15 @@
 						</div>
 						<div class="col">
 							<h3 class="mb-1 text-primary">{{ avance.montantTotal|number_format(0, ',', ' ') }} Ar</h3>
+                            {% if avance.montantDetails %}
+                                <div class="fs-11 text-muted mb-2 italic">
+                                    <span class="fas fa-calculator me-1"></span>
+                                    {% for amt in avance.montantDetails %}
+                                        {{ amt|number_format(0, ',', ' ') }} Ar{% if not loop.last %} + {% endif %}
+                                    {% endfor %}
+                                    = {{ avance.montantTotal|number_format(0, ',', ' ') }} Ar
+                                </div>
+                            {% endif %}
                             <p class="text-600 mb-1">
                                 <span class="fas fa-user me-2"></span>Locataire : <strong>{{ avance.locataire.nomComplet }}</strong>
                             </p>

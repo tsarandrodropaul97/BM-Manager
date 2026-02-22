@@ -243,7 +243,7 @@
 				<div class="modal-body py-4 px-4 text-white">
 					<div class="alert alert-subtle-info fs-11 border-info-subtle mb-4 shadow-none">
 						<span class="fas fa-info-circle me-2"></span>
-						Ce montant sera automatiquement déduit des futurs loyers. Une preuve de versement est requise.
+						Saisissez les différents montants constituant cette avance. Ils seront additionnés automatiquement.
 					</div>
 
 					{% if form.locataire is defined %}
@@ -253,18 +253,38 @@
 						</div>
 					{% endif %}
 
-					<div class="row g-3">
-						<div class="col-md-6 mb-3">
-							<label class="form-label text-400 fw-bold fs-11 text-uppercase">Montant versé</label>
+					<div class="row g-3 align-items-end mb-3">
+						<div class="col">
+							<label class="form-label text-400 fw-bold fs-11 text-uppercase">Ajouter un montant</label>
 							<div class="input-group">
-								{{ form_widget(form.montantTotal, {'attr': {'class': 'form-control bg-dark text-white border-secondary border-end-0 fs-11', 'placeholder': '0'}}) }}
+								<input type="number" id="inputPartialAmount" class="form-control bg-dark text-white border-secondary fs-11" placeholder="Ex: 500000">
 								<span class="input-group-text bg-dark border-secondary text-400 fs-11">Ar</span>
 							</div>
 						</div>
-						<div class="col-md-6 mb-3">
-							<label class="form-label text-400 fw-bold fs-11 text-uppercase">Date versement</label>
-							{{ form_widget(form.dateAccord, {'attr': {'class': 'form-control bg-dark text-white border-secondary fs-11'}}) }}
+						<div class="col-auto">
+							<button type="button" id="btnAddAmount" class="btn btn-primary btn-sm px-3">
+								<span class="fas fa-plus"></span>
+							</button>
 						</div>
+					</div>
+
+					<!-- Liste des montants ajoutés -->
+					<div id="amountListContainer" class="mb-3 p-3 bg-black bg-opacity-20 rounded border border-secondary d-none">
+						<div class="d-flex flex-wrap gap-2 mb-2" id="amountBadgeContainer">
+							<!-- Badges des montants injectés ici -->
+						</div>
+						<div class="border-top border-secondary pt-2 mt-2 d-flex justify-content-between align-items-center">
+							<span class="fs-11 text-400 text-uppercase fw-bold">Somme Totale :</span>
+							<h5 class="mb-0 text-white" id="displayTotalTotal">0 Ar</h5>
+						</div>
+					</div>
+
+					{{ form_widget(form.montantTotal) }}
+					{{ form_widget(form.montantDetails) }}
+
+					<div class="mb-3">
+						<label class="form-label text-400 fw-bold fs-11 text-uppercase">Date versement</label>
+						{{ form_widget(form.dateAccord, {'attr': {'class': 'form-control bg-dark text-white border-secondary fs-11'}}) }}
 					</div>
 
 					<div class="mb-3">
@@ -279,7 +299,7 @@
 				</div>
 				<div class="modal-footer bg-black bg-opacity-20 border-top border-secondary py-3 px-4">
 					<button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">Annuler</button>
-					<button class="btn btn-primary btn-sm px-4" type="submit" id="btnSubmitAvance">
+					<button class="btn btn-primary btn-sm px-4" type="submit" id="btnSubmitAvance" disabled>
 						<span class="fas fa-check-circle me-1" id="btnIcon"></span>
 						<span class="spinner-border spinner-border-sm d-none me-1" role="status" id="btnSpinner"></span>
 						Enregistrer
@@ -315,6 +335,70 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
+            // Logique de saisie de montants multiples
+            const inputPartial = document.getElementById('inputPartialAmount');
+            const btnAdd = document.getElementById('btnAddAmount');
+            const amountListContainer = document.getElementById('amountListContainer');
+            const amountBadgeContainer = document.getElementById('amountBadgeContainer');
+            const displayTotal = document.getElementById('displayTotalTotal');
+            
+            const hiddenTotalInput = document.querySelector('input[name="avance_sur_loyer[montantTotal]"]');
+            const hiddenDetailsInput = document.querySelector('input[name="avance_sur_loyer[montantDetails]"]');
+            const btnSubmitAvance = document.getElementById('btnSubmitAvance');
+
+            let partialAmounts = [];
+
+            function updateAmountUI() {
+                amountBadgeContainer.innerHTML = '';
+                let total = 0;
+                
+                partialAmounts.forEach((amt, index) => {
+                    total += amt;
+                    const badge = document.createElement('span');
+                    badge.className = 'badge badge-subtle-primary p-2 fs-10 d-flex align-items-center';
+                    badge.innerHTML = `
+                        ${amt.toLocaleString()} Ar
+                        <span class="fas fa-times ms-2 cursor-pointer text-danger" onclick="removePartial(${index})"></span>
+                    `;
+                    amountBadgeContainer.appendChild(badge);
+                });
+
+                if (partialAmounts.length > 0) {
+                    amountListContainer.classList.remove('d-none');
+                    btnSubmitAvance.disabled = false;
+                } else {
+                    amountListContainer.classList.add('d-none');
+                    btnSubmitAvance.disabled = true;
+                }
+
+                displayTotal.textContent = total.toLocaleString() + ' Ar';
+                hiddenTotalInput.value = total;
+                hiddenDetailsInput.value = JSON.stringify(partialAmounts);
+            }
+
+            window.removePartial = function(index) {
+                partialAmounts.splice(index, 1);
+                updateAmountUI();
+            };
+
+            btnAdd.addEventListener('click', function() {
+                const val = parseFloat(inputPartial.value);
+                if (!isNaN(val) && val > 0) {
+                    partialAmounts.push(val);
+                    inputPartial.value = '';
+                    updateAmountUI();
+                    inputPartial.focus();
+                }
+            });
+
+            inputPartial.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    btnAdd.click();
+                }
+            });
+
+
             // Spinner logic
             const form = document.getElementById('formAvance');
             const btnSubmit = document.getElementById('btnSubmitAvance');
@@ -365,7 +449,6 @@
                 });
             });
 
-            // Nettoyage au moment de fermer la modal
             previewModal.addEventListener('hidden.bs.modal', function () {
                 previewContent.innerHTML = '';
             });

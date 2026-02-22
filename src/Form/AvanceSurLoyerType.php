@@ -34,18 +34,17 @@ class AvanceSurLoyerType extends AbstractType
         }
 
         $builder
-            ->add('montantTotal', MoneyType::class, [
-                'currency' => 'MGA',
-                'label' => 'Montant versé au propriétaire',
-                'attr' => ['placeholder' => 'Ex: 500000']
+            ->add('montantTotal', \Symfony\Component\Form\Extension\Core\Type\HiddenType::class)
+            ->add('montantDetails', \Symfony\Component\Form\Extension\Core\Type\HiddenType::class, [
+                'mapped' => false,
             ])
             ->add('dateAccord', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'Date de réception par le propriétaire'
+                'label' => 'Date de réception'
             ])
             ->add('motif', TextareaType::class, [
-                'label' => 'Contexte (Ex: Demande exceptionnelle du propriétaire)',
-                'attr' => ['rows' => 3, 'placeholder' => 'Précisez les raisons de cette avance...'],
+                'label' => 'Observations / Contexte',
+                'attr' => ['rows' => 3, 'placeholder' => 'Précisez les raisons...'],
                 'required' => false
             ])
             ->add('document', FileType::class, [
