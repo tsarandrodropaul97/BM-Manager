@@ -1,11 +1,5 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # Détermine la base de la requête
-    RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
-    RewriteRule ^(.*) - [E=BASE:%1]
-
-    # Redirige vers index.php si le fichier n'existe pas
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
