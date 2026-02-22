@@ -1,5 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    # Redirige tout vers le dossier public pour les serveurs mutualisés
+    # Si la requête ne commence pas déjà par /public, on redirige
+    RewriteCond %{REQUEST_URI} !^/public/
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
