@@ -145,7 +145,8 @@ document.querySelector('.navbar-vertical').classList.add(`navbar-${navbarStyle}`
 							<span class="nav-link-text ps-1">Historique</span>
 						</div>
 					</a><!-- more inner pages--></li>
-			</ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#contrats" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="contrats">
+			</ul><!-- parent pages-->			{% if is_granted('ROLE_ADMIN') %}
+			<a class="nav-link dropdown-indicator" href="#contrats" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="contrats">
 				<div class="d-flex align-items-center">
 					<span class="nav-link-icon">
 						<span class="fas fa-file-contract"></span>
@@ -184,7 +185,15 @@ document.querySelector('.navbar-vertical').classList.add(`navbar-${navbarStyle}`
 							<span class="nav-link-text ps-1">Modèles</span>
 						</div>
 					</a><!-- more inner pages--></li>
-			</ul><!-- parent pages--><a class="nav-link dropdown-indicator" href="#loyers" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="loyers">
+			</ul>
+            {% elseif app.user and app.user.locataire and app.user.locataire.contrats|length > 0 %}
+                <a class="nav-link" href="{{ path('app_contrat_show', {'id': app.user.locataire.contrats.first.id}) }}">
+                    <div class="d-flex align-items-center">
+                        <span class="nav-link-icon"><span class="fas fa-file-contract"></span></span>
+                        <span class="nav-link-text ps-1">Mon Contrat de Bail</span>
+                    </div>
+                </a>
+			{% endif %}<!-- parent pages--><a class="nav-link dropdown-indicator" href="#loyers" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="loyers">
 				<div class="d-flex align-items-center">
 					<span class="nav-link-icon">
 						<span class="fas fa-money-bill-wave"></span>

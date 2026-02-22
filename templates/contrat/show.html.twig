@@ -30,12 +30,14 @@
                     </div>
                 </div>
                 <div class="col-auto d-flex gap-2">
-                    <a href="{{ path('app_contrat_index') }}" class="btn btn-falcon-default btn-sm shadow-none">
+                    <a href="{{ is_granted('ROLE_ADMIN') ? path('app_contrat_index') : path('app_dashboard') }}" class="btn btn-falcon-default btn-sm shadow-none">
                         <span class="fas fa-arrow-left me-1"></span>Retour
                     </a>
-                    <a href="{{ path('app_contrat_edit', {'id': contrat.id}) }}" class="btn btn-falcon-primary btn-sm shadow-none">
-                        <span class="fas fa-edit me-1"></span>Modifier
-                    </a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_contrat_edit', {'id': contrat.id}) }}" class="btn btn-falcon-primary btn-sm shadow-none">
+                            <span class="fas fa-edit me-1"></span>Modifier
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -143,6 +145,7 @@
                         </div>
                     </div>
                 </div>
+                {% if is_granted('ROLE_ADMIN') %}
                 <div class="card-footer bg-light dark__bg-1000 border-top text-center py-3">
                     <form method="post" action="{{ path('app_contrat_delete', {'id': contrat.id}) }}" onsubmit="return confirm('Attention ! Cette action supprimera définitivement ce contrat.');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contrat.id) }}">
@@ -151,6 +154,7 @@
                         </button>
                     </form>
                 </div>
+                {% endif %}
             </div>
         </div>
 
@@ -180,8 +184,10 @@
                                 <span class="fas fa-file-signature text-warning fs-3"></span>
                             </div>
                             <h5 class="text-white">Scan non disponible</h5>
-                            <p class="text-400 fs-11 px-4">Veuillez uploader la version signée du PDF pour l'afficher ici.</p>
-                            <a href="{{ path('app_contrat_edit', {'id': contrat.id}) }}" class="btn btn-primary btn-sm shadow-none">Uploader maintenant</a>
+                            <p class="text-400 fs-11 px-4">Le document n'a pas encore été rattaché par l'administrateur.</p>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_contrat_edit', {'id': contrat.id}) }}" class="btn btn-primary btn-sm shadow-none">Uploader maintenant</a>
+                            {% endif %}
                         </div>
                     {% endif %}
                 </div>

@@ -12,11 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/contrats')]
 class ContratController extends AbstractController
 {
     #[Route('', name: 'app_contrat_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(ContratRepository $contratRepository): Response
     {
         $limitDate = new \DateTime('+3 months');
@@ -29,6 +31,7 @@ class ContratController extends AbstractController
     }
 
     #[Route('/new', name: 'app_contrat_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $contrat = new Contrat();
@@ -84,12 +87,21 @@ class ContratController extends AbstractController
     #[Route('/{id}', name: 'app_contrat_show', methods: ['GET'])]
     public function show(Contrat $contrat): Response
     {
+        // Sécurité : Un locataire ne peut voir que son propre contrat
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $user = $this->getUser();
+            if (!$user || !$user->getLocataire() || $user->getLocataire()->getId() !== $contrat->getLocataire()->getId()) {
+                throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce contrat.');
+            }
+        }
+
         return $this->render('contrat/show.html.twig', [
             'contrat' => $contrat,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_contrat_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Contrat $contrat, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(ContratType::class, $contrat);
@@ -127,6 +139,7 @@ class ContratController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_contrat_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Contrat $contrat, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $contrat->getId(), $request->getPayload()->getString('_token'))) {
