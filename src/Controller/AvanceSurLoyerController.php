@@ -37,7 +37,7 @@ class AvanceSurLoyerController extends AbstractController
         $bienId = $request->query->get('bienId');
         $dateStr = $request->query->get('date');
         $status = $request->query->get('status');
-        $sort = $request->query->get('sort', 'DESC');
+        $order = $request->query->get('order', 'DESC');
 
         // Gérer la mise à jour de la date de début de déduction via POST
         if ($request->isMethod('POST') && $request->request->has('dateDebutDeduction')) {
@@ -87,7 +87,7 @@ class AvanceSurLoyerController extends AbstractController
         // On garde une copie du QB pour la pagination avant d'exécuter l'autre
         $paginationQb = clone $qb;
 
-        $query = $qb->orderBy('a.dateAccord', $sort)->getQuery();
+        $query = $qb->orderBy('a.dateAccord', $order)->getQuery();
 
         // On récupère tout pour les stats avant de paginer
         $allResults = $query->getResult();
@@ -189,7 +189,7 @@ class AvanceSurLoyerController extends AbstractController
 
         // Pagination
         $pagination = $paginator->paginate(
-            $paginationQb->orderBy('a.dateAccord', $sort),
+            $paginationQb->orderBy('a.dateAccord', $order),
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
@@ -225,7 +225,7 @@ class AvanceSurLoyerController extends AbstractController
                 'bienId' => $bienId,
                 'date' => $dateStr,
                 'status' => $status,
-                'sort' => $sort
+                'order' => $order
             ]
         ]);
     }
