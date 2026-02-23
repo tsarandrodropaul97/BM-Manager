@@ -81,6 +81,18 @@
                 </div>
             </div>
 
+            <div class="col-12 col-md-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-200 border-end-0 fs-11">
+                        <span class="fas fa-sort-amount-down text-600"></span>
+                    </span>
+                    <select name="sort" class="form-select border-start-0 ps-0 fs-11">
+                        <option value="DESC" {{ filters.sort=='DESC' ? 'selected' : '' }}>Plus récent</option>
+                        <option value="ASC" {{ filters.sort=='ASC' ? 'selected' : '' }}>Plus ancien</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="col-12 col-md-auto ms-auto text-center text-md-end">
                 <div class="d-flex align-items-center justify-content-center justify-content-md-end gap-2">
                     <button type="submit" class="btn btn-primary btn-sm px-4">
@@ -240,7 +252,10 @@
                 </thead>
                 <tbody>
                     {% for avance in pagination %}
-                    <tr>
+                    <tr {% if dateCounts[avance.dateAccord|date('Y-m-d')]|default(0)> 1 %}
+                        style="background-color: rgba(255, 193, 7, 0.45) !important;" title="Plusieurs avances à cette
+                        date"
+                        {% endif %}>
                         <td class="align-middle ps-3">
                             <span class="fw-semi-bold">{{ avance.dateAccord|date('d/m/Y') }}</span>
                         </td>

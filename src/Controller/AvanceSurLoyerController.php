@@ -37,6 +37,7 @@ class AvanceSurLoyerController extends AbstractController
         $bienId = $request->query->get('bienId');
         $dateStr = $request->query->get('date');
         $status = $request->query->get('status');
+        $sort = $request->query->get('sort', 'DESC');
 
         // Gérer la mise à jour de la date de début de déduction via POST
         if ($request->isMethod('POST') && $request->request->has('dateDebutDeduction')) {
@@ -86,10 +87,17 @@ class AvanceSurLoyerController extends AbstractController
         // On garde une copie du QB pour la pagination avant d'exécuter l'autre
         $paginationQb = clone $qb;
 
-        $query = $qb->orderBy('a.dateAccord', 'DESC')->getQuery();
+        $query = $qb->orderBy('a.dateAccord', $sort)->getQuery();
 
         // On récupère tout pour les stats avant de paginer
         $allResults = $query->getResult();
+
+        // Calcul des occurrences de dates pour le surlignage
+        $dateCounts = [];
+        foreach ($allResults as $a) {
+            $d = $a->getDateAccord()->format('Y-m-d');
+            $dateCounts[$d] = ($dateCounts[$d] ?? 0) + 1;
+        }
 
         // Initialisation des stats
         $stats = [
@@ -181,7 +189,7 @@ class AvanceSurLoyerController extends AbstractController
 
         // Pagination
         $pagination = $paginator->paginate(
-            $paginationQb->orderBy('a.dateAccord', 'DESC'),
+            $paginationQb->orderBy('a.dateAccord', $sort),
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
@@ -210,12 +218,14 @@ class AvanceSurLoyerController extends AbstractController
             'form' => $form->createView(),
             'stats' => $stats,
             'oldestDate' => $oldestDate,
+            'dateCounts' => $dateCounts,
             'biens' => $biensRepository->findAll(),
             'filters' => [
                 'search' => $search,
                 'bienId' => $bienId,
                 'date' => $dateStr,
-                'status' => $status
+                'status' => $status,
+                'sort' => $sort
             ]
         ]);
     }
