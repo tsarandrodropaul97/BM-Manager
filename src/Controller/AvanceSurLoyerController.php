@@ -16,6 +16,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Service\NotificationService;
 use App\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 
 #[Route('/avances')]
 class AvanceSurLoyerController extends AbstractController
@@ -260,6 +262,88 @@ class AvanceSurLoyerController extends AbstractController
             'avance' => $avance,
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_avance_edit', methods: ['POST'])]
+    public function edit(Request $request, AvanceSurLoyer $avance, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Sécurité
+        if (!$isAdmin) {
+            $locataire = $user->getLocataire();
+            if (!$locataire || $avance->getLocataire()->getId() !== $locataire->getId()) {
+                throw $this->createAccessDeniedException('Accès refusé.');
+            }
+            // Un locataire ne peut pas modifier une avance déjà validée
+            if ($avance->getStatus() === 'validée') {
+                $this->addFlash('warning', 'Vous ne pouvez pas modifier une avance déjà validée.');
+                return $this->redirectToRoute('app_avance_index');
+            }
+        }
+
+        $form = $this->createForm(AvanceSurLoyerType::class, $avance, [
+            'is_admin' => $isAdmin
+        ]);
+
+        // Supprimer la contrainte required pour l'édition de document
+        $form->add('document', FileType::class, [
+            'label' => 'Preuve de la demande (Papier signé, reçu, etc.)',
+            'mapped' => false,
+            'required' => false,
+            'constraints' => [
+                new File([
+                    'maxSize' => '20M',
+                    'mimeTypes' => [
+                        'application/pdf',
+                        'application/x-pdf',
+                        'image/jpeg',
+                        'image/png',
+                    ],
+                    'mimeTypesMessage' => 'Veuillez uploader un document PDF ou une image valide.',
+                ])
+            ],
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $detailsJson = $form->get('montantDetails')->getData();
+            if ($detailsJson) {
+                $avance->setMontantDetails(json_decode($detailsJson, true));
+            }
+
+            $docFile = $form->get('document')->getData();
+            if ($docFile) {
+                $originalFilename = pathinfo($docFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $docFile->guessExtension();
+
+                try {
+                    $docFile->move($this->getParameter('avances_directory'), $newFilename);
+
+                    $doc = new AvanceDocument();
+                    $doc->setFilename($newFilename);
+                    $doc->setOriginalName($docFile->getClientOriginalName());
+                    $doc->setUploadedBy($user);
+                    $doc->setAvance($avance);
+
+                    $entityManager->persist($doc);
+                } catch (FileException $e) {
+                    $this->addFlash('danger', 'Erreur lors de l\'upload de la preuve.');
+                    return $this->redirectToRoute('app_avance_index');
+                }
+            }
+
+            $entityManager->flush();
+            $this->addFlash('success', 'L\'avance a été modifiée avec succès.');
+
+            return $this->redirectToRoute('app_avance_index');
+        }
+
+        return $this->redirectToRoute('app_avance_index');
     }
 
     #[Route('/{id}', name: 'app_avance_show', methods: ['GET', 'POST'])]

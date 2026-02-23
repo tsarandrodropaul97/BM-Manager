@@ -285,6 +285,18 @@
                                 {% set canApprove = true %}
                                 {% endif %}
 
+                                {% if is_granted('ROLE_ADMIN') or (avance.status != 'validée' and not
+                                avance.isApprovedByLocataire) %}
+                                <button class="btn btn-warning me-1 btn-edit-avance" data-id="{{ avance.id }}"
+                                    data-locataire="{{ avance.locataire.id }}"
+                                    data-date="{{ avance.dateAccord|date('Y-m-d') }}"
+                                    data-details='{{ avance.montantDetails|json_encode()|raw }}'
+                                    data-total="{{ avance.montantTotal }}" data-motif="{{ avance.motif }}"
+                                    data-url="{{ path('app_avance_edit', {id: avance.id}) }}" title="Modifier">
+                                    <span class="fas fa-edit"></span>
+                                </button>
+                                {% endif %}
+
                                 {% if canApprove %}
                                 <form action="{{ path('app_avance_approve', {id: avance.id}) }}" method="POST"
                                     class="d-inline">
@@ -419,6 +431,92 @@
     </div>
 </div>
 
+<!-- Modal ÉDITION Avance -->
+<div class="modal fade" id="modalEditAvance" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+        <div class="modal-content border-0 bg-dark text-white">
+            <div class="modal-header bg-black bg-opacity-20 border-bottom border-secondary py-3 px-4">
+                <h5 class="modal-title text-white">Modifier l'avance</h5>
+                <button class="btn-close btn-close-white" type="button" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <form id="formEditAvance" method="POST" enctype="multipart/form-data">
+                <div class="modal-body p-4 pt-3">
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <div class="mb-3">
+                        <label class="form-label text-400 fw-bold fs-11 text-uppercase">Locataire concerné</label>
+                        <select name="avance_sur_loyer[locataire]"
+                            class="form-select bg-100 text-900 fs-11 border border-300" id="editLocataire">
+                            {% for loc in stats.locataireStats ? [stats.locataireStats] : [] %}
+                            <option value="{{ loc.id }}">{{ loc.nomComplet }}</option>
+                            {% endfor %}
+                            {# Si on est en mode global admin, il faudrait charger tous les locataires.
+                            Mais ici on va injecter via JS si besoin ou se baser sur ce qui est dispo dans la page. #}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                    <div class="row g-3 align-items-end mb-3">
+                        <div class="col">
+                            <label class="form-label text-400 fw-bold fs-11 text-uppercase">Ajouter un montant</label>
+                            <div class="input-group">
+                                <input type="number" id="editInputPartialAmount"
+                                    class="form-control bg-100 text-900 fs-11 border border-300"
+                                    placeholder="Ex: 500000">
+                                <span class="input-group-text bg-200 text-900 fs-11 border border-300">Ar</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" id="editBtnAddAmount" class="btn btn-primary btn-sm px-3">
+                                <span class="fas fa-plus"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="editAmountListContainer"
+                        class="mb-3 p-3 bg-black bg-opacity-20 rounded border border-secondary">
+                        <div class="d-flex flex-wrap gap-2 mb-2" id="editAmountBadgeContainer"></div>
+                        <div
+                            class="border-top border-secondary pt-2 mt-2 d-flex justify-content-between align-items-center">
+                            <span class="fs-11 text-400 text-uppercase fw-bold">Somme Totale :</span>
+                            <h5 class="mb-0 text-white" id="editDisplayTotalTotal">0 Ar</h5>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="avance_sur_loyer[montantTotal]" id="editHiddenTotal">
+                    <input type="hidden" name="avance_sur_loyer[montantDetails]" id="editHiddenDetails">
+                    <input type="hidden" name="avance_sur_loyer[_token]" value="{{ csrf_token('avance_sur_loyer') }}">
+
+                    <div class="mb-3">
+                        <label class="form-label text-400 fw-bold fs-11 text-uppercase">Date versement</label>
+                        <input type="date" name="avance_sur_loyer[dateAccord]" id="editDateAccord"
+                            class="form-control bg-100 text-900 fs-11 border border-300">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-400 fw-bold fs-11 text-uppercase">Nouveau Justificatif
+                            (Optionnel)</label>
+                        <input type="file" name="avance_sur_loyer[document]"
+                            class="form-control bg-100 text-900 fs-11 border border-300">
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="form-label text-400 fw-bold fs-11 text-uppercase">Observations</label>
+                        <textarea name="avance_sur_loyer[motif]" id="editMotif"
+                            class="form-control bg-100 text-900 fs-11 border border-300" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-black bg-opacity-20 border-top border-secondary py-3 px-4">
+                    <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">Annuler</button>
+                    <button class="btn btn-primary btn-sm px-4" type="submit" id="btnSubmitEditAvance">
+                        <span class="fas fa-save me-1"></span>Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Modal de visualisation de document -->
 <div class="modal fade" id="modalPreviewDoc" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -458,6 +556,7 @@
         const btnSubmitAvance = document.getElementById('btnSubmitAvance');
 
         let partialAmounts = [];
+        let editPartialAmounts = [];
 
         function updateAmountUI() {
             amountBadgeContainer.innerHTML = '';
@@ -487,9 +586,49 @@
             hiddenDetailsInput.value = JSON.stringify(partialAmounts);
         }
 
+        function updateEditAmountUI() {
+            const editBadgeContainer = document.getElementById('editAmountBadgeContainer');
+            const editListContainer = document.getElementById('editAmountListContainer');
+            const editDisplayTotal = document.getElementById('editDisplayTotalTotal');
+            const editHiddenTotal = document.getElementById('editHiddenTotal');
+            const editHiddenDetails = document.getElementById('editHiddenDetails');
+            const btnSubmit = document.getElementById('btnSubmitEditAvance');
+
+            editBadgeContainer.innerHTML = '';
+            let total = 0;
+
+            editPartialAmounts.forEach((amt, index) => {
+                total += amt;
+                const badge = document.createElement('span');
+                badge.className = 'badge badge-subtle-primary p-2 fs-10 d-flex align-items-center';
+                badge.innerHTML = `
+                        ${amt.toLocaleString()} Ar
+                        <span class="fas fa-times ms-2 cursor-pointer text-danger" onclick="removeEditPartial(${index})"></span>
+                    `;
+                editBadgeContainer.appendChild(badge);
+            });
+
+            if (editPartialAmounts.length > 0) {
+                editListContainer.classList.remove('d-none');
+                btnSubmit.disabled = false;
+            } else {
+                editListContainer.classList.add('d-none');
+                btnSubmit.disabled = true;
+            }
+
+            editDisplayTotal.textContent = total.toLocaleString() + ' Ar';
+            editHiddenTotal.value = total;
+            editHiddenDetails.value = JSON.stringify(editPartialAmounts);
+        }
+
         window.removePartial = function (index) {
             partialAmounts.splice(index, 1);
             updateAmountUI();
+        };
+
+        window.removeEditPartial = function (index) {
+            editPartialAmounts.splice(index, 1);
+            updateEditAmountUI();
         };
 
         btnAdd.addEventListener('click', function () {
@@ -509,6 +648,52 @@
             }
         });
 
+        // EDIT Logic
+        const editModalEl = document.getElementById('modalEditAvance');
+        const editModal = new bootstrap.Modal(editModalEl);
+        const editForm = document.getElementById('formEditAvance');
+        const editInputPartial = document.getElementById('editInputPartialAmount');
+        const editBtnAdd = document.getElementById('editBtnAddAmount');
+
+        editBtnAdd.addEventListener('click', function () {
+            const val = parseFloat(editInputPartial.value);
+            if (!isNaN(val) && val > 0) {
+                editPartialAmounts.push(val);
+                editInputPartial.value = '';
+                updateEditAmountUI();
+                editInputPartial.focus();
+            }
+        });
+
+        editInputPartial.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                editBtnAdd.click();
+            }
+        });
+
+        document.querySelectorAll('.btn-edit-avance').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const locId = this.getAttribute('data-locataire');
+                const date = this.getAttribute('data-date');
+                const details = JSON.parse(this.getAttribute('data-details') || '[]');
+                const motif = this.getAttribute('data-motif');
+                const url = this.getAttribute('data-url');
+
+                editForm.action = url;
+                if (document.getElementById('editLocataire')) {
+                    document.getElementById('editLocataire').value = locId;
+                }
+                document.getElementById('editDateAccord').value = date;
+                document.getElementById('editMotif').value = motif;
+
+                editPartialAmounts = details.map(v => parseFloat(v));
+                updateEditAmountUI();
+
+                editModal.show();
+            });
+        });
 
         // Spinner logic
         const form = document.getElementById('formAvance');
