@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-bs-theme="dark">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
@@ -122,6 +122,7 @@
 
 <script>
     function confirmAction(title, text, icon, confirmButtonText, cancelButtonText, form) {
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
         Swal.fire({
             title: title || 'Êtes-vous sûr ?',
             text: text || "Cette action est irréversible !",
@@ -131,10 +132,10 @@
             cancelButtonColor: '#3085d6',
             confirmButtonText: confirmButtonText || 'Oui, confirmer',
             cancelButtonText: cancelButtonText || 'Annuler',
-            background: '#12151e',
-            color: '#fff',
+            background: isDark ? '#12151e' : '#fff',
+            color: isDark ? '#fff' : '#000',
             customClass: {
-                popup: 'border border-secondary shadow-lg'
+                popup: isDark ? 'border border-secondary shadow-lg' : 'border border-300 shadow-lg'
             }
         }).then((result) => {
             if (result.isConfirmed) {

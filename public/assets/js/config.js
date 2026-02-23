@@ -19,8 +19,9 @@ Object.keys(CONFIG).forEach(function (key) {
 if (JSON.parse(localStorage.getItem('isNavbarVerticalCollapsed'))) {
   document.documentElement.classList.add('navbar-vertical-collapsed');
 }
-if (localStorage.getItem('theme') === 'dark') {
-  document.documentElement.setAttribute('data-bs-theme', 'dark');
-} else if (localStorage.getItem('theme') === 'auto') {
+var theme = localStorage.getItem('theme');
+if (theme === 'auto') {
   document.documentElement.setAttribute('data-bs-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+} else {
+  document.documentElement.setAttribute('data-bs-theme', theme || CONFIG.theme);
 }

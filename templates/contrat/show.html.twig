@@ -160,9 +160,9 @@
 
         <!-- Visionneuse PDF -->
         <div class="col-lg-5">
-            <div class="card h-100 border-0 shadow-sm overflow-hidden bg-dark">
-                <div class="card-header bg-dark dark__bg-1100 py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 text-white d-flex align-items-center">
+            <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                <div class="card-header bg-subtle-secondary py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 text-900 d-flex align-items-center">
                         <span class="fas fa-file-pdf me-2 text-danger"></span>Document Contractuel Signé
                     </h6>
                     {% if contrat.documentPdf %}
@@ -171,20 +171,19 @@
                         </a>
                     {% endif %}
                 </div>
-                <div class="card-body p-0 bg-dark dark__bg-1000">
+                <div class="card-body p-0">
                     {% if contrat.documentPdf %}
                         <iframe src="{{ asset('uploads/contrats/' ~ contrat.documentPdf) }}#toolbar=0" 
                                 width="100%" height="800px" 
-                                style="border: none;"
-                                class="bg-dark">
+                                style="border: none;">
                         </iframe>
                     {% else %}
                         <div class="d-flex flex-column align-items-center justify-content-center h-100 py-6 text-center">
                             <div class="bg-subtle-warning p-4 rounded-circle mb-3">
                                 <span class="fas fa-file-signature text-warning fs-3"></span>
                             </div>
-                            <h5 class="text-white">Scan non disponible</h5>
-                            <p class="text-400 fs-11 px-4">Le document n'a pas encore été rattaché par l'administrateur.</p>
+                            <h5 class="text-900">Scan non disponible</h5>
+                            <p class="text-600 fs-11 px-4">Le document n'a pas encore été rattaché par l'administrateur.</p>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('app_contrat_edit', {'id': contrat.id}) }}" class="btn btn-primary btn-sm shadow-none">Uploader maintenant</a>
                             {% endif %}

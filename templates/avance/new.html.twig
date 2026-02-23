@@ -5,15 +5,15 @@
 {% block body %}
 <div class="row justify-content-center">
     <div class="col-lg-7 col-xl-6">
-        <div class="card bg-dark shadow-sm border border-secondary mt-3">
+        <div class="card shadow-sm border border-300 mt-3">
             <div class="card-header bg-transparent border-bottom border-secondary py-3 text-center">
-                <h4 class="mb-0 text-white">
+                <h4 class="mb-0 text-900">
                     <span class="fas fa-hand-holding-usd me-2 text-primary"></span>
                     Déclarer une Avance
                 </h4>
-                <p class="text-400 fs-11 mb-0 mt-1">Enregistrez l'argent que vous avez versé au propriétaire à sa demande.</p>
+                <p class="text-600 fs-11 mb-0 mt-1">Enregistrez l'argent que vous avez versé au propriétaire à sa demande.</p>
             </div>
-            <div class="card-body p-4 text-white">
+            <div class="card-body p-4">
                 <div class="alert alert-subtle-info fs-11 border-info-subtle mb-4 shadow-sm">
                     <div class="d-flex">
                         <span class="fas fa-info-circle me-2 mt-1"></span>
@@ -26,45 +26,45 @@
                 {{ form_start(form) }}
                     {% if form.locataire is defined %}
                         <div class="mb-3">
-                            <label class="form-label text-400 fw-bold fs-11 text-uppercase">Locataire concerné (Admin)</label>
-                            {{ form_widget(form.locataire, {'attr': {'class': 'form-select bg-dark text-white border-secondary'}}) }}
+                            <label class="form-label text-700 fw-bold fs-11 text-uppercase">Locataire concerné (Admin)</label>
+                            {{ form_widget(form.locataire, {'attr': {'class': 'form-select'}}) }}
                             {{ form_errors(form.locataire) }}
                         </div>
                     {% endif %}
 
                     <div class="row g-3">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label text-400 fw-bold fs-11 text-uppercase">Montant versé</label>
+                            <label class="form-label text-700 fw-bold fs-11 text-uppercase">Montant versé</label>
                             <div class="input-group">
-                                {{ form_widget(form.montantTotal, {'attr': {'class': 'form-control bg-dark text-white border-secondary border-end-0', 'placeholder': '0.00'}}) }}
-                                <span class="input-group-text bg-dark border-secondary text-400">Ar</span>
+                                {{ form_widget(form.montantTotal, {'attr': {'class': 'form-control border-end-0', 'placeholder': '0.00'}}) }}
+                                <span class="input-group-text bg-200 text-700">Ar</span>
                             </div>
                             {{ form_errors(form.montantTotal) }}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label text-400 fw-bold fs-11 text-uppercase">Date du versement</label>
-                            {{ form_widget(form.dateAccord, {'attr': {'class': 'form-control bg-dark text-white border-secondary'}}) }}
+                            <label class="form-label text-700 fw-bold fs-11 text-uppercase">Date du versement</label>
+                            {{ form_widget(form.dateAccord, {'attr': {'class': 'form-control'}}) }}
                             {{ form_errors(form.dateAccord) }}
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label text-400 fw-bold fs-11 text-uppercase">Preuve de la demande / Reçu</label>
-                        <div class="bg-subtle-secondary p-3 rounded-2 border border-dashed border-secondary">
-                            <p class="fs-11 text-400 mb-2">Uploadez le papier du propriétaire ou votre reçu de virement.</p>
-                            {{ form_widget(form.document, {'attr': {'class': 'form-control bg-dark text-white border-secondary fs-11'}}) }}
+                        <label class="form-label text-700 fw-bold fs-11 text-uppercase">Preuve de la demande / Reçu</label>
+                        <div class="bg-subtle-secondary p-3 rounded-2 border border-dashed border-300">
+                            <p class="fs-11 text-600 mb-2">Uploadez le papier du propriétaire ou votre reçu de virement.</p>
+                            {{ form_widget(form.document, {'attr': {'class': 'form-control fs-11'}}) }}
                             {{ form_errors(form.document) }}
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label text-400 fw-bold fs-11 text-uppercase">Observations supplémentaires</label>
-                        {{ form_widget(form.motif, {'attr': {'class': 'form-control bg-dark text-white border-secondary', 'rows': '3'}}) }}
+                        <label class="form-label text-700 fw-bold fs-11 text-uppercase">Observations supplémentaires</label>
+                        {{ form_widget(form.motif, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
                         {{ form_errors(form.motif) }}
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mt-4 border-top border-secondary pt-3">
-                        <a href="{{ path('app_avance_index') }}" class="btn btn-link text-400 p-0 fs-11">
+                    <div class="d-flex justify-content-between align-items-center mt-4 border-top border-300 pt-3">
+                        <a href="{{ path('app_avance_index') }}" class="btn btn-link text-600 p-0 fs-11">
                             <span class="fas fa-arrow-left me-1"></span>Retour
                         </a>
                         <button type="submit" class="btn btn-primary px-4 shadow-sm" id="btnSubmitAvance">
