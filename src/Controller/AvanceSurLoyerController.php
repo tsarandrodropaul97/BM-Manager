@@ -23,14 +23,20 @@ use Symfony\Component\Validator\Constraints\File;
 class AvanceSurLoyerController extends AbstractController
 {
     #[Route('', name: 'app_avance_index', methods: ['GET', 'POST'])]
-    public function index(AvanceSurLoyerRepository $avanceRepository, \App\Repository\BiensRepository $biensRepository, Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function index(
+        AvanceSurLoyerRepository $avanceRepository,
+        \App\Repository\BiensRepository $biensRepository,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        \Knp\Component\Pager\PaginatorInterface $paginator
+    ): Response {
         /** @var User $user */
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
         $search = $request->query->get('search');
         $bienId = $request->query->get('bienId');
         $dateStr = $request->query->get('date');
+        $status = $request->query->get('status');
 
         // Gérer la mise à jour de la date de début de déduction via POST
         if ($request->isMethod('POST') && $request->request->has('dateDebutDeduction')) {
@@ -73,7 +79,14 @@ class AvanceSurLoyerController extends AbstractController
             $qb->andWhere('a.dateAccord = :date')->setParameter('date', $dateStr);
         }
 
-        $avances = $qb->orderBy('a.dateAccord', 'DESC')->getQuery()->getResult();
+        if ($status) {
+            $qb->andWhere('a.status = :status')->setParameter('status', $status);
+        }
+
+        $query = $qb->orderBy('a.dateAccord', 'DESC')->getQuery();
+
+        // On récupère tout pour les stats avant de paginer
+        $allResults = $query->getResult();
 
         // Initialisation des stats
         $stats = [
@@ -87,7 +100,7 @@ class AvanceSurLoyerController extends AbstractController
 
         // Pour les stats globales ou individuelles
         $uniqueLocataires = [];
-        foreach ($avances as $a) {
+        foreach ($allResults as $a) {
             $uniqueLocataires[$a->getLocataire()->getId()] = $a->getLocataire();
         }
 
@@ -103,7 +116,7 @@ class AvanceSurLoyerController extends AbstractController
             // Date de début : Soit définie manuellement, soit la plus ancienne avance
             $dateDebut = $locataire->getDateDebutDeduction();
             if (!$dateDebut) {
-                foreach ($avances as $a) {
+                foreach ($allResults as $a) {
                     if (!$dateDebut || $a->getDateAccord() < $dateDebut) {
                         $dateDebut = $a->getDateAccord();
                     }
@@ -155,7 +168,7 @@ class AvanceSurLoyerController extends AbstractController
         } else {
             // Stats globales simples pour Admin sans locataire précis
             $totalGlobal = 0;
-            foreach ($avances as $a) {
+            foreach ($allResults as $a) {
                 if ($a->getStatus() === 'validée') {
                     $totalGlobal += (float)$a->getMontantTotal();
                 }
@@ -163,9 +176,18 @@ class AvanceSurLoyerController extends AbstractController
             $stats['totalAvance'] = $totalGlobal;
         }
 
+        // Pagination
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
+
         // Préparation du formulaire pour la modal
         $avance = new AvanceSurLoyer();
-        if (!$isAdmin && $user->getLocataire()) {
+        if ($isAdmin && isset($stats['locataireStats']) && $stats['locataireStats']) {
+            $avance->setLocataire($stats['locataireStats']);
+        } elseif (!$isAdmin && $user->getLocataire()) {
             $avance->setLocataire($user->getLocataire());
         }
 
@@ -175,12 +197,23 @@ class AvanceSurLoyerController extends AbstractController
             'is_admin' => $isAdmin
         ]);
 
+        $oldestDate = null;
+        if (!empty($allResults)) {
+            $oldestDate = end($allResults)->getDateAccord();
+        }
+
         return $this->render('avance/index.html.twig', [
-            'avances' => $avances,
+            'pagination' => $pagination,
             'form' => $form->createView(),
             'stats' => $stats,
+            'oldestDate' => $oldestDate,
             'biens' => $biensRepository->findAll(),
-            'filters' => ['search' => $search, 'bienId' => $bienId, 'date' => $dateStr]
+            'filters' => [
+                'search' => $search,
+                'bienId' => $bienId,
+                'date' => $dateStr,
+                'status' => $status
+            ]
         ]);
     }
 

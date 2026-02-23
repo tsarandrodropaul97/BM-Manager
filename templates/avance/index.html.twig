@@ -31,24 +31,29 @@
     <div class="card-body">
         <form method="get" action="{{ path('app_avance_index') }}" class="row g-3 align-items-center">
             {% if is_granted('ROLE_ADMIN') %}
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-2">
                 <div class="input-group">
-                    <span class="input-group-text bg-200 border-end-0">
+                    <span class="input-group-text bg-200 border-end-0 fs-11">
                         <span class="fas fa-user text-600"></span>
                     </span>
                     <input type="text" name="search" value="{{ filters.search|default('') }}"
-                        class="form-control border-start-0 ps-0" placeholder="Nom du locataire...">
+                        class="form-control border-start-0 ps-0 fs-11" placeholder="Locataire...">
                 </div>
             </div>
-            <div class="col-12 col-md-3">
-                <select name="bienId" class="form-select" aria-label="Choisir un bien">
-                    <option value="">Tous les biens</option>
-                    {% for bien in biens %}
-                    <option value="{{ bien.id }}" {{ filters.bienId==bien.id ? 'selected' : '' }}>
-                        {{ bien.designation }}
-                    </option>
-                    {% endfor %}
-                </select>
+            <div class="col-12 col-md-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-200 border-end-0">
+                        <span class="fas fa-home text-600"></span>
+                    </span>
+                    <select name="bienId" class="form-select border-start-0 ps-0 fs-11" aria-label="Choisir un bien">
+                        <option value="">Tous les biens</option>
+                        {% for bien in biens %}
+                        <option value="{{ bien.id }}" {{ filters.bienId==bien.id ? 'selected' : '' }}>
+                            {{ bien.designation }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             {% endif %}
 
@@ -62,15 +67,29 @@
                 </div>
             </div>
 
-            <div class="col-12 col-md-auto ms-md-auto text-center text-md-end">
-                <div class="d-grid d-md-inline-block gap-2">
-                    <button type="submit" class="btn btn-primary px-4">
+            <div class="col-12 col-md-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-200 border-end-0 fs-11">
+                        <span class="fas fa-check-circle text-600"></span>
+                    </span>
+                    <select name="status" class="form-select border-start-0 ps-0 fs-11">
+                        <option value="">Tous les statuts</option>
+                        <option value="validée" {{ filters.status=='validée' ? 'selected' : '' }}>Validée</option>
+                        <option value="en attente" {{ filters.status=='en attente' ? 'selected' : '' }}>En attente
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-auto ms-auto text-center text-md-end">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-end gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm px-4">
                         <span class="fas fa-filter me-1"></span>Filtrer
                     </button>
-                    <a href="{{ path('app_avance_index') }}"
-                        class="btn btn-outline-secondary px-4 d-md-none">Réinitialiser</a>
-                    <a href="{{ path('app_avance_index') }}"
-                        class="btn btn-link py-0 text-muted d-none d-md-inline-block fs-11">Réinitialiser</a>
+                    <a href="{{ path('app_avance_index') }}" class="btn btn-link btn-sm text-secondary p-0 fs-11"
+                        title="Réinitialiser tous les filtres">
+                        <span class="fas fa-redo-alt me-1"></span>Réinitialiser
+                    </a>
                 </div>
             </div>
         </form>
@@ -116,7 +135,7 @@
             <div class="col-12 col-sm-auto">
                 <span class="badge badge-subtle-info fs-10">
                     {{ stats.locataireStats.dateDebutDeduction ? stats.locataireStats.dateDebutDeduction|date('d/m/Y') :
-                    (avances|last.dateAccord|default(now)|date('d/m/Y')) }}
+                    (oldestDate ? oldestDate|date('d/m/Y') : 'En attente') }}
                 </span>
             </div>
             <div class="col-12 col-md">
@@ -201,7 +220,7 @@
 <!-- Liste des avances -->
 <div class="card mb-3">
     <div class="card-header border-bottom">
-        <h6 class="mb-0">Liste des Avances ({{ avances|length }})</h6>
+        <h6 class="mb-0">Liste des Avances ({{ pagination.getTotalItemCount }})</h6>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive scrollbar">
@@ -220,7 +239,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for avance in avances %}
+                    {% for avance in pagination %}
                     <tr>
                         <td class="align-middle ps-3">
                             <span class="fw-semi-bold">{{ avance.dateAccord|date('d/m/Y') }}</span>
@@ -334,6 +353,11 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="card-footer bg-200 py-2">
+        <div class="d-flex justify-content-center">
+            {{ knp_pagination_render(pagination) }}
         </div>
     </div>
 </div>
