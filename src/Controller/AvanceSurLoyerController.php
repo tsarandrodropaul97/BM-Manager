@@ -245,13 +245,13 @@ class AvanceSurLoyerController extends AbstractController
             $this->addFlash('success', 'L\'avance sur loyer a été enregistrée.');
 
             // Notifications par email
-            if ($isAdmin) {
-                // Créé par admin -> Notifier le locataire
-                $notificationService->notifyTenantOnNewAvance($avance);
-            } else {
-                // Créé par locataire -> Notifier le propriétaire
-                $notificationService->notifyOwnerOnNewAvance($avance);
-            }
+            // if ($isAdmin) {
+            //     // Créé par admin -> Notifier le locataire
+            //     $notificationService->notifyTenantOnNewAvance($avance);
+            // } else {
+            //     // Créé par locataire -> Notifier le propriétaire
+            //     $notificationService->notifyOwnerOnNewAvance($avance);
+            // }
 
             return $this->redirectToRoute('app_avance_index');
         }
