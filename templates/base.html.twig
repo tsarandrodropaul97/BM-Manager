@@ -132,7 +132,10 @@
             confirmButtonText: confirmButtonText || 'Oui, confirmer',
             cancelButtonText: cancelButtonText || 'Annuler',
             background: '#12151e',
-            color: '#fff'
+            color: '#fff',
+            customClass: {
+                popup: 'border border-secondary shadow-lg'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 form.submit();
@@ -152,6 +155,14 @@
         });
     });
 </script>
+
+<style>
+    .swal2-backdrop-show {
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+    }
+</style>
 
 {% block end_javascripts %}{% endblock %}
 </body>
