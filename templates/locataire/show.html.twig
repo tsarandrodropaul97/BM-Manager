@@ -1,24 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails du Locataire - {{ locataire.nomComplet }}
-{% endblock %}
+{% block title %}Détails du Locataire - {{ locataire.nomComplet }}{% endblock %}
 
 {% block body %}
-<!-- En-tête page -->
-<div class="card mb-3">
-	<div class="card-header border-bottom">
+<!-- Fil d'ariane / Header discret -->
+<div class="card mb-3 border-0 shadow-none bg-transparent">
+	<div class="card-body p-0">
 		<div class="row flex-between-center g-3">
-			<div class="col-12 col-sm-auto text-center text-sm-start">
-				<h5 class="mb-0">Fiche Locataire</h5>
-				<p class="mb-0 fs-11 text-muted">Consultation complète du dossier locataire</p>
+			<div class="col-12 col-sm-auto">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb mb-0 fs-11">
+						<li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Accueil</a></li>
+						<li class="breadcrumb-item"><a href="{{ path('app_locataire_index') }}">Locataires</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Fiche Détail</li>
+					</ol>
+				</nav>
 			</div>
 			<div
 				class="col-12 col-sm-auto ms-auto d-flex flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-end gap-2">
-				<a href="{{ path('app_locataire_index') }}" class="btn btn-outline-secondary btn-sm px-3">
+				<a href="{{ path('app_locataire_index') }}" class="btn btn-subtle-secondary btn-sm px-3">
 					<span class="fas fa-arrow-left me-1"></span>Retour
 				</a>
-				<a href="{{ path('app_locataire_edit', {'id': locataire.id}) }}" class="btn btn-primary btn-sm px-3">
-					<span class="fas fa-edit me-1"></span>Modifier
+				<a href="{{ path('app_locataire_edit', {'id': locataire.id}) }}"
+					class="btn btn-primary btn-sm px-4 shadow-sm">
+					<span class="fas fa-edit me-1"></span>Modifier le profil
 				</a>
 			</div>
 		</div>
@@ -26,177 +31,255 @@
 </div>
 
 <div class="row g-3">
-	<!-- Colonne Gauche : Identité et Documents -->
+	<!-- Colonne Gauche : Identité & Dossier -->
 	<div class="col-lg-8">
-		<div class="card mb-3">
-			<div class="card-body">
-				<div class="row align-items-center g-3 text-center text-sm-start">
+		<!-- Carte Profil Premium -->
+		<div class="card mb-3 overflow-hidden border-0 shadow-sm">
+			<div class="card-body p-4">
+				<div class="row align-items-center g-4">
 					<div class="col-12 col-sm-auto">
-						<div class="avatar avatar-5xl mx-auto mx-sm-0">
+						<div
+							class="avatar avatar-5xl profile-avatar mx-auto mx-sm-0 shadow-sm border border-3 border-white">
 							{% if locataire.photo %}
 							<img src="{{ asset('uploads/locataires/' ~ locataire.photo) }}" alt=""
-								class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+								class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
 							{% else %}
-							<div class="bg-subtle-primary text-primary d-flex align-items-center justify-content-center rounded-circle mx-auto mx-sm-0"
-								style="width: 100px; height: 100px;">
+							<div class="bg-subtle-primary text-primary d-flex align-items-center justify-content-center rounded-circle"
+								style="width: 120px; height: 120px;">
 								<span class="fas fa-user fa-3x"></span>
 							</div>
 							{% endif %}
 						</div>
 					</div>
 					<div class="col-12 col-sm">
-						<h3 class="mb-1 fs-7 fs-sm-5">{{ locataire.nomComplet }}</h3>
-						<p class="text-600 mb-2">
-							<span class="fas fa-briefcase me-2"></span>{{ locataire.profession }} <span
-								class="d-none d-sm-inline">chez</span> <span class="d-sm-none"><br></span><strong>{{
-								locataire.employeur }}</strong>
-						</p>
 						<div
-							class="badge rounded-pill fs-11 {% if locataire.statut == 'actif' %}bg-subtle-success text-success{% else %}bg-subtle-warning text-warning{% endif %}">
-							{{ locataire.statut|capitalize }}
+							class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start justify-content-between mb-2">
+							<h2 class="mb-0 fw-bold dark__text-white">{{ locataire.nomComplet }}</h2>
+							<span
+								class="badge rounded-pill mt-2 mt-sm-0 fs-11 p-2 px-3 {% if locataire.statut == 'actif' %}bg-subtle-success text-success{% else %}bg-subtle-warning text-warning{% endif %}">
+								<span class="fas fa-circle me-1 fs-12"></span>{{ locataire.statut|capitalize }}
+							</span>
 						</div>
-					</div>
-				</div>
+						<p class="text-700 fs-9 mb-4 text-center text-sm-start">
+							<span class="fas fa-briefcase me-2 text-primary"></span>{{ locataire.profession }}
+							<span class="mx-2 text-400">|</span>
+							<span class="fw-semi-bold">{{ locataire.employeur }}</span>
+						</p>
 
-				<div class="row mt-4 pt-4 border-top g-3">
-					<div class="col-12 col-sm-6 col-md-4">
-						<div class="fs-11 text-muted text-uppercase fw-semi-bold">Nationalité</div>
-						<div class="fw-bold">{{ locataire.nationalite }}</div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-4">
-						<div class="fs-11 text-muted text-uppercase fw-semi-bold">Né(e) le</div>
-						<div class="fw-bold">{{ locataire.dateNaissance|date('d/m/Y') }}</div>
-					</div>
-					<div class="col-12 col-sm-12 col-md-4">
-						<div class="fs-11 text-muted text-uppercase fw-semi-bold">À</div>
-						<div class="fw-bold">{{ locataire.lieuNaissance }}</div>
+						<div class="row g-3">
+							<div class="col-4 border-end border-200">
+								<div class="fs-11 text-muted text-uppercase fw-bold mb-1">Nationalité</div>
+								<div class="fs-9 fw-semi-bold">{{ locataire.nationalite }}</div>
+							</div>
+							<div class="col-4 border-end border-200 ps-xl-4">
+								<div class="fs-11 text-muted text-uppercase fw-bold mb-1">Âge</div>
+								<div class="fs-9 fw-semi-bold">{{ locataire.dateNaissance ?
+									locataire.dateNaissance.diff(date()).y ~ ' ans' : 'N/A' }}</div>
+							</div>
+							<div class="col-4 ps-xl-4">
+								<div class="fs-11 text-muted text-uppercase fw-bold mb-1">Originaire de</div>
+								<div class="fs-9 fw-semi-bold">{{ locataire.lieuNaissance }}</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="card mb-3">
-			<div class="card-header border-bottom">
-				<h6 class="mb-0">Coordonnées</h6>
+		<!-- Coordonnées & Adresse -->
+		<div class="row g-3 mb-3">
+			<div class="col-md-6">
+				<div class="card h-100 border-0 shadow-sm">
+					<div class="card-body">
+						<h6 class="mb-3 d-flex align-items-center"><span
+								class="fas fa-phone-alt me-2 text-600"></span>Contact Direct</h6>
+						<div class="mb-3">
+							<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block">Téléphone</label>
+							<a href="tel:{{ locataire.telephone }}" class="fs-8 fw-bold text-900 hover-primary">{{
+								locataire.telephone }}</a>
+						</div>
+						<div>
+							<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block">Email</label>
+							<a href="mailto:{{ locataire.email }}"
+								class="fs-9 fw-bold text-900 hover-primary text-break">{{ locataire.email }}</a>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="card-body">
-				<div class="row g-3">
-					<div class="col-12 col-md-6 text-center text-md-start">
-						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-1">Téléphone</label>
-						<a href="tel:{{ locataire.telephone }}" class="fs-6 fs-sm-4 fw-bold text-primary">{{
-							locataire.telephone
-							}}</a>
-					</div>
-					<div class="col-12 col-md-6 text-center text-md-start">
-						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-1">Email</label>
-						<a href="mailto:{{ locataire.email }}" class="fs-6 fs-sm-4 fw-bold text-primary">{{
-							locataire.email
-							}}</a>
-					</div>
-					<div class="col-12 mt-3 pt-3 border-top">
-						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-1">Adresse
-							Actuelle</label>
-						<p class="mb-0 text-700">{{ locataire.adresseActuelle }}</p>
+			<div class="col-md-6">
+				<div class="card h-100 border-0 shadow-sm">
+					<div class="card-body">
+						<h6 class="mb-3 d-flex align-items-center"><span
+								class="fas fa-map-marker-alt me-2 text-600"></span>Localisation</h6>
+						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block">Adresse actuelle</label>
+						<p class="mb-0 text-900 fw-semi-bold">{{ locataire.adresseActuelle }}</p>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="card mb-3">
-			<div class="card-header border-bottom">
-				<h6 class="mb-0">Documents d'Identité (CIN)</h6>
+		<!-- Dossier KYC (Documents) -->
+		<div class="card border-0 shadow-sm mb-3">
+			<div class="card-header bg-subtle-light dark__bg-1100 py-3">
+				<h6 class="mb-0 d-flex align-items-center"><span class="fas fa-id-card me-2"></span>Dossier d'Identité
+					(CIN)</h6>
 			</div>
 			<div class="card-body">
 				<div class="row g-3">
 					<div class="col-12 col-md-6">
-						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-2">Recto</label>
-						{% if locataire.cinRecto %}
-						<div class="border rounded p-2 bg-light dark__bg-1100 text-center">
-							<span class="fas fa-file-pdf fa-2x text-danger mb-2"></span>
-							<div class="fs-11 text-truncate">{{ locataire.cinRecto }}</div>
-							<a href="{{ asset('uploads/locataires/' ~ locataire.cinRecto) }}" target="_blank"
-								class="btn btn-link btn-sm p-0">Ouvrir le document</a>
+						<div
+							class="p-3 border rounded-3 bg-subtle-light dark__bg-1100 border-dashed text-center h-100 d-flex flex-column justify-content-center">
+							<div class="fs-11 text-muted text-uppercase fw-bold mb-2">Recto</div>
+							{% if locataire.cinRecto %}
+							<div class="px-3">
+								<span class="fas fa-file-image fa-3x text-primary mb-2"></span>
+								<div class="fs-11 text-800 text-truncate mb-2">{{ locataire.cinRecto }}</div>
+								<a href="{{ asset('uploads/locataires/' ~ locataire.cinRecto) }}" target="_blank"
+									class="btn btn-subtle-primary btn-xs rounded-pill px-3">Visualiser</a>
+							</div>
+							{% else %}
+							<div class="py-2 opacity-50">
+								<span class="fas fa-cloud-upload-alt fa-2x text-400 mb-2"></span>
+								<div class="fs-11 text-500 italic">Portrait manquant</div>
+							</div>
+							{% endif %}
 						</div>
-						{% else %}
-						<div class="alert alert-warning mb-0 fs-11">Document manquant</div>
-						{% endif %}
 					</div>
 					<div class="col-12 col-md-6">
-						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-2">Verso</label>
-						{% if locataire.cinVerso %}
-						<div class="border rounded p-2 bg-light dark__bg-1100 text-center">
-							<span class="fas fa-file-pdf fa-2x text-danger mb-2"></span>
-							<div class="fs-11 text-truncate">{{ locataire.cinVerso }}</div>
-							<a href="{{ asset('uploads/locataires/' ~ locataire.cinVerso) }}" target="_blank"
-								class="btn btn-link btn-sm p-0">Ouvrir le document</a>
+						<div
+							class="p-3 border rounded-3 bg-subtle-light dark__bg-1100 border-dashed text-center h-100 d-flex flex-column justify-content-center">
+							<div class="fs-11 text-muted text-uppercase fw-bold mb-2">Verso</div>
+							{% if locataire.cinVerso %}
+							<div class="px-3">
+								<span class="fas fa-file-image fa-3x text-primary mb-2"></span>
+								<div class="fs-11 text-800 text-truncate mb-2">{{ locataire.cinVerso }}</div>
+								<a href="{{ asset('uploads/locataires/' ~ locataire.cinVerso) }}" target="_blank"
+									class="btn btn-subtle-primary btn-xs rounded-pill px-3">Visualiser</a>
+							</div>
+							{% else %}
+							<div class="py-2 opacity-50">
+								<span class="fas fa-cloud-upload-alt fa-2x text-400 mb-2"></span>
+								<div class="fs-11 text-500 italic">Verso manquant</div>
+							</div>
+							{% endif %}
 						</div>
-						{% else %}
-						<div class="alert alert-warning mb-0 fs-11">Document manquant</div>
-						{% endif %}
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- Colonne Droite : Location -->
+	<!-- Colonne Droite : Location & Contrat -->
 	<div class="col-lg-4">
-		<div class="card mb-3">
-			<div class="card-header border-bottom">
-				<h6 class="mb-0">Bien Loué</h6>
+		<!-- Carte Bien Immobilier -->
+		<div class="card mb-3 border-0 shadow-sm overflow-hidden h-100">
+			<div class="card-header bg-subtle-primary text-primary py-3 d-flex align-items-center">
+				<h6 class="mb-0"><span class="fas fa-key me-2"></span>Bien en Location</h6>
 			</div>
-			<div class="card-body">
-				{% if locataire.bien %}
-				<div class="d-flex align-items-center mb-3">
-					<div class="avatar avatar-3xl me-3">
-						{% if locataire.bien.image %}
-						<img src="{{ asset('uploads/biens/' ~ locataire.bien.image) }}" alt="" class="rounded"
-							style="width: 60px; height: 60px; object-fit: cover;">
-						{% else %}
-						<div class="bg-subtle-primary text-primary d-flex align-items-center justify-content-center rounded"
-							style="width: 60px; height: 60px;">
-							<span class="fas fa-home"></span>
-						</div>
-						{% endif %}
-					</div>
-					<div>
-						<h6 class="mb-0">{{ locataire.bien.designation }}</h6>
-						<p class="fs-11 text-muted mb-0">{{ locataire.bien.ville }}</p>
-					</div>
-				</div>
-				<div class="border-top pt-3">
-					<div class="d-flex justify-content-between mb-2">
-						<span class="text-700 fs-11">Date d'entrée :</span>
-						<span class="fw-bold">{{ locataire.dateEntree|date('d/m/Y') }}</span>
-					</div>
-					<div class="d-flex justify-content-between mb-2">
-						<span class="text-700 fs-11">Loyer mensuel :</span>
-						<span class="fw-bold text-primary">{{ locataire.bien.prix ? locataire.bien.prix|number_format(0,
-							',', ' ') ~ ' Ar' : 'N/A' }}</span>
-					</div>
-					<a href="{{ path('app_biens_show', {'id': locataire.bien.id}) }}"
-						class="btn btn-link btn-sm p-0">Gérer le bien
-						<span class="fas fa-chevron-right ms-1 fs-11"></span>
-					</a>
-				</div>
+			{% if locataire.bien %}
+			<div class="position-relative">
+				{% if locataire.bien.image %}
+				<img src="{{ asset('uploads/biens/' ~ locataire.bien.image) }}" alt="" class="card-img-top"
+					style="height: 180px; object-fit: cover;">
 				{% else %}
-				<div class="text-center py-4">
-					<span class="fas fa-key fa-3x text-200 mb-2"></span>
-					<p class="text-muted fs-11 mb-0">Aucun bien associé à ce locataire.</p>
-					<a href="{{ path('app_locataire_edit', {'id': locataire.id}) }}"
-						class="btn btn-link btn-sm mt-2">Assigner un bien</a>
+				<div class="bg-subtle-primary d-flex align-items-center justify-content-center" style="height: 180px;">
+					<span class="fas fa-building fa-4x text-primary opacity-25"></span>
 				</div>
 				{% endif %}
+				<div class="position-absolute bottom-0 start-0 w-100 p-3 bg-gradient-dark">
+					<h5 class="text-white mb-0 fs-9">{{ locataire.bien.designation }}</h5>
+					<p class="text-white opacity-75 fs-11 mb-0"><span class="fas fa-map-marker-alt me-1"></span>{{
+						locataire.bien.ville }}</p>
+				</div>
 			</div>
+			<div class="card-body">
+				<div class="list-group list-group-flush fs-10">
+					<div class="list-group-item px-0 d-flex justify-content-between bg-transparent">
+						<span class="text-600">Date d'entrée</span>
+						<span class="fw-bold dark__text-white">{{ locataire.dateEntree|date('d/m/Y') }}</span>
+					</div>
+					<div class="list-group-item px-0 d-flex justify-content-between bg-transparent border-0">
+						<span class="text-600">Loyer mensuel</span>
+						<span class="fw-bold text-primary fs-8">{{ locataire.bien.prix ?
+							locataire.bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}</span>
+					</div>
+				</div>
+				<div class="mt-4">
+					<a href="{{ path('app_biens_show', {'id': locataire.bien.id}) }}"
+						class="btn btn-outline-primary btn-sm w-100 rounded-pill">
+						Consulter le bien <span class="fas fa-chevron-right ms-2 fs-11"></span>
+					</a>
+				</div>
+			</div>
+			{% else %}
+			<div class="card-body text-center py-5">
+				<div class="mb-4">
+					<span class="fas fa-home fa-4x text-200"></span>
+				</div>
+				<p class="text-muted fs-10 px-4">Aucune unité n'est encore assignée à ce locataire.</p>
+				<a href="{{ path('app_locataire_edit', {'id': locataire.id}) }}"
+					class="btn btn-subtle-primary btn-sm rounded-pill mt-2">Assigner un bien</a>
+			</div>
+			{% endif %}
 		</div>
 
-		<div class="card border-0 bg-subtle-danger">
-			<div class="card-body text-center">
-				<p class="fs-11 text-danger mb-3">Attention : la suppression supprimera également tous les documents
-					associés.</p>
-				{{ include('locataire/_delete_form.html.twig') }}
+		<!-- Section Action de Suppression (Discrète) -->
+		<div class="card mt-3 bg-transparent border-dashed">
+			<div class="card-body p-3 text-center">
+				<p class="fs-12 text-muted mb-2 italic">Dossier n°{{ locataire.id }}</p>
+				<button type="button" class="btn btn-link text-danger fs-11 p-0" data-bs-toggle="modal"
+					data-bs-target="#deleteModal">
+					<span class="fas fa-trash-alt me-1"></span>Clôturer le dossier définitvement
+				</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+<!-- Modal de suppression (Nouveau) -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header border-0 pb-0">
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body text-center pt-0">
+				<div class="mb-3">
+					<span class="fas fa-exclamation-triangle fa-3x text-danger opacity-50"></span>
+				</div>
+				<h5>Supprimer le locataire ?</h5>
+				<p class="text-muted fs-11 px-4">Cette action est irréversible et supprimera également les contrats et
+					documents associés de <strong>{{ locataire.nomComplet }}</strong>.</p>
+				<div class="d-flex justify-content-center gap-2 mt-4">
+					<button type="button" class="btn btn-subtle-secondary" data-bs-toggle="modal">Annuler</button>
+					{{ include('locataire/_delete_form.html.twig') }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.bg-gradient-dark {
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+	}
+
+	.hover-primary:hover {
+		color: var(--falcon-primary) !important;
+		text-decoration: underline;
+	}
+
+	.profile-avatar {
+		transition: transform 0.3s ease;
+	}
+
+	.profile-avatar:hover {
+		transform: scale(1.05);
+	}
+
+	.border-dashed {
+		border-style: dashed !important;
+		border-width: 1px !important;
+	}
+</style>
 {% endblock %}

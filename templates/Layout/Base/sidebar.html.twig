@@ -94,11 +94,11 @@
 						</div>
 					</a>
 					<ul class="nav collapse" id="rapports">
-						<li class="nav-item"><a class="nav-link" href="{{ path('app_revenu_locatif') }}">Revenus
+						<li class="nav-item"><a class="nav-link" href="#">Revenus
 								locatifs</a></li>
-						<li class="nav-item"><a class="nav-link" href="{{ path('app_taux_occupation') }}">Taux
+						<li class="nav-item"><a class="nav-link" href="#">Taux
 								d'occupation</a></li>
-						<li class="nav-item"><a class="nav-link" href="{{ path('app_finance') }}">Analyse financière</a>
+						<li class="nav-item"><a class="nav-link" href="#">Analyse financière</a>
 						</li>
 					</ul>
 				</li>
@@ -210,7 +210,8 @@
 					</a>
 					<ul class="nav collapse" id="admin">
 						<li class="nav-item"><a class="nav-link" href="#">Propriétaires</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Utilisateurs</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ path('app_user_index') }}">Utilisateurs</a>
+						</li>
 						<li class="nav-item"><a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a></li>
 						<li class="nav-item"><a class="nav-link" href="#">Documents types</a></li>
 					</ul>

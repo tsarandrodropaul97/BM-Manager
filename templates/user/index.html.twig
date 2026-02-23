@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Utilisateurs{% endblock %}
+
+{% block body %}
+<div class="card mb-3">
+    <div class="card-header border-bottom">
+        <div class="row flex-between-center g-3">
+            <div class="col-12 col-sm-auto text-center text-sm-start">
+                <h5 class="mb-0">Gestion des Utilisateurs</h5>
+                <p class="mb-0 fs-11 text-muted">Aperçu et gestion des comptes utilisateurs du système</p>
+            </div>
+            <div class="col-12 col-sm-auto ms-auto text-center text-sm-end">
+                <div class="d-flex gap-2 justify-content-center justify-content-sm-end">
+                    <a href="{{ path('app_user_new') }}" class="btn btn-primary btn-sm px-4">
+                        <span class="fas fa-plus me-1"></span>Nouveau utilisateur
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header border-bottom">
+        <h6 class="mb-0">Liste des Comptes ({{ users|length }})</h6>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive scrollbar">
+            <table class="table table-sm table-striped fs-9 mb-0">
+                <thead class="bg-200 text-900">
+                    <tr>
+                        <th class="align-middle ps-3 text-nowrap">Utilisateur</th>
+                        <th class="align-middle text-nowrap">Email</th>
+                        <th class="align-middle text-nowrap">Rôles</th>
+                        <th class="align-middle text-nowrap">Type</th>
+                        <th class="align-middle text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td class="align-middle ps-3">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-l me-2">
+                                    <div class="bg-subtle-primary text-primary d-flex align-items-center justify-content-center rounded-circle"
+                                        style="width: 38px; height: 38px;">
+                                        <span class="fs-9 fw-bold">{{ user.fullName ? user.fullName|slice(0, 1)|upper :
+                                            user.email|slice(0, 1)|upper }}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-nowrap text-900">{{ user.fullName|default('-') }}</h6>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle text-nowrap">{{ user.email }}</td>
+                        <td class="align-middle text-nowrap">
+                            {% for role in user.roles %}
+                            {% if role == 'ROLE_ADMIN' %}
+                            <span class="badge badge-subtle-danger rounded-pill">Admin</span>
+                            {% elseif role == 'ROLE_USER' %}
+                            <span class="badge badge-subtle-success rounded-pill">User</span>
+                            {% else %}
+                            <span class="badge badge-subtle-secondary rounded-pill">{{ role }}</span>
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="align-middle text-nowrap">
+                            {% if user.locataire %}
+                            <span class="text-primary fw-medium"><span class="fas fa-key me-1"></span>Locataire</span>
+                            {% else %}
+                            <span class="text-muted fs-11">Interne</span>
+                            {% endif %}
+                        </td>
+                        <td class="align-middle text-end pe-3 px-2">
+                            <div class="d-flex justify-content-end gap-1">
+                                <a class="btn btn-subtle-warning btn-sm"
+                                    href="{{ path('app_user_edit', {'id': user.id}) }}" title="Modifier">
+                                    <span class="fas fa-pencil-alt"></span>
+                                </a>
+                                {% if app.user.id != user.id %}
+                                <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}"
+                                    style="display:inline-block"
+                                    onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                    <button class="btn btn-subtle-danger btn-sm" title="Supprimer">
+                                        <span class="fas fa-trash"></span>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">Aucun utilisateur trouvé</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
