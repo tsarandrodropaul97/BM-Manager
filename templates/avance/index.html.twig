@@ -276,9 +276,9 @@
 										{% endif %}
 
 										{% if is_granted('ROLE_ADMIN') %}
-											<form method="post" action="{{ path('app_avance_delete', {'id': avance.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette avance ?');">
+											<form method="post" action="{{ path('app_avance_delete', {'id': avance.id}) }}" class="d-inline form-delete-confirm">
 												<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avance.id) }}">
-												<button class="btn btn-danger" title="Supprimer">
+												<button class="btn btn-danger" type="button" title="Supprimer" onclick="confirmDelete(this.form)">
 													<span class="fas fa-trash-alt"></span>
 												</button>
 											</form>
@@ -410,6 +410,25 @@
     </div>
 
 	<script>
+        function confirmDelete(form) {
+            Swal.fire({
+                title: 'Supprimer cette avance ?',
+                text: "Cette action est irréversible !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, supprimer',
+                cancelButtonText: 'Annuler',
+                background: '#12151e',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+
 		document.addEventListener('DOMContentLoaded', function () {
             // Logique de saisie de montants multiples
             const inputPartial = document.getElementById('inputPartialAmount');

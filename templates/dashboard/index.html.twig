@@ -175,9 +175,9 @@
                                             <td class="py-3 text-center">{{ avance.dateAccord|date('d/m/Y') }}</td>
                                             <td class="py-3 text-end fw-bold text-primary">{{ avance.montantTotal|number_format(0, ',', ' ') }} Ar</td>
                                             <td class="pe-3 py-3 text-center">
-                                                <form method="post" action="{{ path('app_avance_delete', {'id': avance.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette avance ?');">
+                                                <form method="post" action="{{ path('app_avance_delete', {'id': avance.id}) }}" class="d-inline form-delete-confirm">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avance.id) }}">
-                                                    <button class="btn btn-danger btn-sm rounded-circle" title="Supprimer">
+                                                    <button class="btn btn-danger btn-sm rounded-circle" type="button" title="Supprimer" onclick="confirmDelete(this.form)">
                                                         <span class="fas fa-trash-alt fs-12"></span>
                                                     </button>
                                                 </form>
@@ -458,4 +458,27 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block end_javascripts %}
+	<script>
+        function confirmDelete(form) {
+            Swal.fire({
+                title: 'Supprimer cette avance ?',
+                text: "Cette action est irréversible !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, supprimer',
+                cancelButtonText: 'Annuler',
+                background: '#12151e',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
 {% endblock %}
