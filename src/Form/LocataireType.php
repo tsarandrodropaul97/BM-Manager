@@ -87,7 +87,7 @@ class LocataireType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '2M',
+                        'maxSize' => '20M',
                         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
                         'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, WEBP)',
                     ])
@@ -99,7 +99,7 @@ class LocataireType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '2M',
+                        'maxSize' => '20M',
                         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
                         'mimeTypesMessage' => 'Veuillez uploader un fichier valide (JPG, PNG, WEBP, PDF)',
                     ])
@@ -111,7 +111,7 @@ class LocataireType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '2M',
+                        'maxSize' => '20M',
                         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
                         'mimeTypesMessage' => 'Veuillez uploader un fichier valide (JPG, PNG, WEBP, PDF)',
                     ])

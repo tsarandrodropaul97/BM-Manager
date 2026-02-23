@@ -53,7 +53,7 @@ class AvanceSurLoyerType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new File([
-                        'maxSize' => '5M',
+                        'maxSize' => '20M',
                         'mimeTypes' => [
                             'application/pdf',
                             'application/x-pdf',

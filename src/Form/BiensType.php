@@ -285,7 +285,7 @@ class BiensType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new \Symfony\Component\Validator\Constraints\File([
-                        'maxSize' => '5M',
+                        'maxSize' => '20M',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
