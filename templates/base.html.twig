@@ -120,6 +120,39 @@
 <script src="{{ asset('vendors/list.js/list.min.js') }}"></script>
 <script src="{{ asset('assets/js/theme.js') }}"></script>
 
+<script>
+    function confirmAction(title, text, icon, confirmButtonText, cancelButtonText, form) {
+        Swal.fire({
+            title: title || 'Êtes-vous sûr ?',
+            text: text || "Cette action est irréversible !",
+            icon: icon || 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: confirmButtonText || 'Oui, confirmer',
+            cancelButtonText: cancelButtonText || 'Annuler',
+            background: '#12151e',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            const btn = e.target.closest('[data-confirm]');
+            if (btn) {
+                e.preventDefault();
+                const form = btn.closest('form');
+                const message = btn.getAttribute('data-confirm');
+                confirmAction('Confirmation', message, 'warning', 'Oui', 'Non', form);
+            }
+        });
+    });
+</script>
+
 {% block end_javascripts %}{% endblock %}
 </body>
 </html>
