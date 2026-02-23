@@ -8,13 +8,13 @@
 <div class="card mb-3">
 	<div class="card-header border-bottom">
 		<div class="row flex-between-center g-3">
-			<div class="col-12 col-sm-auto align-self-center">
+			<div class="col-12 col-sm-auto text-center text-sm-start">
 				<h5 class="mb-0">Gestion des Locataires</h5>
 				<p class="mb-0 fs-11 text-muted">Aperçu et gestion de vos locataires à Madagascar</p>
 			</div>
-			<div class="col-12 col-sm-auto ms-auto">
-				<div class="d-flex gap-2">
-					<a href="{{ path('app_locataire_new') }}" class="btn btn-primary btn-sm">
+			<div class="col-12 col-sm-auto ms-auto text-center text-sm-end">
+				<div class="d-flex gap-2 justify-content-center justify-content-sm-end">
+					<a href="{{ path('app_locataire_new') }}" class="btn btn-primary btn-sm px-4">
 						<span class="fas fa-plus me-1"></span>Ajouter un locataire
 					</a>
 				</div>
@@ -53,10 +53,14 @@
 				<input type="date" name="dateEntree" value="{{ filters.dateEntree }}" class="form-control"
 					title="Date d'entrée">
 			</div>
-			<div class="col-12 col-md-auto ms-auto text-center text-md-end">
-				<button type="submit" class="btn btn-primary px-4">Filtrer</button>
-				<a href="{{ path('app_locataire_index') }}"
-					class="btn btn-link py-0 text-muted fs-11 mt-2 mt-md-0 d-block d-md-inline-block">Réinitialiser</a>
+			<div class="col-12 col-md-auto ms-md-auto text-center text-md-end">
+				<div class="d-grid d-md-inline-block gap-2">
+					<button type="submit" class="btn btn-primary px-4">Filtrer</button>
+					<a href="{{ path('app_locataire_index') }}"
+						class="btn btn-outline-secondary px-4 d-md-none">Réinitialiser</a>
+					<a href="{{ path('app_locataire_index') }}"
+						class="btn btn-link py-0 text-muted fs-11 d-none d-md-inline-block">Réinitialiser</a>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -73,12 +77,12 @@
 			<table class="table table-sm table-striped fs-11 mb-0">
 				<thead class="bg-200 text-900">
 					<tr>
-						<th class="align-middle ps-3">Locataire</th>
-						<th class="align-middle">Téléphone</th>
-						<th class="align-middle">Email</th>
-						<th class="align-middle">Bien Loué</th>
-						<th class="align-middle">Statut</th>
-						<th class="align-middle text-center">Entrée</th>
+						<th class="align-middle ps-3 text-nowrap">Locataire</th>
+						<th class="align-middle text-nowrap">Téléphone</th>
+						<th class="align-middle text-nowrap">Email</th>
+						<th class="align-middle text-nowrap">Bien Loué</th>
+						<th class="align-middle text-nowrap">Statut</th>
+						<th class="align-middle text-center text-nowrap">Entrée</th>
 						<th class="align-middle text-end pe-3">Actions</th>
 					</tr>
 				</thead>

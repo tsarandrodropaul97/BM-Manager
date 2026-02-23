@@ -8,15 +8,16 @@
 <div class="card mb-3">
 	<div class="card-header border-bottom">
 		<div class="row flex-between-center g-3">
-			<div class="col-12 col-sm-auto align-self-center">
+			<div class="col-12 col-sm-auto text-center text-sm-start">
 				<h5 class="mb-0">Fiche Locataire</h5>
 				<p class="mb-0 fs-11 text-muted">Consultation complète du dossier locataire</p>
 			</div>
-			<div class="col-12 col-sm-auto ms-auto d-flex justify-content-center justify-content-sm-end gap-2">
-				<a href="{{ path('app_locataire_index') }}" class="btn btn-outline-secondary btn-sm">
+			<div
+				class="col-12 col-sm-auto ms-auto d-flex flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-end gap-2">
+				<a href="{{ path('app_locataire_index') }}" class="btn btn-outline-secondary btn-sm px-3">
 					<span class="fas fa-arrow-left me-1"></span>Retour
 				</a>
-				<a href="{{ path('app_locataire_edit', {'id': locataire.id}) }}" class="btn btn-primary btn-sm">
+				<a href="{{ path('app_locataire_edit', {'id': locataire.id}) }}" class="btn btn-primary btn-sm px-3">
 					<span class="fas fa-edit me-1"></span>Modifier
 				</a>
 			</div>
@@ -44,13 +45,14 @@
 						</div>
 					</div>
 					<div class="col-12 col-sm">
-						<h3 class="mb-1">{{ locataire.nomComplet }}</h3>
-						<p class="text-600 mb-1">
-							<span class="fas fa-briefcase me-2"></span>{{ locataire.profession }} chez <strong>{{
+						<h3 class="mb-1 fs-7 fs-sm-5">{{ locataire.nomComplet }}</h3>
+						<p class="text-600 mb-2">
+							<span class="fas fa-briefcase me-2"></span>{{ locataire.profession }} <span
+								class="d-none d-sm-inline">chez</span> <span class="d-sm-none"><br></span><strong>{{
 								locataire.employeur }}</strong>
 						</p>
 						<div
-							class="badge rounded-pill {% if locataire.statut == 'actif' %}bg-subtle-success text-success{% else %}bg-subtle-warning text-warning{% endif %}">
+							class="badge rounded-pill fs-11 {% if locataire.statut == 'actif' %}bg-subtle-success text-success{% else %}bg-subtle-warning text-warning{% endif %}">
 							{{ locataire.statut|capitalize }}
 						</div>
 					</div>
@@ -79,14 +81,16 @@
 			</div>
 			<div class="card-body">
 				<div class="row g-3">
-					<div class="col-12 col-md-6">
-						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-0">Téléphone</label>
-						<a href="tel:{{ locataire.telephone }}" class="fs-4 fw-bold text-primary">{{ locataire.telephone
+					<div class="col-12 col-md-6 text-center text-md-start">
+						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-1">Téléphone</label>
+						<a href="tel:{{ locataire.telephone }}" class="fs-6 fs-sm-4 fw-bold text-primary">{{
+							locataire.telephone
 							}}</a>
 					</div>
-					<div class="col-12 col-md-6">
-						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-0">Email</label>
-						<a href="mailto:{{ locataire.email }}" class="fs-4 fw-bold text-primary">{{ locataire.email
+					<div class="col-12 col-md-6 text-center text-md-start">
+						<label class="fs-11 text-muted text-uppercase fw-semi-bold d-block mb-1">Email</label>
+						<a href="mailto:{{ locataire.email }}" class="fs-6 fs-sm-4 fw-bold text-primary">{{
+							locataire.email
 							}}</a>
 					</div>
 					<div class="col-12 mt-3 pt-3 border-top">

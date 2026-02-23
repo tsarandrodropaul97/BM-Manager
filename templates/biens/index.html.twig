@@ -8,18 +8,18 @@
 <div class="card mb-3">
 	<div class="card-header">
 		<div class="row flex-between-center g-3">
-			<div class="col-12 col-sm-auto align-self-center">
+			<div class="col-12 col-sm-auto text-center text-sm-start">
 				<h5 class="mb-0">Gestion des Biens Immobilier</h5>
 				<p class="mb-0 fs-11 text-muted">Aperçu et gestion de votre parc immobilier</p>
 			</div>
-			<div class="col-12 col-sm-auto ms-auto">
-				<div class="d-flex gap-2">
+			<div class="col-12 col-sm-auto ms-auto text-center text-sm-end">
+				<div class="d-flex gap-2 justify-content-center justify-content-sm-end">
 					{% if is_granted('ROLE_ADMIN') %}
 					<a href="{{ path('app_biens_export', app.request.query.all) }}"
-						class="btn btn-outline-secondary btn-sm">
-						<span class="fas fa-file-export me-1"></span>Exporter
+						class="btn btn-outline-secondary btn-sm px-3">
+						<span class="fas fa-file-export me-1"></span><span class="d-none d-sm-inline">Exporter</span>
 					</a>
-					<a href="{{ path('app_biens_new') }}" class="btn btn-primary btn-sm">
+					<a href="{{ path('app_biens_new') }}" class="btn btn-primary btn-sm px-3">
 						<span class="fas fa-plus me-1"></span>Ajouter un bien
 					</a>
 					{% endif %}
@@ -59,10 +59,14 @@
 							placeholder="Ville">
 					</div>
 					<input type="hidden" name="viewMode" value="{{ viewMode }}">
-					<div class="col-12 col-md-auto ms-auto text-center text-md-end">
-						<button type="submit" class="btn btn-primary px-4">Filtrer</button>
-						<a href="{{ path('app_biens_index') }}"
-							class="btn btn-link py-0 text-muted fs-11 mt-2 mt-md-0 d-block d-md-inline-block">Réinitialiser</a>
+					<div class="col-12 col-md-auto ms-md-auto text-center text-md-end">
+						<div class="d-grid d-md-inline-block gap-2">
+							<button type="submit" class="btn btn-primary px-4">Filtrer</button>
+							<a href="{{ path('app_biens_index') }}"
+								class="btn btn-outline-secondary px-4 d-md-none">Réinitialiser</a>
+							<a href="{{ path('app_biens_index') }}"
+								class="btn btn-link py-0 text-muted fs-11 d-none d-md-inline-block">Réinitialiser</a>
+						</div>
 					</div>
 				</form>
 			</div>
@@ -71,35 +75,35 @@
 </div>
 
 <div class="row g-3 mb-3">
-	<div class="col-sm-6 col-lg-3">
+	<div class="col-6 col-lg-3">
 		<div class="card border-0 h-100 bg-subtle-primary">
-			<div class="card-body text-center py-4">
-				<div class="fs-4 fw-bold text-primary mb-1">{{ stats.total }}</div>
-				<h6 class="text-primary mb-0 opacity-75 fw-semi-bold">Total Biens</h6>
+			<div class="card-body text-center py-3 py-sm-4">
+				<div class="fs-5 fs-sm-4 fw-bold text-primary mb-1">{{ stats.total }}</div>
+				<h6 class="text-primary mb-0 opacity-75 fw-semi-bold fs-11">Total Biens</h6>
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-6 col-lg-3">
+	<div class="col-6 col-lg-3">
 		<div class="card border-0 h-100 bg-subtle-success">
-			<div class="card-body text-center py-4">
-				<div class="fs-4 fw-bold text-success mb-1">{{ stats.occupes }}</div>
-				<h6 class="text-success mb-0 opacity-75 fw-semi-bold">Occupés</h6>
+			<div class="card-body text-center py-3 py-sm-4">
+				<div class="fs-5 fs-sm-4 fw-bold text-success mb-1">{{ stats.occupes }}</div>
+				<h6 class="text-success mb-0 opacity-75 fw-semi-bold fs-11">Occupés</h6>
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-6 col-lg-3">
+	<div class="col-6 col-lg-3">
 		<div class="card border-0 h-100 bg-subtle-warning">
-			<div class="card-body text-center py-4">
-				<div class="fs-4 fw-bold text-warning mb-1">{{ stats.enTravaux }}</div>
-				<h6 class="text-warning mb-0 opacity-75 fw-semi-bold">En travaux</h6>
+			<div class="card-body text-center py-3 py-sm-4">
+				<div class="fs-5 fs-sm-4 fw-bold text-warning mb-1">{{ stats.enTravaux }}</div>
+				<h6 class="text-warning mb-0 opacity-75 fw-semi-bold fs-11">En travaux</h6>
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-6 col-lg-3">
+	<div class="col-6 col-lg-3">
 		<div class="card border-0 h-100 bg-subtle-danger">
-			<div class="card-body text-center py-4">
-				<div class="fs-4 fw-bold text-danger mb-1">{{ stats.vacants }}</div>
-				<h6 class="text-danger mb-0 opacity-75 fw-semi-bold">Vacants</h6>
+			<div class="card-body text-center py-3 py-sm-4">
+				<div class="fs-5 fs-sm-4 fw-bold text-danger mb-1">{{ stats.vacants }}</div>
+				<h6 class="text-danger mb-0 opacity-75 fw-semi-bold fs-11">Vacants</h6>
 			</div>
 		</div>
 	</div>
@@ -202,13 +206,13 @@
 			<table class="table table-sm table-striped fs-11 mb-0">
 				<thead class="bg-200 text-900">
 					<tr>
-						<th class="align-middle ps-3">Bien</th>
-						<th class="align-middle">Référence</th>
-						<th class="align-middle">Ville</th>
-						<th class="align-middle">Statut</th>
-						<th class="align-middle text-center">Surface</th>
-						<th class="align-middle text-center">Pièces</th>
-						<th class="align-middle text-center">Loyer</th>
+						<th class="align-middle ps-3 text-nowrap">Bien</th>
+						<th class="align-middle text-nowrap">Référence</th>
+						<th class="align-middle text-nowrap">Ville</th>
+						<th class="align-middle text-nowrap">Statut</th>
+						<th class="align-middle text-center text-nowrap">Surface</th>
+						<th class="align-middle text-center text-nowrap">Pièces</th>
+						<th class="align-middle text-center text-nowrap">Loyer</th>
 						<th class="align-middle text-end pe-3">Actions</th>
 					</tr>
 				</thead>

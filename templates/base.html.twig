@@ -165,34 +165,57 @@
             const navbarVertical = document.querySelector('.navbar-vertical');
 
             if (navbarVerticalCollapse && navbarVertical) {
+                const isMobile = () => window.innerWidth < 1200;
+
                 navbarVerticalCollapse.addEventListener('show.bs.collapse', function () {
-                    navbarVertical.classList.add('show');
-                    document.body.style.overflow = 'hidden';
+                    if (isMobile()) {
+                        navbarVertical.classList.add('show');
+                        document.body.style.overflow = 'hidden';
 
-                    // Add backdrop
-                    const backdrop = document.createElement('div');
-                    backdrop.className = 'navbar-vertical-backdrop';
-                    backdrop.style.position = 'fixed';
-                    backdrop.style.top = '0';
-                    backdrop.style.left = '0';
-                    backdrop.style.width = '100vw';
-                    backdrop.style.height = '100vh';
-                    backdrop.style.background = 'rgba(0,0,0,0.2)';
-                    backdrop.style.backdropFilter = 'blur(2px)';
-                    backdrop.style.zIndex = '1040';
-                    backdrop.id = 'navbarBackdrop';
-                    document.body.appendChild(backdrop);
+                        // Add backdrop
+                        const backdrop = document.createElement('div');
+                        backdrop.className = 'navbar-vertical-backdrop';
+                        backdrop.style.position = 'fixed';
+                        backdrop.style.top = '0';
+                        backdrop.style.left = '0';
+                        backdrop.style.width = '100vw';
+                        backdrop.style.height = '100vh';
+                        backdrop.style.background = 'rgba(0,0,0,0.4)';
+                        backdrop.style.backdropFilter = 'blur(4px)';
+                        backdrop.style.zIndex = '1055';
+                        backdrop.id = 'navbarBackdrop';
+                        document.body.appendChild(backdrop);
 
-                    backdrop.addEventListener('click', function () {
-                        bootstrap.Collapse.getInstance(navbarVerticalCollapse).hide();
-                    });
+                        // Trigger fade in
+                        setTimeout(() => backdrop.classList.add('show'), 10);
+
+                        backdrop.addEventListener('click', function () {
+                            const bsCollapse = bootstrap.Collapse.getInstance(navbarVerticalCollapse);
+                            if (bsCollapse) bsCollapse.hide();
+                        });
+                    }
                 });
 
                 navbarVerticalCollapse.addEventListener('hide.bs.collapse', function () {
-                    navbarVertical.classList.remove('show');
-                    document.body.style.overflow = 'auto';
-                    const backdrop = document.getElementById('navbarBackdrop');
-                    if (backdrop) backdrop.remove();
+                    if (isMobile()) {
+                        navbarVertical.classList.remove('show');
+                        document.body.style.overflow = 'auto';
+                        const backdrop = document.getElementById('navbarBackdrop');
+                        if (backdrop) {
+                            backdrop.classList.remove('show');
+                            setTimeout(() => backdrop.remove(), 300);
+                        }
+                    }
+                });
+
+                // Reset state on window resize
+                window.addEventListener('resize', () => {
+                    if (!isMobile()) {
+                        navbarVertical.classList.remove('show');
+                        document.body.style.overflow = 'auto';
+                        const backdrop = document.getElementById('navbarBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
                 });
             }
         });
@@ -209,27 +232,43 @@
         @media (max-width: 1199.98px) {
             .navbar-vertical {
                 display: block !important;
-                max-width: 0;
-                overflow: hidden;
-                transition: all 0.3s ease-in-out;
-                position: fixed;
-                z-index: 1050;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                background: #fff;
-                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                bottom: 0 !important;
+                width: 280px !important;
+                max-width: 85vw !important;
+                z-index: 1060 !important;
+                background: #fff !important;
+                transform: translateX(-101%);
+                /* Extra 1% to ensure it's hidden */
+                transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                box-shadow: none !important;
+                overflow-y: auto !important;
+                visibility: hidden;
+                border-right: none !important;
             }
 
             .navbar-vertical.show {
-                max-width: 250px;
-                width: 250px;
+                transform: translateX(0);
+                visibility: visible;
+                box-shadow: 10px 0 25px rgba(0, 0, 0, 0.1) !important;
             }
 
             .navbar-vertical .navbar-collapse {
-                width: 250px;
-                max-height: 100vh;
-                overflow-y: auto;
+                width: 100% !important;
+                display: block !important;
+                max-height: none !important;
+            }
+
+            /* Fix text alignment and spacing */
+            .navbar-vertical .nav-link {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            .navbar-vertical .navbar-vertical-label {
+                margin-left: 1rem !important;
             }
 
             .content {
@@ -237,15 +276,27 @@
                 transition: all 0.3s ease;
             }
 
-            /* Ensure the hamburger button is reachable */
             .navbar-toggler-humburger-icon {
-                z-index: 1060;
+                z-index: 1070;
             }
 
             [data-bs-theme='dark'] .navbar-vertical {
                 background: #12151e !important;
-                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
             }
+
+            .navbar-vertical .navbar-brand {
+                display: none !important;
+            }
+        }
+
+        .navbar-vertical-backdrop {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar-vertical-backdrop.show {
+            opacity: 1;
         }
     </style>
 

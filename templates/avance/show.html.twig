@@ -31,17 +31,18 @@
             <div class="card-body">
                 <div class="row align-items-center g-3 text-center text-sm-start">
                     <div class="col-12 col-sm-auto">
-                        <div class="avatar avatar-4xl mx-auto">
+                        <div class="avatar avatar-3xl avatar-sm-4xl mx-auto">
                             <div class="bg-subtle-primary text-primary d-flex align-items-center justify-content-center rounded-circle mx-auto"
-                                style="width: 80px; height: 80px;">
-                                <span class="fas fa-hand-holding-usd fa-2x"></span>
+                                style="width: 60px; height: 60px; min-width: 60px;">
+                                <span class="fas fa-hand-holding-usd fa-lg"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-sm">
-                        <h3 class="mb-1 text-primary">{{ avance.montantTotal|number_format(0, ',', ' ') }} Ar</h3>
+                        <h3 class="mb-1 text-primary fs-8 fs-sm-7">{{ avance.montantTotal|number_format(0, ',', ' ') }}
+                            Ar</h3>
                         {% if avance.montantDetails %}
-                        <div class="fs-11 text-muted mb-2 italic">
+                        <div class="fs-11 text-muted mb-2 italic px-2 px-sm-0">
                             <span class="fas fa-calculator me-1"></span>
                             {% for amt in avance.montantDetails %}
                             {{ amt|number_format(0, ',', ' ') }} Ar{% if not loop.last %} + {% endif %}
@@ -49,11 +50,11 @@
                             = {{ avance.montantTotal|number_format(0, ',', ' ') }} Ar
                         </div>
                         {% endif %}
-                        <p class="text-600 mb-1">
+                        <p class="text-600 mb-2">
                             <span class="fas fa-user me-2"></span>Locataire : <strong>{{ avance.locataire.nomComplet
                                 }}</strong>
                         </p>
-                        <div class="badge rounded-pill bg-subtle-success text-success">
+                        <div class="badge rounded-pill bg-subtle-success text-success fs-11">
                             Versement du {{ avance.dateAccord|date('d/m/Y') }}
                         </div>
                     </div>
@@ -83,19 +84,20 @@
             </div>
             <div class="card-footer bg-light border-top">
                 <div class="row text-center g-3">
-                    <div class="col-12 col-md-4">
-                        <div class="fs-11 text-muted text-uppercase">Loyer Initial</div>
-                        <div class="fw-bold fs-9">{{ stats.loyerInitial|number_format(0, ',', ' ') }} Ar</div>
+                    <div class="col-4 col-md-4">
+                        <div class="fs-11 text-muted text-uppercase mb-1">Loyer Initial</div>
+                        <div class="fw-bold fs-11 fs-sm-9">{{ stats.loyerInitial|number_format(0, ',', ' ') }} <span
+                                class="d-none d-sm-inline">Ar</span></div>
                     </div>
-                    <div class="col-12 col-md-4 border-start-md border-top border-top-md-0 pt-3 pt-md-0">
-                        <div class="fs-11 text-success text-uppercase">Déduit ce mois</div>
-                        <div class="fw-bold fs-9 text-success">- {{ stats.montantDeduit|number_format(0, ',', ' ') }} Ar
-                        </div>
+                    <div class="col-4 col-md-4 border-start border-start-md">
+                        <div class="fs-11 text-success text-uppercase mb-1">Déduit</div>
+                        <div class="fw-bold fs-11 fs-sm-9 text-success">- {{ stats.montantDeduit|number_format(0, ',', '
+                            ') }} <span class="d-none d-sm-inline">Ar</span></div>
                     </div>
-                    <div class="col-12 col-md-4 border-start-md border-top border-top-md-0 pt-3 pt-md-0">
-                        <div class="fs-11 text-primary text-uppercase">Solde restant</div>
-                        <div class="fw-bold fs-9 text-primary">{{ stats.soldeRestant|number_format(0, ',', ' ') }} Ar
-                        </div>
+                    <div class="col-4 col-md-4 border-start border-start-md">
+                        <div class="fs-11 text-primary text-uppercase mb-1">Solde</div>
+                        <div class="fw-bold fs-11 fs-sm-9 text-primary">{{ stats.soldeRestant|number_format(0, ',', ' ')
+                            }} <span class="d-none d-sm-inline">Ar</span></div>
                     </div>
                 </div>
             </div>
