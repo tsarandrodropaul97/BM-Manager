@@ -351,4 +351,25 @@ class AvanceSurLoyerController extends AbstractController
 
         return $this->redirectToRoute('app_avance_index');
     }
+
+    #[Route('/{id}/delete', name: 'app_avance_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function delete(Request $request, AvanceSurLoyer $avance, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $avance->getId(), $request->getPayload()->getString('_token'))) {
+            // Supprimer les fichiers physiques des justificatifs liés
+            foreach ($avance->getDocuments() as $doc) {
+                $filePath = $this->getParameter('avances_directory') . '/' . $doc->getFilename();
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+
+            $entityManager->remove($avance);
+            $entityManager->flush();
+            $this->addFlash('success', 'L\'avance a été supprimée avec succès.');
+        }
+
+        return $this->redirectToRoute('app_avance_index');
+    }
 }

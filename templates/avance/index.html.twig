@@ -275,9 +275,18 @@
 											</form>
 										{% endif %}
 
-										<a href="{{ path('app_avance_show', {'id': avance.id}) }}" class="btn btn-light" title="Détails">
-											<span class="fas fa-eye"></span>
-										</a>
+										{% if is_granted('ROLE_ADMIN') %}
+											<form method="post" action="{{ path('app_avance_delete', {'id': avance.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette avance ?');">
+												<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avance.id) }}">
+												<button class="btn btn-danger" title="Supprimer">
+													<span class="fas fa-trash-alt"></span>
+												</button>
+											</form>
+										{% else %}
+											<a href="{{ path('app_avance_show', {'id': avance.id}) }}" class="btn btn-light" title="Détails">
+												<span class="fas fa-eye"></span>
+											</a>
+										{% endif %}
 									</div>
 								</td>
 							</tr>
