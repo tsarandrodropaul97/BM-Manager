@@ -83,6 +83,9 @@ class AvanceSurLoyerController extends AbstractController
             $qb->andWhere('a.status = :status')->setParameter('status', $status);
         }
 
+        // On garde une copie du QB pour la pagination avant d'exécuter l'autre
+        $paginationQb = clone $qb;
+
         $query = $qb->orderBy('a.dateAccord', 'DESC')->getQuery();
 
         // On récupère tout pour les stats avant de paginer
@@ -178,7 +181,7 @@ class AvanceSurLoyerController extends AbstractController
 
         // Pagination
         $pagination = $paginator->paginate(
-            $query, /* query NOT result */
+            $paginationQb->orderBy('a.dateAccord', 'DESC'),
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
