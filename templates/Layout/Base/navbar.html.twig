@@ -1,24 +1,36 @@
 {# templates/Layout/Base/navbar.html.twig #}
 
 {# Navigation top - Structure requise par Falcon #}
-<nav class="navbar navbar-light navbar-glass navbar-top navbar-expand-lg" data-navbar-top="combo" data-move-target="#navbarVerticalNav" style="display: none;"></nav>
+<nav class="navbar navbar-light navbar-glass navbar-top navbar-expand-lg" data-navbar-top="combo"
+    data-move-target="#navbarVerticalNav" style="display: none;"></nav>
 
 {# Contenu principal #}
 <div class="content">
     {# Header/Navbar du contenu #}
     <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand">
         <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse"
-                aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation">
+            data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse"
+            aria-expanded="false" aria-label="Toggle Navigation">
             <span class="navbar-toggle-icon"><span class="toggle-line"></span></span>
         </button>
+
+        <a class="navbar-brand me-1 me-sm-3 d-lg-none" href="{{ path('app_dashboard') }}">
+            <div class="d-flex align-items-center">
+                <div class="me-2"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #0d6efd, #6f42c1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: white; font-weight: 700; font-size: 10px;">BM</span>
+                </div>
+                <span class="text-900 dark__text-white fw-bold fs-8">BailManager</span>
+            </div>
+        </a>
 
         {# Barre de recherche #}
         <ul class="navbar-nav align-items-center d-none d-lg-block">
             <li class="nav-item">
                 <div class="search-box">
                     <form class="position-relative">
-                        <input class="form-control search-input" type="search" placeholder="Rechercher..." aria-label="Search" />
+                        <input class="form-control search-input" type="search" placeholder="Rechercher..."
+                            aria-label="Search" />
                         <span class="fas fa-search search-box-icon"></span>
                     </form>
                 </div>
@@ -30,21 +42,24 @@
             {# Theme switcher #}
             <li class="nav-item ps-2 pe-0">
                 <div class="dropdown theme-control-dropdown">
-                    <a class="nav-link d-flex align-items-center dropdown-toggle fa-icon-wait fs-9 pe-1 py-0"
-                       href="#" role="button" id="themeSwitchDropdown" data-bs-toggle="dropdown">
+                    <a class="nav-link d-flex align-items-center dropdown-toggle fa-icon-wait fs-9 pe-1 py-0" href="#"
+                        role="button" id="themeSwitchDropdown" data-bs-toggle="dropdown">
                         <span class="fas fa-sun fs-7" data-theme-dropdown-toggle-icon="light"></span>
                         <span class="fas fa-moon fs-7" data-theme-dropdown-toggle-icon="dark"></span>
                         <span class="fas fa-adjust fs-7" data-theme-dropdown-toggle-icon="auto"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-caret border py-0 mt-3">
                         <div class="bg-white dark__bg-1000 rounded-2 py-2">
-                            <button class="dropdown-item d-flex align-items-center gap-2" type="button" value="light" data-theme-control="theme">
+                            <button class="dropdown-item d-flex align-items-center gap-2" type="button" value="light"
+                                data-theme-control="theme">
                                 <span class="fas fa-sun"></span>Clair
                             </button>
-                            <button class="dropdown-item d-flex align-items-center gap-2" type="button" value="dark" data-theme-control="theme">
+                            <button class="dropdown-item d-flex align-items-center gap-2" type="button" value="dark"
+                                data-theme-control="theme">
                                 <span class="fas fa-moon"></span>Sombre
                             </button>
-                            <button class="dropdown-item d-flex align-items-center gap-2" type="button" value="auto" data-theme-control="theme">
+                            <button class="dropdown-item d-flex align-items-center gap-2" type="button" value="auto"
+                                data-theme-control="theme">
                                 <span class="fas fa-adjust"></span>Auto
                             </button>
                         </div>
@@ -55,24 +70,24 @@
             {# Profil utilisateur #}
             <li class="nav-item dropdown">
                 <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown">
-                    <div class="avatar avatar-xl">
+                    <div class="avatar avatar-l avatar-sm-xl">
                         <img class="rounded-circle" src="{{ asset('assets/img/team/3-thumb.png') }}" alt="User" />
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-caret dropdown-menu-end py-0">
                     <div class="bg-white dark__bg-1000 rounded-2 py-2">
                         {% if app.user %}
-                            <a class="dropdown-item" href="{{ path('app_profile') }}">
-                                <span class="fas fa-user me-1"></span>Profil
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ path('app_logout') }}">
-                                <span class="fas fa-sign-out-alt me-1"></span>Déconnexion
-                            </a>
+                        <a class="dropdown-item" href="{{ path('app_profile') }}">
+                            <span class="fas fa-user me-1"></span>Profil
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path('app_logout') }}">
+                            <span class="fas fa-sign-out-alt me-1"></span>Déconnexion
+                        </a>
                         {% else %}
-                            <a class="dropdown-item" href="">
-                                <span class="fas fa-sign-in-alt me-1"></span>Connexion
-                            </a>
+                        <a class="dropdown-item" href="">
+                            <span class="fas fa-sign-in-alt me-1"></span>Connexion
+                        </a>
                         {% endif %}
                     </div>
                 </div>
@@ -82,12 +97,12 @@
 
     {# Messages Flash #}
     {% for type, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show mt-3" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        {% endfor %}
+    {% for message in messages %}
+    <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show mt-3" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
     {% endfor %}
 
-{# Le contenu des pages sera injecté ici via le block body du base.html.twig #}
+    {# Le contenu des pages sera injecté ici via le block body du base.html.twig #}

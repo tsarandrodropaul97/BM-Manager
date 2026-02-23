@@ -3,179 +3,198 @@
 {% block title %}Mon Profil{% endblock %}
 
 {% block body %}
-    <div class="row g-3">
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Réglages du Profil</h5>
-                    <span class="badge badge-subtle-primary">Compte Locataire</span>
+<div class="row g-3">
+    <div class="col-12">
+        <div class="card mb-3">
+            <div class="card-header border-bottom d-flex flex-between-center g-3">
+                <h5 class="mb-0">Réglages du Profil</h5>
+                <span class="badge badge-subtle-primary">Compte Locataire</span>
+            </div>
+            <div class="card-body bg-light dark__bg-1100">
+                {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show"
+                    role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div class="card-body bg-light dark__bg-1100">
-                    {% for label, messages in app.flashes %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
+                {% endfor %}
+                {% endfor %}
 
-                    {{ form_start(form) }}
-                    <div class="row g-3">
-                        <!-- Colonne Gauche : Identité -->
-                        <div class="col-lg-8">
-                            <div class="card shadow-none border mb-3">
-                                <div class="card-header border-bottom">
-                                    <h6 class="mb-0 text-primary">
-                                        <span class="fas fa-id-card me-2"></span>Informations Personnelles
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row align-items-center mb-4">
-                                        <div class="col-auto">
-                                            <div class="avatar avatar-5xl">
-                                                {% if locataire.photo %}
-                                                    <img src="{{ asset('uploads/locataires/' ~ locataire.photo) }}" alt="" class="rounded-circle shadow-sm" style="width: 100px; height: 100px; object-fit: cover;">
-                                                {% else %}
-                                                    <div class="bg-subtle-primary text-primary d-flex align-items-center justify-content-center rounded-circle" style="width: 100px; height: 100px;">
-                                                        <span class="fas fa-user fa-3x"></span>
-                                                    </div>
-                                                {% endif %}
+                {{ form_start(form) }}
+                <div class="row g-3">
+                    <!-- Colonne Gauche : Identité -->
+                    <div class="col-lg-8">
+                        <div class="card shadow-none border mb-3">
+                            <div class="card-header border-bottom">
+                                <h6 class="mb-0 text-primary">
+                                    <span class="fas fa-id-card me-2"></span>Informations Personnelles
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center mb-4 g-3 text-center text-sm-start">
+                                    <div class="col-12 col-sm-auto">
+                                        <div class="avatar avatar-5xl mx-auto">
+                                            {% if locataire.photo %}
+                                            <img src="{{ asset('uploads/locataires/' ~ locataire.photo) }}" alt=""
+                                                class="rounded-circle shadow-sm"
+                                                style="width: 100px; height: 100px; object-fit: cover;">
+                                            {% else %}
+                                            <div class="bg-subtle-primary text-primary d-flex align-items-center justify-content-center rounded-circle mx-auto"
+                                                style="width: 100px; height: 100px;">
+                                                <span class="fas fa-user fa-3x"></span>
                                             </div>
-                                        </div>
-                                        <div class="col">
-                                            <h4 class="mb-1">{{ locataire.nomComplet }}</h4>
-                                            <p class="text-muted fs-11 mb-2">Modifier votre photo de profil</p>
-                                            <div class="col-md-8">
-                                                {{ form_widget(form.photo, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
+                                            {% endif %}
                                         </div>
                                     </div>
-
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ form_label(form.telephone, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
-                                        </div>
-                                        <div class="col-12">
-                                            {{ form_label(form.adresseActuelle, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.adresseActuelle, {'attr': {'class': 'form-control', 'rows': 2}}) }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ form_label(form.profession, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.profession, {'attr': {'class': 'form-control'}}) }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ form_label(form.employeur, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.employeur, {'attr': {'class': 'form-control'}}) }}
+                                    <div class="col-12 col-sm">
+                                        <h4 class="mb-1">{{ locataire.nomComplet }}</h4>
+                                        <p class="text-muted fs-11 mb-2">Modifier votre photo de profil</p>
+                                        <div class="col-12 col-md-8 mx-auto mx-sm-0">
+                                            {{ form_widget(form.photo, {'attr': {'class': 'form-control
+                                            form-control-sm'}}) }}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="card shadow-none border">
-                                <div class="card-header border-bottom">
-                                    <h6 class="mb-0 text-danger">
-                                        <span class="fas fa-shield-alt me-2"></span>Sécurité et Mot de passe
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row g-3">
-                                        <div class="col-12">
-                                            {{ form_label(form.currentPassword, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.currentPassword, {'attr': {'class': 'form-control', 'placeholder': 'Votre mot de passe actuel'}}) }}
-                                            <div class="fs-11 text-muted mt-1 italic">Requis uniquement pour changer de mot de passe.</div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ form_label(form.plainPassword.first, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ form_label(form.plainPassword.second, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
-                                        </div>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.telephone, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form_label(form.adresseActuelle, null, {'label_attr': {'class':
+                                        'form-label'}}) }}
+                                        {{ form_widget(form.adresseActuelle, {'attr': {'class': 'form-control', 'rows':
+                                        2}}) }}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.profession, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.profession, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.employeur, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.employeur, {'attr': {'class': 'form-control'}}) }}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Colonne Droite : Infos Location & Actions -->
-                        <div class="col-lg-4">
-                            <div class="sticky-top" style="top: 80px; z-index: 10;">
-                                <div class="card mb-3 border border-primary-subtle bg-subtle-primary">
-                                    <div class="card-body">
-                                        <h6 class="text-primary text-uppercase fs-11 fw-semi-bold mb-3">Votre Location Actuelle</h6>
-                                        {% if locataire.bien %}
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="avatar avatar-3xl me-3">
-                                                    {% if locataire.bien.image %}
-                                                        <img src="{{ asset('uploads/biens/' ~ locataire.bien.image) }}" alt="" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
-                                                    {% else %}
-                                                        <div class="bg-primary text-white d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 60px;">
-                                                            <span class="fas fa-home"></span>
-                                                        </div>
-                                                    {% endif %}
-                                                </div>
-                                                <div>
-                                                    <h6 class="mb-0 text-900">{{ locataire.bien.designation }}</h6>
-                                                    <p class="fs-11 mb-0 text-600">{{ locataire.bien.ville }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="border-top border-primary-subtle pt-3">
-                                                <div class="d-flex justify-content-between mb-2">
-                                                    <span class="fs-11 text-700">Date d'arrivée :</span>
-                                                    <span class="fs-11 fw-bold">{{ locataire.dateEntree|date('d/m/Y') }}</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between mb-2">
-                                                    <span class="fs-11 text-700">Loyer mensuel :</span>
-                                                    <span class="fs-11 fw-bold text-primary">{{ locataire.bien.prix ? locataire.bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between mb-0">
-                                                    <span class="fs-11 text-700">Statut bail :</span>
-                                                    <span class="badge badge-subtle-success fs-10 px-2">{{ locataire.statut|capitalize }}</span>
-                                                </div>
-                                            </div>
-                                        {% else %}
-                                            <div class="text-center py-3">
-                                                <span class="fas fa-key fa-2x text-300 mb-2"></span>
-                                                <p class="text-muted fs-11 mb-0">Aucun bien associé à votre compte.</p>
-                                            </div>
-                                        {% endif %}
+                        <div class="card shadow-none border">
+                            <div class="card-header border-bottom">
+                                <h6 class="mb-0 text-danger">
+                                    <span class="fas fa-shield-alt me-2"></span>Sécurité et Mot de passe
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        {{ form_label(form.currentPassword, null, {'label_attr': {'class':
+                                        'form-label'}}) }}
+                                        {{ form_widget(form.currentPassword, {'attr': {'class': 'form-control',
+                                        'placeholder': 'Votre mot de passe actuel'}}) }}
+                                        <div class="fs-11 text-muted mt-1 italic">Requis uniquement pour changer de mot
+                                            de passe.</div>
                                     </div>
-                                </div>
-
-                                <div class="card border">
-                                    <div class="card-body">
-                                        <button type="submit" class="btn btn-primary d-block w-100 mb-2">
-                                            <span class="fas fa-save me-2"></span>Enregistrer
-                                        </button>
-                                        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary d-block w-100">
-                                            Annuler
-                                        </a>
-                                        <p class="text-center fs-11 text-muted mt-3 mb-0">
-                                            <span class="fas fa-info-circle me-1"></span>
-                                            Les modifications seront prises en compte immédiatement.
-                                        </p>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.plainPassword.first, null, {'label_attr': {'class':
+                                        'form-label'}}) }}
+                                        {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.plainPassword.second, null, {'label_attr': {'class':
+                                        'form-label'}}) }}
+                                        {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}})
+                                        }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {{ form_end(form) }}
+
+                    <!-- Colonne Droite : Infos Location & Actions -->
+                    <div class="col-lg-4">
+                        <div class="sticky-top" style="top: 80px; z-index: 10;">
+                            <div class="card mb-3 border border-primary-subtle bg-subtle-primary">
+                                <div class="card-body">
+                                    <h6 class="text-primary text-uppercase fs-11 fw-semi-bold mb-3">Votre Location
+                                        Actuelle</h6>
+                                    {% if locataire.bien %}
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="avatar avatar-3xl me-3">
+                                            {% if locataire.bien.image %}
+                                            <img src="{{ asset('uploads/biens/' ~ locataire.bien.image) }}" alt=""
+                                                class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                            {% else %}
+                                            <div class="bg-primary text-white d-flex align-items-center justify-content-center rounded"
+                                                style="width: 60px; height: 60px;">
+                                                <span class="fas fa-home"></span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 text-900">{{ locataire.bien.designation }}</h6>
+                                            <p class="fs-11 mb-0 text-600">{{ locataire.bien.ville }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="border-top border-primary-subtle pt-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="fs-11 text-700">Date d'arrivée :</span>
+                                            <span class="fs-11 fw-bold">{{ locataire.dateEntree|date('d/m/Y') }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="fs-11 text-700">Loyer mensuel :</span>
+                                            <span class="fs-11 fw-bold text-primary">{{ locataire.bien.prix ?
+                                                locataire.bien.prix|number_format(0, ',', ' ') ~ ' Ar' : 'N/A' }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-0">
+                                            <span class="fs-11 text-700">Statut bail :</span>
+                                            <span class="badge badge-subtle-success fs-10 px-2">{{
+                                                locataire.statut|capitalize }}</span>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center py-3">
+                                        <span class="fas fa-key fa-2x text-300 mb-2"></span>
+                                        <p class="text-muted fs-11 mb-0">Aucun bien associé à votre compte.</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="card border">
+                                <div class="card-body">
+                                    <button type="submit" class="btn btn-primary d-block w-100 mb-2">
+                                        <span class="fas fa-save me-2"></span>Enregistrer
+                                    </button>
+                                    <a href="{{ path('app_dashboard') }}"
+                                        class="btn btn-outline-secondary d-block w-100">
+                                        Annuler
+                                    </a>
+                                    <p class="text-center fs-11 text-muted mt-3 mb-0">
+                                        <span class="fas fa-info-circle me-1"></span>
+                                        Les modifications seront prises en compte immédiatement.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                {{ form_end(form) }}
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

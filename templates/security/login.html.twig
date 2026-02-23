@@ -3,180 +3,173 @@
 {% block title %}Connexion - BM Manager ERP{% endblock %}
 
 {% block body %}
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            overflow-y: hidden; /* empêche le scroll vertical */
-        }
-    </style>
-            <div class="row min-vh-100 bg-100">
-                {# Image latérale simplifiée #}
-                <div class="col-6 d-none d-lg-block position-relative">
-                    <div class="bg-holder" style="background-image:url({{ asset('assets/img/generic/21.jpg') }});background-position: 50% 20%;"></div>
+<style>
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+    }
+</style>
+<div class="row min-vh-100 bg-100 g-0">
+    {# Image latérale simplifiée #}
+    <div class="col-6 d-none d-lg-block position-relative">
+        <div class="bg-holder"
+            style="background-image:url({{ asset('assets/img/generic/21.jpg') }});background-position: 50% 20%;"></div>
 
-                    {# Overlay simplifié #}
-                    <div class="position-absolute bottom-0 start-0 w-100 p-4"
-                         style="background: linear-gradient(transparent, rgba(42, 123, 228, 0.9));">
-                        <div class="text-white mb-5">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="fas fa-building fa-2x me-3"></i>
-                                <h3 class="fw-bold mb-0">Gestion Immobilière Simplifiée</h3>
-                            </div>
-                            <p class="mb-0 opacity-90">
-                                Gérez vos biens, locataires et contrats de bail en toute simplicité.
-                            </p>
-                        </div>
-                    </div>
+        {# Overlay simplifié #}
+        <div class="position-absolute bottom-0 start-0 w-100 p-4"
+            style="background: linear-gradient(transparent, rgba(42, 123, 228, 0.9));">
+            <div class="text-white mb-5">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-building fa-2x me-3"></i>
+                    <h3 class="fw-bold mb-0">Gestion Immobilière Simplifiée</h3>
                 </div>
-
-                <div class="col-sm-10 col-md-6 px-sm-0 align-self-center mx-auto">
-                    <div class="row justify-content-center g-0">
-                        <div class="col-lg-9 col-xl-8 col-xxl-6">
-                            <div class="card shadow border-0">
-                                {# En-tête compact #}
-                                <div class="card-header bg-primary text-center py-3 border-0">
-                                    <i class="fas fa-building text-white fa-lg mb-2"></i>
-                                    <h4 class="text-white fw-bold mb-1">BM Manager</h4>
-                                    <small class="text-white opacity-75">ERP Gestion Immobilière</small>
-                                </div>
-
-                                <div class="card-body p-4">
-                                    {# Titre simplifié #}
-                                    <div class="text-center mb-3">
-                                        <h5 class="fw-bold text-primary mb-1">Accès à votre espace</h5>
-                                        <small class="text-muted">Connectez-vous pour gérer votre portefeuille immobilier</small>
-                                    </div>
-
-                                    {# Messages d'erreur compacts #}
-                                    {% if error %}
-                                        <div class="alert alert-danger border-0 py-2 mb-3" role="alert">
-                                            <small><i class="fas fa-exclamation-triangle me-1"></i>
-                                                {{ error.messageKey|trans(error.messageData, 'security') }}</small>
-                                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
-                                        </div>
-                                    {% endif %}
-
-                                    {# Messages flash compacts #}
-                                    {% for label, messages in app.flashes %}
-                                        {% for message in messages %}
-                                            <div class="alert alert-{{ label == 'error' ? 'danger' : (label == 'success' ? 'success' : 'info') }} border-0 py-2 mb-3" role="alert">
-                                                <small><i class="fas fa-info-circle me-1"></i> {{ message }}</small>
-                                                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
-                                            </div>
-                                        {% endfor %}
-                                    {% endfor %}
-
-                                    {# Message si déjà connecté - compact #}
-                                    {% if app.user %}
-                                        <div class="alert alert-success border-0 text-center py-3">
-                                            <i class="fas fa-user-check fa-lg text-success mb-2"></i>
-                                            <h6 class="mb-2">Connecté : {{ app.user.userIdentifier }}</h6>
-                                            <div class="d-grid gap-2 d-md-flex justify-content-center">
-                                                <a href="{{ path('app_dashboard') }}" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
-                                                </a>
-                                                <a href="{{ path('app_logout') }}" class="btn btn-outline-secondary btn-sm">
-                                                    Déconnexion
-                                                </a>
-                                            </div>
-                                        </div>
-                                    {% else %}
-
-                                        {# Formulaire compact #}
-                                        <form method="post" action="{{ path('app_login') }}">
-                                            <div class="mb-3">
-                                                <label class="form-label fw-semibold small" for="inputEmail">
-                                                    <i class="fas fa-envelope me-1 text-muted"></i> Email professionnel
-                                                </label>
-                                                <input type="email"
-                                                       value="{{ last_username }}"
-                                                       name="email"
-                                                       id="inputEmail"
-                                                       class="form-control"
-                                                       placeholder="votre.email@entreprise.com"
-                                                       autocomplete="email"
-                                                       required
-                                                       autofocus>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-semibold small" for="inputPassword">
-                                                    <i class="fas fa-lock me-1 text-muted"></i> Mot de passe
-                                                </label>
-                                                <input type="password"
-                                                       name="password"
-                                                       id="inputPassword"
-                                                       class="form-control"
-                                                       placeholder="Votre mot de passe"
-                                                       autocomplete="current-password"
-                                                       required>
-                                            </div>
-
-                                            {# Options sur une ligne #}
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me">
-                                                    <label class="form-check-label small" for="remember_me">
-                                                        Se souvenir de moi
-                                                    </label>
-                                                </div>
-                                                <a class="text-decoration-none small" href="">
-                                                    Mot de passe oublié ?
-                                                </a>
-                                            </div>
-
-                                            {# Token CSRF #}
-                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                                            {# URL de redirection #}
-                                            {% if target_path is defined %}
-                                                <input type="hidden" name="_target_path" value="{{ target_path }}">
-                                            {% endif %}
-
-                                            <div class="d-grid mb-3">
-                                                <button class="btn btn-primary fw-semibold" type="submit" name="submit">
-                                                    <i class="fas fa-sign-in-alt me-1"></i> Accéder à mon espace
-                                                </button>
-                                            </div>
-                                        </form>
-
-                                        {# Support compact sur 2 colonnes #}
-                                        <div class="bg-gradient rounded p-3 mb-3">
-                                            <h6 class="text-muted mb-2 text-center">
-                                                <i class="fas fa-headset me-1"></i> Besoin d'aide ?
-                                            </h6>
-                                            <div class="row g-2">
-                                                <div class="col-6">
-                                                    <a href="mailto:support@bmmanager.com" class="btn btn-outline-secondary btn-sm w-100">
-                                                        <i class="fas fa-envelope"></i> Support
-                                                    </a>
-                                                </div>
-                                                <div class="col-6">
-                                                    <a href="tel:+33123456789" class="btn btn-outline-secondary btn-sm w-100">
-                                                        <i class="fas fa-phone"></i> Appeler
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {# Nouveau compte - compact #}
-                                        <div class="text-center border-top pt-3">
-                                            <small class="text-muted d-block mb-2">
-                                                Première connexion ?
-                                            </small>
-                                            <a href="{{ path('app_register') }}" class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-user-plus me-1"></i> Créer un compte
-                                            </a>
-                                        </div>
-
-                                    {% endif %}
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <p class="mb-0 opacity-90">
+                    Gérez vos biens, locataires et contrats de bail en toute simplicité.
+                </p>
             </div>
+        </div>
+    </div>
+
+    <div class="col-sm-10 col-md-6 px-sm-0 align-self-center mx-auto">
+        <div class="row justify-content-center g-0">
+            <div class="col-lg-9 col-xl-8 col-xxl-6">
+                <div class="card shadow border-0">
+                    {# En-tête compact #}
+                    <div class="card-header bg-primary text-center py-3 border-0">
+                        <i class="fas fa-building text-white fa-lg mb-2"></i>
+                        <h4 class="text-white fw-bold mb-1">BM Manager</h4>
+                        <small class="text-white opacity-75">ERP Gestion Immobilière</small>
+                    </div>
+
+                    <div class="card-body p-4">
+                        {# Titre simplifié #}
+                        <div class="text-center mb-3">
+                            <h5 class="fw-bold text-primary mb-1">Accès à votre espace</h5>
+                            <small class="text-muted">Connectez-vous pour gérer votre portefeuille immobilier</small>
+                        </div>
+
+                        {# Messages d'erreur compacts #}
+                        {% if error %}
+                        <div class="alert alert-danger border-0 py-2 mb-3" role="alert">
+                            <small><i class="fas fa-exclamation-triangle me-1"></i>
+                                {{ error.messageKey|trans(error.messageData, 'security') }}</small>
+                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endif %}
+
+                        {# Messages flash compacts #}
+                        {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ label == 'error' ? 'danger' : (label == 'success' ? 'success' : 'info') }} border-0 py-2 mb-3"
+                            role="alert">
+                            <small><i class="fas fa-info-circle me-1"></i> {{ message }}</small>
+                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                        {% endfor %}
+
+                        {# Message si déjà connecté - compact #}
+                        {% if app.user %}
+                        <div class="alert alert-success border-0 text-center py-3">
+                            <i class="fas fa-user-check fa-lg text-success mb-2"></i>
+                            <h6 class="mb-2">Connecté : {{ app.user.userIdentifier }}</h6>
+                            <div class="d-grid gap-2 d-md-flex justify-content-center">
+                                <a href="{{ path('app_dashboard') }}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-tachometer-alt me-1"></i> Tableau de bord
+                                </a>
+                                <a href="{{ path('app_logout') }}" class="btn btn-outline-secondary btn-sm">
+                                    Déconnexion
+                                </a>
+                            </div>
+                        </div>
+                        {% else %}
+
+                        {# Formulaire compact #}
+                        <form method="post" action="{{ path('app_login') }}">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small" for="inputEmail">
+                                    <i class="fas fa-envelope me-1 text-muted"></i> Email professionnel
+                                </label>
+                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
+                                    class="form-control" placeholder="votre.email@entreprise.com" autocomplete="email"
+                                    required autofocus>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small" for="inputPassword">
+                                    <i class="fas fa-lock me-1 text-muted"></i> Mot de passe
+                                </label>
+                                <input type="password" name="password" id="inputPassword" class="form-control"
+                                    placeholder="Votre mot de passe" autocomplete="current-password" required>
+                            </div>
+
+                            {# Options sur une ligne #}
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="remember_me"
+                                        name="_remember_me">
+                                    <label class="form-check-label small" for="remember_me">
+                                        Se souvenir de moi
+                                    </label>
+                                </div>
+                                <a class="text-decoration-none small" href="">
+                                    Mot de passe oublié ?
+                                </a>
+                            </div>
+
+                            {# Token CSRF #}
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            {# URL de redirection #}
+                            {% if target_path is defined %}
+                            <input type="hidden" name="_target_path" value="{{ target_path }}">
+                            {% endif %}
+
+                            <div class="d-grid mb-3">
+                                <button class="btn btn-primary fw-semibold" type="submit" name="submit">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Accéder à mon espace
+                                </button>
+                            </div>
+                        </form>
+
+                        {# Support compact sur 2 colonnes #}
+                        <div class="bg-gradient rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2 text-center">
+                                <i class="fas fa-headset me-1"></i> Besoin d'aide ?
+                            </h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <a href="mailto:support@bmmanager.com"
+                                        class="btn btn-outline-secondary btn-sm w-100">
+                                        <i class="fas fa-envelope"></i> Support
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="tel:+33123456789" class="btn btn-outline-secondary btn-sm w-100">
+                                        <i class="fas fa-phone"></i> Appeler
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Nouveau compte - compact #}
+                        <div class="text-center border-top pt-3">
+                            <small class="text-muted d-block mb-2">
+                                Première connexion ?
+                            </small>
+                            <a href="{{ path('app_register') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-user-plus me-1"></i> Créer un compte
+                            </a>
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

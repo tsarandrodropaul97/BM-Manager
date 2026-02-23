@@ -4,385 +4,383 @@
 {% endblock %}
 
 {% block body %}
-	<!-- En-tête page -->
-	<div class="card mb-3">
-		<div class="card-header">
-			<div class="row flex-between-end">
-				<div class="col-auto align-self-center">
-					<h5 class="mb-0">Modifier le Bien :
-						{{ bien.designation }}</h5>
-					<p class="mb-0 fs-11 text-muted">Mise à jour des informations du bien immobilier</p>
-				</div>
-				<div class="col-auto ms-auto d-flex gap-2">
-					<a href="{{ path('app_biens_index') }}" class="btn btn-outline-secondary btn-sm">
-						<span class="fas fa-arrow-left me-1"></span>Retour à la liste
-					</a>
-					{{ include('biens/_delete_form.html.twig') }}
-				</div>
+<!-- En-tête page -->
+<div class="card mb-3">
+	<div class="card-header">
+		<div class="row flex-between-center g-3">
+			<div class="col-12 col-sm-auto align-self-center">
+				<h5 class="mb-0 text-truncate">Modifier le Bien : {{ bien.designation }}</h5>
+				<p class="mb-0 fs-11 text-muted">Mise à jour des informations du bien immobilier</p>
+			</div>
+			<div
+				class="col-12 col-sm-auto ms-auto d-flex flex-wrap gap-2 justify-content-center justify-content-sm-end">
+				<a href="{{ path('app_biens_index') }}" class="btn btn-outline-secondary btn-sm">
+					<span class="fas fa-arrow-left me-1"></span>Retour à la liste
+				</a>
+				{{ include('biens/_delete_form.html.twig') }}
 			</div>
 		</div>
 	</div>
+</div>
 
-	{{ form_start(form, {'attr': {'id': 'modifierBienForm'}}) }}
+{{ form_start(form, {'attr': {'id': 'modifierBienForm'}}) }}
 
-	<!-- Section 1: Informations générales -->
-	<div class="card mb-3">
-		<div class="card-header">
-			<h6 class="mb-0">
-				<span class="fas fa-info-circle me-2 text-primary"></span>
-				Informations Générales
-			</h6>
-		</div>
-		<div class="card-body">
-			<div class="row g-3">
-				<div class="col-md-8">
-					<label for="{{ form.designation.vars.id }}" class="form-label">
-						Désignation du bien
-						<span class="text-danger">*</span>
-					</label>
-					{{ form_widget(form.designation, {'attr': {'class': 'form-control', 'placeholder': 'ex: Appartement T3 centre-ville'}}) }}
-					<div class="form-text">Nom descriptif du bien pour identification rapide</div>
-					{{ form_errors(form.designation) }}
-				</div>
-				<div class="col-md-4">
-					<label for="{{ form.reference.vars.id }}" class="form-label">Référence interne</label>
-					{{ form_widget(form.reference, {'attr': {'class': 'form-control', 'placeholder': 'Auto-généré'}}) }}
-					{{ form_errors(form.reference) }}
-				</div>
-				<div class="col-md-6">
-					<label for="{{ form.categorie.vars.id }}" class="form-label">
-						Catégorie
-						<span class="text-danger">*</span>
-					</label>
-					{{ form_widget(form.categorie, {'attr': {'class': 'form-select'}}) }}
-					{{ form_errors(form.categorie) }}
-				</div>
-				<div class="col-md-6">
-					<label for="{{ form.statut.vars.id }}" class="form-label">Statut</label>
-					{{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
-					{{ form_errors(form.statut) }}
-				</div>
+<!-- Section 1: Informations générales -->
+<div class="card mb-3">
+	<div class="card-header">
+		<h6 class="mb-0">
+			<span class="fas fa-info-circle me-2 text-primary"></span>
+			Informations Générales
+		</h6>
+	</div>
+	<div class="card-body">
+		<div class="row g-3">
+			<div class="col-12 col-md-8">
+				<label for="{{ form.designation.vars.id }}" class="form-label">
+					Désignation du bien
+					<span class="text-danger">*</span>
+				</label>
+				{{ form_widget(form.designation, {'attr': {'class': 'form-control', 'placeholder': 'ex: Appartement T3
+				centre-ville'}}) }}
+				<div class="form-text">Nom descriptif du bien pour identification rapide</div>
+				{{ form_errors(form.designation) }}
+			</div>
+			<div class="col-12 col-md-4">
+				<label for="{{ form.reference.vars.id }}" class="form-label">Référence interne</label>
+				{{ form_widget(form.reference, {'attr': {'class': 'form-control', 'placeholder': 'Auto-généré'}}) }}
+				{{ form_errors(form.reference) }}
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="{{ form.categorie.vars.id }}" class="form-label">
+					Catégorie
+					<span class="text-danger">*</span>
+				</label>
+				{{ form_widget(form.categorie, {'attr': {'class': 'form-select'}}) }}
+				{{ form_errors(form.categorie) }}
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="{{ form.statut.vars.id }}" class="form-label">Statut</label>
+				{{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(form.statut) }}
 			</div>
 		</div>
 	</div>
+</div>
 
-	<!-- Section Photos et Médias -->
-	<div class="card mb-3">
-		<div class="card-header">
-			<h6 class="mb-0">
-				<span class="fas fa-image me-2 text-danger"></span>
-				Photos et Médias
-			</h6>
-		</div>
-		<div class="card-body">
-			<div class="row g-3">
-				<div class="col-md-12">
-					{% if bien.image %}
-						<div class="mb-3">
-							<label class="form-label d-block">Image actuelle</label>
-							<img src="{{ asset('uploads/biens/' ~ bien.image) }}" alt="Aperçu" class="img-thumbnail" style="max-height: 200px;">
-						</div>
+<!-- Section Photos et Médias -->
+<div class="card mb-3">
+	<div class="card-header">
+		<h6 class="mb-0">
+			<span class="fas fa-image me-2 text-danger"></span>
+			Photos et Médias
+		</h6>
+	</div>
+	<div class="card-body">
+		<div class="row g-3">
+			<div class="col-md-12">
+				{% if bien.image %}
+				<div class="mb-3">
+					<label class="form-label d-block">Image actuelle</label>
+					<img src="{{ asset('uploads/biens/' ~ bien.image) }}" alt="Aperçu" class="img-thumbnail"
+						style="max-height: 200px;">
+				</div>
+				{% endif %}
+				<label for="{{ form.image.vars.id }}" class="form-label">
+					{% if bien.image %}Remplacer l'image{% else %}Image principale du bien
 					{% endif %}
-					<label for="{{ form.image.vars.id }}" class="form-label">
-						{% if bien.image %}Remplacer l'image{% else %}Image principale du bien
-						{% endif %}
-					</label>
-					{{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
-					<div class="form-text">Formats acceptés : JPG, PNG, WEBP (Max 5Mo)</div>
-					{{ form_errors(form.image) }}
-				</div>
+				</label>
+				{{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+				<div class="form-text">Formats acceptés : JPG, PNG, WEBP (Max 5Mo)</div>
+				{{ form_errors(form.image) }}
 			</div>
 		</div>
 	</div>
+</div>
 
-	<!-- Section 2: Adresse et localisation -->
-	<div class="card mb-3">
-		<div class="card-header">
-			<h6 class="mb-0">
-				<span class="fas fa-map-marker-alt me-2 text-success"></span>
-				Adresse et Localisation
-			</h6>
-		</div>
-		<div class="card-body">
-			<div class="row g-3">
-				<div class="col-md-12">
-					<label for="{{ form.adresse.vars.id }}" class="form-label">
-						Adresse complète
-						<span class="text-danger">*</span>
-					</label>
-					{{ form_widget(form.adresse, {'attr': {'class': 'form-control', 'placeholder': 'Numéro, rue, avenue...'}}) }}
-					{{ form_errors(form.adresse) }}
-				</div>
-				<div class="col-md-3">
-					<label for="{{ form.code_postal.vars.id }}" class="form-label">
-						Code postal
-						<span class="text-danger">*</span>
-					</label>
-					{{ form_widget(form.code_postal, {'attr': {'class': 'form-control', 'placeholder': '75001'}}) }}
-					{{ form_errors(form.code_postal) }}
-				</div>
-				<div class="col-md-5">
-					<label for="{{ form.ville.vars.id }}" class="form-label">
-						Ville
-						<span class="text-danger">*</span>
-					</label>
-					{{ form_widget(form.ville, {'attr': {'class': 'form-control', 'placeholder': 'Paris'}}) }}
-					{{ form_errors(form.ville) }}
-				</div>
-				<div class="col-md-4">
-					<label for="{{ form.pays.vars.id }}" class="form-label">Pays</label>
-					{{ form_widget(form.pays, {'attr': {'class': 'form-control', 'placeholder': 'France'}}) }}
-					{{ form_errors(form.pays) }}
-				</div>
-				<div class="col-md-12">
-					<label for="{{ form.secteur.vars.id }}" class="form-label">Quartier/Secteur</label>
-					{{ form_widget(form.secteur, {'attr': {'class': 'form-control', 'placeholder': 'Centre-ville, Belleville...'}}) }}
-					{{ form_errors(form.secteur) }}
-				</div>
+<!-- Section 2: Adresse et localisation -->
+<div class="card mb-3">
+	<div class="card-header">
+		<h6 class="mb-0">
+			<span class="fas fa-map-marker-alt me-2 text-success"></span>
+			Adresse et Localisation
+		</h6>
+	</div>
+	<div class="card-body">
+		<div class="row g-3">
+			<div class="col-12">
+				<label for="{{ form.adresse.vars.id }}" class="form-label">
+					Adresse complète
+					<span class="text-danger">*</span>
+				</label>
+				{{ form_widget(form.adresse, {'attr': {'class': 'form-control', 'placeholder': 'Numéro, rue,
+				avenue...'}}) }}
+				{{ form_errors(form.adresse) }}
+			</div>
+			<div class="col-12 col-sm-6 col-md-3">
+				<label for="{{ form.code_postal.vars.id }}" class="form-label">
+					Code postal
+					<span class="text-danger">*</span>
+				</label>
+				{{ form_widget(form.code_postal, {'attr': {'class': 'form-control', 'placeholder': '75001'}}) }}
+				{{ form_errors(form.code_postal) }}
+			</div>
+			<div class="col-12 col-sm-6 col-md-5">
+				<label for="{{ form.ville.vars.id }}" class="form-label">
+					Ville
+					<span class="text-danger">*</span>
+				</label>
+				{{ form_widget(form.ville, {'attr': {'class': 'form-control', 'placeholder': 'Paris'}}) }}
+				{{ form_errors(form.ville) }}
+			</div>
+			<div class="col-12 col-md-4">
+				<label for="{{ form.pays.vars.id }}" class="form-label">Pays</label>
+				{{ form_widget(form.pays, {'attr': {'class': 'form-control', 'placeholder': 'France'}}) }}
+				{{ form_errors(form.pays) }}
+			</div>
+			<div class="col-12">
+				<label for="{{ form.secteur.vars.id }}" class="form-label">Quartier/Secteur</label>
+				{{ form_widget(form.secteur, {'attr': {'class': 'form-control', 'placeholder': 'Centre-ville,
+				Belleville...'}}) }}
+				{{ form_errors(form.secteur) }}
 			</div>
 		</div>
 	</div>
+</div>
 
-	<!-- Section 3: Caractéristiques techniques -->
-	<div class="card mb-3">
-		<div class="card-header">
-			<h6 class="mb-0">
-				<span class="fas fa-ruler-combined me-2 text-warning"></span>
-				Caractéristiques Techniques
-			</h6>
-		</div>
-		<div class="card-body">
-			<div class="row g-3">
-				<div class="col-md-3">
-					<label for="{{ form.surface_habitable.vars.id }}" class="form-label">
-						Surface habitable (m²)
-						<span class="text-danger">*</span>
-					</label>
-					<div class="input-group">
-						{{ form_widget(form.surface_habitable, {'attr': {'class': 'form-control', 'placeholder': '75'}}) }}
-						<span class="input-group-text">m²</span>
-					</div>
-					{{ form_errors(form.surface_habitable) }}
+<!-- Section 3: Caractéristiques techniques -->
+<div class="card mb-3">
+	<div class="card-header">
+		<h6 class="mb-0">
+			<span class="fas fa-ruler-combined me-2 text-warning"></span>
+			Caractéristiques Techniques
+		</h6>
+	</div>
+	<div class="card-body">
+		<div class="row g-3">
+			<div class="col-12 col-sm-6 col-md-3">
+				<label for="{{ form.surface_habitable.vars.id }}" class="form-label">
+					Surface habitable (m²)
+					<span class="text-danger">*</span>
+				</label>
+				<div class="input-group">
+					{{ form_widget(form.surface_habitable, {'attr': {'class': 'form-control', 'placeholder': '75'}}) }}
+					<span class="input-group-text">m²</span>
 				</div>
-				<div class="col-md-3">
-					<label for="{{ form.surface_total.vars.id }}" class="form-label">Surface totale (m²)</label>
-					<div class="input-group">
-						{{ form_widget(form.surface_total, {'attr': {'class': 'form-control', 'placeholder': '85'}}) }}
-						<span class="input-group-text">m²</span>
-					</div>
-					{{ form_errors(form.surface_total) }}
+				{{ form_errors(form.surface_habitable) }}
+			</div>
+			<div class="col-12 col-sm-6 col-md-3">
+				<label for="{{ form.surface_total.vars.id }}" class="form-label">Surface totale (m²)</label>
+				<div class="input-group">
+					{{ form_widget(form.surface_total, {'attr': {'class': 'form-control', 'placeholder': '85'}}) }}
+					<span class="input-group-text">m²</span>
 				</div>
-				<div class="col-md-3">
-					<label for="{{ form.nbr_piece.vars.id }}" class="form-label">
-						Nombre de pièces
-						<span class="text-danger">*</span>
-					</label>
-					{{ form_widget(form.nbr_piece, {'attr': {'class': 'form-control', 'placeholder': '3'}}) }}
-					{{ form_errors(form.nbr_piece) }}
+				{{ form_errors(form.surface_total) }}
+			</div>
+			<div class="col-12 col-sm-6 col-md-3">
+				<label for="{{ form.nbr_piece.vars.id }}" class="form-label">
+					Nombre de pièces
+					<span class="text-danger">*</span>
+				</label>
+				{{ form_widget(form.nbr_piece, {'attr': {'class': 'form-control', 'placeholder': '3'}}) }}
+				{{ form_errors(form.nbr_piece) }}
+			</div>
+			<div class="col-12 col-sm-6 col-md-3">
+				<label for="{{ form.nbr_chambre.vars.id }}" class="form-label">Nombre de chambres</label>
+				{{ form_widget(form.nbr_chambre, {'attr': {'class': 'form-control', 'placeholder': '2'}}) }}
+				{{ form_errors(form.nbr_chambre) }}
+			</div>
+			<div class="col-12 col-md-4">
+				<label for="{{ form.salle_bain.vars.id }}" class="form-label">Salles de bain</label>
+				{{ form_widget(form.salle_bain, {'attr': {'class': 'form-control', 'placeholder': '1'}}) }}
+				{{ form_errors(form.salle_bain) }}
+			</div>
+			<div class="col-12 col-md-4">
+				<label for="{{ form.wc.vars.id }}" class="form-label">WC séparés</label>
+				{{ form_widget(form.wc, {'attr': {'class': 'form-control', 'placeholder': '1'}}) }}
+				{{ form_errors(form.wc) }}
+			</div>
+			<div class="col-12 col-md-4">
+				<label for="{{ form.etage.vars.id }}" class="form-label">Étage</label>
+				<div class="input-group">
+					{{ form_widget(form.etage, {'attr': {'class': 'form-control', 'placeholder': '3'}}) }}
+					<span class="input-group-text">e</span>
 				</div>
-				<div class="col-md-3">
-					<label for="{{ form.nbr_chambre.vars.id }}" class="form-label">Nombre de chambres</label>
-					{{ form_widget(form.nbr_chambre, {'attr': {'class': 'form-control', 'placeholder': '2'}}) }}
-					{{ form_errors(form.nbr_chambre) }}
-				</div>
-				<div class="col-md-4">
-					<label for="{{ form.salle_bain.vars.id }}" class="form-label">Salles de bain</label>
-					{{ form_widget(form.salle_bain, {'attr': {'class': 'form-control', 'placeholder': '1'}}) }}
-					{{ form_errors(form.salle_bain) }}
-				</div>
-				<div class="col-md-4">
-					<label for="{{ form.wc.vars.id }}" class="form-label">WC séparés</label>
-					{{ form_widget(form.wc, {'attr': {'class': 'form-control', 'placeholder': '1'}}) }}
-					{{ form_errors(form.wc) }}
-				</div>
-				<div class="col-md-4">
-					<label for="{{ form.etage.vars.id }}" class="form-label">Étage</label>
-					<div class="input-group">
-						{{ form_widget(form.etage, {'attr': {'class': 'form-control', 'placeholder': '3'}}) }}
-						<span class="input-group-text">e</span>
-					</div>
-					{{ form_errors(form.etage) }}
-				</div>
-				<div class="col-md-6">
-					<label for="{{ form.ascenseur.vars.id }}" class="form-label">Ascenseur</label>
-					{{ form_widget(form.ascenseur, {'attr': {'class': 'form-control'}}) }}
-					{{ form_errors(form.ascenseur) }}
-				</div>
-				<div class="col-md-6">
-					<label for="{{ form.balcon.vars.id }}" class="form-label">Balcon/Terrasse</label>
-					{{ form_widget(form.balcon, {'attr': {'class': 'form-control'}}) }}
-					{{ form_errors(form.balcon) }}
-				</div>
+				{{ form_errors(form.etage) }}
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="{{ form.ascenseur.vars.id }}" class="form-label">Ascenseur</label>
+				{{ form_widget(form.ascenseur, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(form.ascenseur) }}
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="{{ form.balcon.vars.id }}" class="form-label">Balcon/Terrasse</label>
+				{{ form_widget(form.balcon, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(form.balcon) }}
 			</div>
 		</div>
 	</div>
+</div>
 
-	<!-- Section 4: Équipements et caractéristiques -->
-	<div class="card mb-3">
-		<div class="card-header">
-			<h6 class="mb-0">
-				<span class="fas fa-home me-2 text-info"></span>
-				Équipements et Caractéristiques
-			</h6>
-		</div>
-		<div class="card-body">
-			<div class="row g-3">
-				<div class="col-md-4">
-					<label for="{{ form.typechauffage.vars.id }}" class="form-label">Type de chauffage</label>
-					{{ form_widget(form.typechauffage, {'attr': {'class': 'form-control'}}) }}
-					{{ form_errors(form.typechauffage) }}
-				</div>
-				<div class="col-md-4">
-					<label for="{{ form.eau.vars.id }}" class="form-label">Eau chaude</label>
-					{{ form_widget(form.eau, {'attr': {'class': 'form-control'}}) }}
-					{{ form_errors(form.eau) }}
-				</div>
-				<div class="col-md-4">
-					<label for="{{ form.cuisine.vars.id }}" class="form-label">Cuisine</label>
-					{{ form_widget(form.cuisine, {'attr': {'class': 'form-control'}}) }}
-					{{ form_errors(form.cuisine) }}
-				</div>
-				<div class="col-md-12">
-					<label class="form-label">Équipements disponibles</label>
-					<div class="row">
-						<div class="col-md-3">
-							<div class="form-check">
-								{{ form_widget(form.is_parking, {'attr': {'class': 'form-check-input'}}) }}
-								<label class="form-check-label" for="{{ form.is_parking.vars.id }}">
-									Place de parking
-								</label>
-							</div>
-							<div class="form-check">
-								{{ form_widget(form.is_garage, {'attr': {'class': 'form-check-input'}}) }}
-								<label class="form-check-label" for="{{ form.is_garage.vars.id }}">
-									Garage
-								</label>
-							</div>
+<!-- Section 4: Équipements et caractéristiques -->
+<div class="card mb-3">
+	<div class="card-header">
+		<h6 class="mb-0">
+			<span class="fas fa-home me-2 text-info"></span>
+			Équipements et Caractéristiques
+		</h6>
+	</div>
+	<div class="card-body">
+		<div class="row g-3">
+			<div class="col-12 col-md-4">
+				<label for="{{ form.typechauffage.vars.id }}" class="form-label">Type de chauffage</label>
+				{{ form_widget(form.typechauffage, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(form.typechauffage) }}
+			</div>
+			<div class="col-12 col-md-4">
+				<label for="{{ form.eau.vars.id }}" class="form-label">Eau chaude</label>
+				{{ form_widget(form.eau, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(form.eau) }}
+			</div>
+			<div class="col-12 col-md-4">
+				<label for="{{ form.cuisine.vars.id }}" class="form-label">Cuisine</label>
+				{{ form_widget(form.cuisine, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(form.cuisine) }}
+			</div>
+			<div class="col-12">
+				<label class="form-label">Équipements disponibles</label>
+				<div class="row g-3">
+					<div class="col-6 col-md-3">
+						<div class="form-check">
+							{{ form_widget(form.is_parking, {'attr': {'class': 'form-check-input'}}) }}
+							<label class="form-check-label" for="{{ form.is_parking.vars.id }}">
+								Place de parking
+							</label>
 						</div>
-						<div class="col-md-3">
-							<div class="form-check">
-								{{ form_widget(form.is_interphone, {'attr': {'class': 'form-check-input'}}) }}
-								<label class="form-check-label" for="{{ form.is_interphone.vars.id }}">
-									Interphone
-								</label>
-							</div>
-							<div class="form-check">
-								{{ form_widget(form.is_gardien, {'attr': {'class': 'form-check-input'}}) }}
-								<label class="form-check-label" for="{{ form.is_gardien.vars.id }}">
-									Gardien
-								</label>
-							</div>
+						<div class="form-check mt-2">
+							{{ form_widget(form.is_garage, {'attr': {'class': 'form-check-input'}}) }}
+							<label class="form-check-label" for="{{ form.is_garage.vars.id }}">
+								Garage
+							</label>
 						</div>
-						<div class="col-md-3">
-							<div class="form-check">
-								{{ form_widget(form.is_connexion, {'attr': {'class': 'form-check-input'}}) }}
-								<label class="form-check-label" for="{{ form.is_connexion.vars.id }}">
-									Connexion internet
-								</label>
-							</div>
-							<div class="form-check">
-								{{ form_widget(form.is_chemine, {'attr': {'class': 'form-check-input'}}) }}
-								<label class="form-check-label" for="{{ form.is_chemine.vars.id }}">
-									Cheminée
-								</label>
-							</div>
+					</div>
+					<div class="col-6 col-md-3">
+						<div class="form-check">
+							{{ form_widget(form.is_interphone, {'attr': {'class': 'form-check-input'}}) }}
+							<label class="form-check-label" for="{{ form.is_interphone.vars.id }}">
+								Interphone
+							</label>
 						</div>
-						<div class="col-md-3">
-							<div class="form-check">
-								{{ form_widget(form.is_jardin, {'attr': {'class': 'form-check-input'}}) }}
-								<label class="form-check-label" for="{{ form.is_jardin.vars.id }}">
-									Jardin
-								</label>
-							</div>
-							<div class="form-check">
-								{{ form_widget(form.is_meuble, {'attr': {'class': 'form-check-input'}}) }}
-								<label class="form-check-label" for="{{ form.is_meuble.vars.id }}">
-									Meublé
-								</label>
-							</div>
+						<div class="form-check mt-2">
+							{{ form_widget(form.is_gardien, {'attr': {'class': 'form-check-input'}}) }}
+							<label class="form-check-label" for="{{ form.is_gardien.vars.id }}">
+								Gardien
+							</label>
+						</div>
+					</div>
+					<div class="col-6 col-md-3">
+						<div class="form-check">
+							{{ form_widget(form.is_connexion, {'attr': {'class': 'form-check-input'}}) }}
+							<label class="form-check-label" for="{{ form.is_connexion.vars.id }}">
+								Connexion internet
+							</label>
+						</div>
+						<div class="form-check mt-2">
+							{{ form_widget(form.is_chemine, {'attr': {'class': 'form-check-input'}}) }}
+							<label class="form-check-label" for="{{ form.is_chemine.vars.id }}">
+								Cheminée
+							</label>
+						</div>
+					</div>
+					<div class="col-6 col-md-3">
+						<div class="form-check">
+							{{ form_widget(form.is_jardin, {'attr': {'class': 'form-check-input'}}) }}
+							<label class="form-check-label" for="{{ form.is_jardin.vars.id }}">
+								Jardin
+							</label>
+						</div>
+						<div class="form-check mt-2">
+							{{ form_widget(form.is_meuble, {'attr': {'class': 'form-check-input'}}) }}
+							<label class="form-check-label" for="{{ form.is_meuble.vars.id }}">
+								Meublé
+							</label>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
-	<!-- Section 5: Notes et observations -->
-	<div class="card mb-3">
-		<div class="card-header">
-			<h6 class="mb-0">
-				<span class="fas fa-sticky-note me-2 text-secondary"></span>
-				Notes et Observations
-			</h6>
-		</div>
-		<div class="card-body">
-			<div class="row g-3">
-				<div class="col-md-12">
-					<label for="{{ form.description.vars.id }}" class="form-label">Description détaillée</label>
-					{{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Description complète du bien, ses atouts, particularités...'}}) }}
-					{{ form_errors(form.description) }}
-				</div>
-				<div class="col-md-6">
-					<label for="{{ form.notes_interne.vars.id }}" class="form-label">Notes internes</label>
-					{{ form_widget(form.notes_interne, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Notes privées, points d\'attention, historique...'}}) }}
-                    <div class="form-text">Ces notes ne seront pas visibles dans les annonces</div>
-                    {{ form_errors(form.notes_interne) }}
-                </div>
-                <div class="col-md-6">
-                    <label for="{{ form.points_attention.vars.id }}" class="form-label">Points d'attention</label>
-                    {{ form_widget(form.points_attention, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Éléments à surveiller, défauts connus...'}}) }}
-					{{ form_errors(form.points_attention) }}
-				</div>
+<!-- Section 5: Notes et observations -->
+<div class="card mb-3">
+	<div class="card-header">
+		<h6 class="mb-0">
+			<span class="fas fa-sticky-note me-2 text-secondary"></span>
+			Notes et Observations
+		</h6>
+	</div>
+	<div class="card-body">
+		<div class="row g-3">
+			<div class="col-12">
+				<label for="{{ form.description.vars.id }}" class="form-label">Description détaillée</label>
+				{{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder':
+				'Description complète du bien, ses atouts, particularités...'}}) }}
+				{{ form_errors(form.description) }}
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="{{ form.notes_interne.vars.id }}" class="form-label">Notes internes</label>
+				{{ form_widget(form.notes_interne, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Notes
+				privées, points d\'attention, historique...'}}) }}
+				<div class="form-text">Ces notes ne seront pas visibles dans les annonces</div>
+				{{ form_errors(form.notes_interne) }}
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="{{ form.points_attention.vars.id }}" class="form-label">Points d'attention</label>
+				{{ form_widget(form.points_attention, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder':
+				'Éléments à surveiller, défauts connus...'}}) }}
+				{{ form_errors(form.points_attention) }}
 			</div>
 		</div>
 	</div>
+</div>
 
-	<!-- Boutons d'action -->
-	<div class="card mb-3">
-		<div class="card-body">
-			<div class="row">
-				<div class="col-md-6">
-					<a href="{{ path('app_biens_index') }}" class="btn btn-outline-secondary">
-						<span class="fas fa-times me-1"></span>Annuler
-					</a>
-				</div>
-				<div class="col-md-6 text-end">
-					<button type="submit" class="btn btn-success">
-						<span class="fas fa-save me-1"></span>Enregistrer les modifications
-					</button>
-				</div>
+<!-- Boutons d'action -->
+<div class="card mb-3">
+	<div class="card-body">
+		<div class="row g-3 flex-between-center">
+			<div class="col-12 col-sm-auto text-center text-sm-start order-2 order-sm-1">
+				<a href="{{ path('app_biens_index') }}" class="btn btn-outline-secondary">
+					<span class="fas fa-times me-1"></span>Annuler
+				</a>
+			</div>
+			<div class="col-12 col-sm-auto order-1 order-sm-2">
+				<button type="submit" class="btn btn-success w-100 px-4">
+					<span class="fas fa-save me-1"></span>Enregistrer les modifications
+				</button>
 			</div>
 		</div>
 	</div>
+</div>
 
-	{{ form_end(form) }}
+{{ form_end(form) }}
 
-	<!-- Styles personnalisés -->
-	<style>
-		.card-header h6 {
-			font-weight: 600;
-		}
+<!-- Styles personnalisés -->
+<style>
+	.card-header h6 {
+		font-weight: 600;
+	}
 
-		.form-check-input:checked {
-			background-color: #0d6efd;
-			border-color: #0d6efd;
-		}
+	.form-check-input:checked {
+		background-color: #0d6efd;
+		border-color: #0d6efd;
+	}
 
-		.text-danger {
-			color: #dc3545 !important;
-		}
+	.text-danger {
+		color: #dc3545 !important;
+	}
 
-		.fs-11 {
-			font-size: 0.875rem;
-		}
-
-		/* Responsive adjustments */
-		@media(max-width: 768px) {
-			.col-md-3,
-			.col-md-4,
-			.col-md-6 {
-				margin-bottom: 1rem;
-			}
-		}
-	</style>
+	.fs-11 {
+		font-size: 0.875rem;
+	}
+</style>
 {% endblock %}

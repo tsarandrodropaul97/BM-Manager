@@ -4,22 +4,22 @@
 {% endblock %}
 
 {% block body %}
-	<div class="card mb-3">
-		<div class="card-header border-bottom">
-			<div class="row flex-between-end">
-				<div class="col-auto align-self-center">
-					<h5 class="mb-0">Ajouter un Nouveau Locataire</h5>
-					<p class="mb-0 fs-11 text-muted">Enregistrement d'un nouveau dossier locataire</p>
-				</div>
-				<div class="col-auto ms-auto">
-					<a href="{{ path('app_locataire_index') }}" class="btn btn-outline-secondary btn-sm">
-						<span class="fas fa-arrow-left me-1"></span>Retour à la liste
-					</a>
-				</div>
+<div class="card mb-3">
+	<div class="card-header border-bottom">
+		<div class="row flex-between-center g-3">
+			<div class="col-12 col-sm-auto align-self-center">
+				<h5 class="mb-0">Ajouter un Nouveau Locataire</h5>
+				<p class="mb-0 fs-11 text-muted">Enregistrement d'un nouveau dossier locataire</p>
+			</div>
+			<div class="col-12 col-sm-auto ms-auto text-center text-sm-end">
+				<a href="{{ path('app_locataire_index') }}" class="btn btn-outline-secondary btn-sm">
+					<span class="fas fa-arrow-left me-1"></span>Retour à la liste
+				</a>
 			</div>
 		</div>
 	</div>
+</div>
 
-	{{ include('locataire/_form.html.twig', {'button_label': 'Créer le locataire'}) }}
+{{ include('locataire/_form.html.twig', {'button_label': 'Créer le locataire'}) }}
 
 {% endblock %}

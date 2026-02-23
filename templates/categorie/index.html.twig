@@ -3,148 +3,90 @@
 {% block title %}Catégories des Biens{% endblock %}
 
 {% block body %}
-    <!-- En-tête page -->
-    <div class="card mb-3">
-        <div class="card-header">
-            <div class="row flex-between-end">
-                <div class="col-auto align-self-center">
-                    <h5 class="mb-0">Catégories des Biens</h5>
-                    <p class="mb-0 fs-11 text-muted">Gérez les catégories pour organiser vos biens immobiliers</p>
-                </div>
-                <div class="col-auto ms-auto">
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#importModal">
-                            <span class="fas fa-upload me-1"></span>Importer
-                        </button>
-                        <a href="{{ path('app_categorie_export', app.request.query.all) }}" class="btn btn-outline-info btn-sm">
-                            <span class="fas fa-download me-1"></span>Exporter
-                        </a>
-                        <a href="{{ path('app_categorie_ajout') }}" class="btn btn-primary btn-sm">
-                            <span class="fas fa-plus me-1"></span>Nouvelle catégorie
-                        </a>
-                    </div>
-                </div>
+<!-- En-tête page -->
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="row flex-between-center g-3 text-center text-sm-start">
+            <div class="col-12 col-sm-auto align-self-center">
+                <h5 class="mb-0">Catégories des Biens</h5>
+                <p class="mb-0 fs-11 text-muted">Gérez les catégories pour organiser vos biens immobiliers</p>
+            </div>
+            <div
+                class="col-12 col-sm-auto ms-auto d-flex flex-wrap gap-2 justify-content-center justify-content-sm-end">
+                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="modal"
+                    data-bs-target="#importModal">
+                    <span class="fas fa-upload me-1"></span>Importer
+                </button>
+                <a href="{{ path('app_categorie_export', app.request.query.all) }}" class="btn btn-outline-info btn-sm">
+                    <span class="fas fa-download me-1"></span>Exporter
+                </a>
+                <a href="{{ path('app_categorie_ajout') }}" class="btn btn-primary btn-sm px-3">
+                    <span class="fas fa-plus me-1"></span>Nouvelle catégorie
+                </a>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Filtres et recherche -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <form method="get" action="{{ path('app_categorie') }}" class="row g-3" id="filterForm">
-                <div class="col-md-4">
-                    <div class="search-box">
-                        <div class="position-relative">
-                            <input class="form-control search-input search" type="search" name="search" value="{{ filters.search }}" placeholder="Rechercher une catégorie..." aria-label="Search">
-                            <span class="fas fa-search search-box-icon"></span>
-                        </div>
+<!-- Filtres et recherche -->
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="get" action="{{ path('app_categorie') }}" class="row g-3 align-items-center" id="filterForm">
+            <div class="col-12 col-md-4">
+                <div class="search-box">
+                    <div class="position-relative">
+                        <input class="form-control search-input search fs-11" type="search" name="search"
+                            value="{{ filters.search }}" placeholder="Rechercher une catégorie..." aria-label="Search">
+                        <span class="fas fa-search search-box-icon"></span>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <select class="form-select" name="statut" onchange="document.getElementById('filterForm').submit()">
-                        <option value="">Tous les statuts</option>
-                        <option value="active" {% if filters.statut == 'active' %}selected{% endif %}>Actives</option>
-                        <option value="inactive" {% if filters.statut == 'inactive' %}selected{% endif %}>Inactives</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select class="form-select" name="type" onchange="document.getElementById('filterForm').submit()">
-                        <option value="">Tous les types</option>
-                        <option value="residential" {% if filters.type == 'residential' %}selected{% endif %}>Résidentiel</option>
-                        <option value="commercial" {% if filters.type == 'commercial' %}selected{% endif %}>Commercial</option>
-                        <option value="office" {% if filters.type == 'office' %}selected{% endif %}>Mixte / Bureau</option>
-                        <option value="industrial" {% if filters.type == 'industrial' %}selected{% endif %}>Industriel</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <a href="{{ path('app_categorie') }}" class="btn btn-outline-secondary w-100">
-                        <span class="fas fa-filter me-1"></span>Réinitialiser
-                    </a>
-                </div>
-                <input type="hidden" name="limit" value="{{ filters.limit }}">
-            </form>
-        </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <select class="form-select fs-11" name="statut"
+                    onchange="document.getElementById('filterForm').submit()">
+                    <option value="">Tous les statuts</option>
+                    <option value="active" {% if filters.statut=='active' %}selected{% endif %}>Actives</option>
+                    <option value="inactive" {% if filters.statut=='inactive' %}selected{% endif %}>Inactives</option>
+                </select>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <select class="form-select fs-11" name="type" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">Tous les types</option>
+                    <option value="residential" {% if filters.type=='residential' %}selected{% endif %}>Résidentiel
+                    </option>
+                    <option value="commercial" {% if filters.type=='commercial' %}selected{% endif %}>Commercial
+                    </option>
+                    <option value="office" {% if filters.type=='office' %}selected{% endif %}>Mixte / Bureau</option>
+                    <option value="industrial" {% if filters.type=='industrial' %}selected{% endif %}>Industriel
+                    </option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2 text-center text-md-start">
+                <a href="{{ path('app_categorie') }}" class="btn btn-outline-secondary w-100 fs-11">
+                    <span class="fas fa-filter me-1"></span>Réinitialiser
+                </a>
+            </div>
+            <input type="hidden" name="limit" value="{{ filters.limit }}">
+        </form>
     </div>
+</div>
 
-    <!-- Statistiques rapides -->
-    <div class="row g-3 mb-3">
-        <!-- Total catégories -->
-        <div class="col-md-3">
-            <div class="card bg-soft-primary border-0">
-                <div class="card-body">
-                    <div class="row flex-between-center">
-                        <div class="col-auto">
-                            <h6 class="text-primary mb-0">Total catégories</h6>
-                            <p class="fs-3 fw-bold text-primary mb-0">{{ stats.total }}</p>
-                        </div>
-                        <div class="col-auto">
-                            <div class="avatar avatar-2xl">
-                                <div class="avatar-name rounded-circle bg-primary-subtle text-primary d-flex justify-content-center align-items-center">
-                                    <span class="fas fa-tags fa-lg"></span>
-                                </div>
-                            </div>
-                        </div>
+<!-- Statistiques rapides -->
+<div class="row g-3 mb-3">
+    <!-- Total catégories -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card bg-soft-primary border-0">
+            <div class="card-body">
+                <div class="row flex-between-center">
+                    <div class="col-auto">
+                        <h6 class="text-primary mb-0">Total catégories</h6>
+                        <p class="fs-3 fw-bold text-primary mb-0">{{ stats.total }}</p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Actives -->
-        <div class="col-md-3">
-            <div class="card bg-soft-success border-0">
-                <div class="card-body">
-                    <div class="row flex-between-center">
-                        <div class="col-auto">
-                            <h6 class="text-success mb-0">Actives</h6>
-                            <p class="fs-3 fw-bold text-success mb-0">{{ stats.actives }}</p>
-                        </div>
-                        <div class="col-auto">
-                            <div class="avatar avatar-2xl">
-                                <div class="avatar-name rounded-circle bg-success-subtle text-success d-flex justify-content-center align-items-center">
-                                    <span class="fas fa-check-circle fa-lg"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Inactives -->
-        <div class="col-md-3">
-            <div class="card bg-soft-warning border-0">
-                <div class="card-body">
-                    <div class="row flex-between-center">
-                        <div class="col-auto">
-                            <h6 class="text-warning mb-0">Inactives</h6>
-                            <p class="fs-3 fw-bold text-warning mb-0">{{ stats.inactives }}</p>
-                        </div>
-                        <div class="col-auto">
-                            <div class="avatar avatar-2xl">
-                                <div class="avatar-name rounded-circle bg-warning-subtle text-warning d-flex justify-content-center align-items-center">
-                                    <span class="fas fa-pause-circle fa-lg"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Biens associés -->
-        <div class="col-md-3">
-            <div class="card bg-soft-info border-0">
-                <div class="card-body">
-                    <div class="row flex-between-center">
-                        <div class="col-auto">
-                            <h6 class="text-info mb-0">Biens associés</h6>
-                            <p class="fs-3 fw-bold text-info mb-0">{{ stats.biensAssocies }}</p>
-                        </div>
-                        <div class="col-auto">
-                            <div class="avatar avatar-2xl">
-                                <div class="avatar-name rounded-circle bg-info-subtle text-info d-flex justify-content-center align-items-center">
-                                    <span class="fas fa-building fa-lg"></span>
-                                </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-2xl">
+                            <div
+                                class="avatar-name rounded-circle bg-primary-subtle text-primary d-flex justify-content-center align-items-center">
+                                <span class="fas fa-tags fa-lg"></span>
                             </div>
                         </div>
                     </div>
@@ -153,49 +95,120 @@
         </div>
     </div>
 
-    <!-- Liste des catégories -->
-    <div class="card">
-        <div class="card-header">
-            <div class="row flex-between-end">
-                <div class="col-auto align-self-center">
-                    <h6 class="mb-0">Liste des Catégories</h6>
-                </div>
-                <div class="col-auto ms-auto">
-                    <div class="d-flex">
-                        <form method="get" action="{{ path('app_categorie') }}">
-                            {% for key, val in app.request.query.all %}
-                                {% if key != 'limit' and key != 'page' %}
-                                    <input type="hidden" name="{{ key }}" value="{{ val }}">
-                                {% endif %}
-                            {% endfor %}
-                            <select class="form-select form-select-sm me-2" name="limit" style="width: auto;" onchange="this.form.submit()">
-                                <option value="10" {% if filters.limit == 10 %}selected{% endif %}>10</option>
-                                <option value="25" {% if filters.limit == 25 %}selected{% endif %}>25</option>
-                                <option value="50" {% if filters.limit == 50 %}selected{% endif %}>50</option>
-                                <option value="100" {% if filters.limit == 100 %}selected{% endif %}>100</option>
-                            </select>
-                        </form>
-                        <span class="text-muted fs-11 align-self-center">par page</span>
+    <!-- Actives -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card bg-soft-success border-0">
+            <div class="card-body">
+                <div class="row flex-between-center">
+                    <div class="col-auto">
+                        <h6 class="text-success mb-0">Actives</h6>
+                        <p class="fs-3 fw-bold text-success mb-0">{{ stats.actives }}</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-2xl">
+                            <div
+                                class="avatar-name rounded-circle bg-success-subtle text-success d-flex justify-content-center align-items-center">
+                                <span class="fas fa-check-circle fa-lg"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card-body p-0">
-            <div class="table-responsive scrollbar">
-                <table class="table table-sm table-striped fs-11 mb-0">
-                    <thead class="bg-200">
+    </div>
+
+    <!-- Inactives -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card bg-soft-warning border-0">
+            <div class="card-body">
+                <div class="row flex-between-center">
+                    <div class="col-auto">
+                        <h6 class="text-warning mb-0">Inactives</h6>
+                        <p class="fs-3 fw-bold text-warning mb-0">{{ stats.inactives }}</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-2xl">
+                            <div
+                                class="avatar-name rounded-circle bg-warning-subtle text-warning d-flex justify-content-center align-items-center">
+                                <span class="fas fa-pause-circle fa-lg"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biens associés -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card bg-soft-info border-0">
+            <div class="card-body">
+                <div class="row flex-between-center">
+                    <div class="col-auto">
+                        <h6 class="text-info mb-0">Biens associés</h6>
+                        <p class="fs-3 fw-bold text-info mb-0">{{ stats.biensAssocies }}</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="avatar avatar-2xl">
+                            <div
+                                class="avatar-name rounded-circle bg-info-subtle text-info d-flex justify-content-center align-items-center">
+                                <span class="fas fa-building fa-lg"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Liste des catégories -->
+<div class="card">
+    <div class="card-header">
+        <div class="row flex-between-end">
+            <div class="col-auto align-self-center">
+                <h6 class="mb-0">Liste des Catégories</h6>
+            </div>
+            <div class="col-auto ms-auto">
+                <div class="d-flex">
+                    <form method="get" action="{{ path('app_categorie') }}">
+                        {% for key, val in app.request.query.all %}
+                        {% if key != 'limit' and key != 'page' %}
+                        <input type="hidden" name="{{ key }}" value="{{ val }}">
+                        {% endif %}
+                        {% endfor %}
+                        <select class="form-select form-select-sm me-2" name="limit" style="width: auto;"
+                            onchange="this.form.submit()">
+                            <option value="10" {% if filters.limit==10 %}selected{% endif %}>10</option>
+                            <option value="25" {% if filters.limit==25 %}selected{% endif %}>25</option>
+                            <option value="50" {% if filters.limit==50 %}selected{% endif %}>50</option>
+                            <option value="100" {% if filters.limit==100 %}selected{% endif %}>100</option>
+                        </select>
+                    </form>
+                    <span class="text-muted fs-11 align-self-center">par page</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive scrollbar">
+            <table class="table table-sm table-striped fs-11 mb-0">
+                <thead class="bg-200">
                     <tr>
-                        <th class="text-900 sort" data-sort="nom">{{ knp_pagination_sortable(pagination, 'Nom', 'c.nom') }}</th>
-                        <th class="text-900 sort" data-sort="type">{{ knp_pagination_sortable(pagination, 'Type', 'c.type') }}</th>
+                        <th class="text-900 sort" data-sort="nom">{{ knp_pagination_sortable(pagination, 'Nom', 'c.nom')
+                            }}</th>
+                        <th class="text-900 sort" data-sort="type">{{ knp_pagination_sortable(pagination, 'Type',
+                            'c.type') }}</th>
                         <th class="text-900 sort" data-sort="description">Description</th>
                         <th class="text-900 sort" data-sort="nb_biens">Nb. Biens</th>
                         <th class="text-900 sort" data-sort="couleur">Couleur</th>
                         <th class="text-900 sort" data-sort="statut">Statut</th>
-                        <th class="text-900 sort" data-sort="date_creation">{{ knp_pagination_sortable(pagination, 'Créé le', 'c.createdAt') }}</th>
+                        <th class="text-900 sort" data-sort="date_creation">{{ knp_pagination_sortable(pagination, 'Créé
+                            le', 'c.createdAt') }}</th>
                         <th class="text-900 no-sort">Actions</th>
                     </tr>
-                    </thead>
-                    <tbody class="list">
+                </thead>
+                <tbody class="list">
                     {% for categorie in pagination %}
                     <tr>
                         <td class="nom">
@@ -211,40 +224,47 @@
                             </div>
                         </td>
                         <td class="type">
-                            <span class="badge rounded-pill {{ categorie.typeBadgeClass }}">{{ categorie.type|capitalize }}</span>
+                            <span class="badge rounded-pill {{ categorie.typeBadgeClass }}">{{ categorie.type|capitalize
+                                }}</span>
                         </td>
                         <td class="description">
-                                <span class="text-truncate" style="max-width: 200px; display: inline-block;" title="{{ categorie.description }}">
-                                    {{ categorie.description|length > 40 ? categorie.description|slice(0, 40) ~ '...' : categorie.description }}
-                                </span>
+                            <span class="text-truncate" style="max-width: 200px; display: inline-block;"
+                                title="{{ categorie.description }}">
+                                {{ categorie.description|length > 40 ? categorie.description|slice(0, 40) ~ '...' :
+                                categorie.description }}
+                            </span>
                         </td>
                         <td class="nb_biens">
                             <span class="badge bg-soft-info text-info">{{ categorie.getBiens()|length }}</span>
                         </td>
                         <td class="couleur">
                             <div class="d-flex align-items-center">
-                                <div class="rounded me-2" style="background-color: {{ categorie.couleur }}; width: 20px; height: 20px;"></div>
+                                <div class="rounded me-2"
+                                    style="background-color: {{ categorie.couleur }}; width: 20px; height: 20px;"></div>
                                 <span class="text-700">{{ categorie.couleur }}</span>
                             </div>
                         </td>
                         <td class="statut">
                             {% if categorie.statut == 'active' %}
-                                <span class="badge badge-subtle-success">Active</span>
+                            <span class="badge badge-subtle-success">Active</span>
                             {% else %}
-                                <span class="badge badge-subtle-warning">Inactive</span>
+                            <span class="badge badge-subtle-warning">Inactive</span>
                             {% endif %}
                         </td>
                         <td class="date_creation">
-                            <small class="text-700">{{ categorie.createdAt ? categorie.createdAt|date('d/m/Y') : '' }}</small>
+                            <small class="text-700">{{ categorie.createdAt ? categorie.createdAt|date('d/m/Y') : ''
+                                }}</small>
                         </td>
                         <td>
                             <div class="dropdown font-sans-serif position-static">
-                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" data-bs-toggle="dropdown">
+                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button"
+                                    data-bs-toggle="dropdown">
                                     <span class="fas fa-ellipsis-h fs-11"></span>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end border py-0">
                                     <div class="py-2">
-                                        {# <a class="dropdown-item" href="{{ path('app_categorie_show', {'id': categorie.id}) }}">
+                                        {# <a class="dropdown-item"
+                                            href="{{ path('app_categorie_show', {'id': categorie.id}) }}">
                                             <span class="fas fa-eye me-1"></span>Voir détails
                                         </a> #}
                                         {# Edit logic would go here: path('app_categorie_edit', {'id': categorie.id}) #}
@@ -252,7 +272,8 @@
                                             <span class="fas fa-edit me-1"></span>Modifier
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item text-danger" href="#!" onclick="confirmerSuppression({{ categorie.id }})">
+                                        <a class="dropdown-item text-danger" href="#!"
+                                            onclick="confirmerSuppression({{ categorie.id }})">
                                             <span class="fas fa-trash me-1"></span>Supprimer
                                         </a>
                                     </div>
@@ -265,104 +286,102 @@
                         <td colspan="8" class="text-center py-3">Aucune catégorie trouvée.</td>
                     </tr>
                     {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
-        <div class="card-footer">
-            <div class="row align-items-center">
-                <div class="pagination-wrapper">
-                    <div class="d-flex justify-content-center">
-                        {{ knp_pagination_render(pagination) }}
-                    </div>
-                </div>
-                <div class="col-auto d-flex align-items-center">
-                    <p class="mb-0 text-700 fs-11">Affichage {{ pagination.count }} sur {{ pagination.getTotalItemCount }} résultats</p>
-                </div>
+    </div>
+    <div class="card-footer py-2">
+        <div class="row align-items-center g-3 text-center text-sm-start">
+            <div class="col-12 col-sm-auto text-700 fs-11">
+                Affichage {{ pagination.count }} sur {{ pagination.getTotalItemCount }} résultats
+            </div>
+            <div class="col-12 col-sm-auto ms-sm-auto d-flex justify-content-center">
+                {{ knp_pagination_render(pagination) }}
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal d'importation -->
-    <div class="modal fade" id="importModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Importer des catégories</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Modal d'importation -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Importer des catégories</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="fichierImport" class="form-label">Fichier CSV/Excel</label>
+                    <input type="file" class="form-control" id="fichierImport" accept=".csv,.xlsx,.xls">
+                    <div class="form-text">Formats acceptés: CSV, Excel (.xlsx, .xls)</div>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="fichierImport" class="form-label">Fichier CSV/Excel</label>
-                        <input type="file" class="form-control" id="fichierImport" accept=".csv,.xlsx,.xls">
-                        <div class="form-text">Formats acceptés: CSV, Excel (.xlsx, .xls)</div>
-                    </div>
-                    <div class="alert alert-info">
-                        <span class="fas fa-info-circle me-2"></span>
-                        <strong>Format requis:</strong> Nom, Type, Description, Couleur (hex), Statut
-                    </div>
+                <div class="alert alert-info">
+                    <span class="fas fa-info-circle me-2"></span>
+                    <strong>Format requis:</strong> Nom, Type, Description, Couleur (hex), Statut
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" onclick="importerCategories()">Importer</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="importerCategories()">Importer</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal de confirmation de suppression -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmer la suppression</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <span class="fas fa-exclamation-triangle me-2"></span>
+                    Êtes-vous sûr de vouloir supprimer cette catégorie ?
                 </div>
-                <div class="modal-body">
-                    <div class="alert alert-warning">
-                        <span class="fas fa-exclamation-triangle me-2"></span>
-                        Êtes-vous sûr de vouloir supprimer cette catégorie ?
-                    </div>
-                    <p>Cette action est irréversible. Les biens associés à cette catégorie devront être recatégorisés.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-danger" id="confirmerSuppression">Supprimer</button>
-                </div>
+                <p>Cette action est irréversible. Les biens associés à cette catégorie devront être recatégorisés.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmerSuppression">Supprimer</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // Variables globales
-        let categorieASupprimer = null;
+<script>
+    // Variables globales
+    let categorieASupprimer = null;
 
-        // Confirmation de suppression
-        function confirmerSuppression(id) {
-            categorieASupprimer = id;
-            const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-            modal.show();
+    // Confirmation de suppression
+    function confirmerSuppression(id) {
+        categorieASupprimer = id;
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.show();
+    }
+
+    // Importer les catégories
+    function importerCategories() {
+        const fichier = document.getElementById('fichierImport').files[0];
+        if (!fichier) {
+            alert('Veuillez sélectionner un fichier');
+            return;
         }
+        alert('Import simulé - Fichier: ' + fichier.name);
+        bootstrap.Modal.getInstance(document.getElementById('importModal')).hide();
+    }
 
-        // Importer les catégories
-        function importerCategories() {
-            const fichier = document.getElementById('fichierImport').files[0];
-            if (!fichier) {
-                alert('Veuillez sélectionner un fichier');
-                return;
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('confirmerSuppression').addEventListener('click', function () {
+            if (categorieASupprimer) {
+                alert('Catégorie supprimée: ID ' + categorieASupprimer);
+                bootstrap.Modal.getInstance(document.getElementById('confirmationModal')).hide();
+                location.reload();
             }
-            alert('Import simulé - Fichier: ' + fichier.name);
-            bootstrap.Modal.getInstance(document.getElementById('importModal')).hide();
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('confirmerSuppression').addEventListener('click', function() {
-                if (categorieASupprimer) {
-                    alert('Catégorie supprimée: ID ' + categorieASupprimer);
-                    bootstrap.Modal.getInstance(document.getElementById('confirmationModal')).hide();
-                    location.reload();
-                }
-            });
         });
-    </script>
+    });
+</script>
 {% endblock %}

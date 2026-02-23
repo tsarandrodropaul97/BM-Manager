@@ -12,22 +12,22 @@
             </div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.nom, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.prenom, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.dateNaissance, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.lieuNaissance, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.nationalite, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.statut, {'attr': {'class': 'form-select'}}) }}
                     </div>
                 </div>
@@ -44,19 +44,19 @@
             </div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.telephone, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="col-md-12">
                         {{ form_row(form.adresseActuelle, {'attr': {'class': 'form-control', 'rows': 2}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.profession, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.employeur, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
@@ -73,10 +73,10 @@
             </div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.bien, {'attr': {'class': 'form-select'}}) }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         {{ form_row(form.dateEntree, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
@@ -97,25 +97,26 @@
                 <div class="mb-3">
                     {{ form_row(form.photo) }}
                     {% if locataire.photo %}
-                        <div class="mt-2 text-center">
-                            <img src="{{ asset('uploads/locataires/' ~ locataire.photo) }}" alt="Photo" class="img-thumbnail" style="max-height: 150px;">
-                        </div>
+                    <div class="mt-2 text-center">
+                        <img src="{{ asset('uploads/locataires/' ~ locataire.photo) }}" alt="Photo"
+                            class="img-thumbnail" style="max-height: 150px;">
+                    </div>
                     {% endif %}
                 </div>
                 <div class="mb-3 border-top pt-3">
                     {{ form_row(form.cinRecto) }}
                     {% if locataire.cinRecto %}
-                        <div class="mt-2">
-                            <small class="text-muted">Document actuel : {{ locataire.cinRecto }}</small>
-                        </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Document actuel : {{ locataire.cinRecto }}</small>
+                    </div>
                     {% endif %}
                 </div>
                 <div class="mb-3 border-top pt-3">
                     {{ form_row(form.cinVerso) }}
                     {% if locataire.cinVerso %}
-                        <div class="mt-2">
-                            <small class="text-muted">Document actuel : {{ locataire.cinVerso }}</small>
-                        </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Document actuel : {{ locataire.cinVerso }}</small>
+                    </div>
                     {% endif %}
                 </div>
             </div>

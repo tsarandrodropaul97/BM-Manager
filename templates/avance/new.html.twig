@@ -11,68 +11,77 @@
                     <span class="fas fa-hand-holding-usd me-2 text-primary"></span>
                     Déclarer une Avance
                 </h4>
-                <p class="text-600 fs-11 mb-0 mt-1">Enregistrez l'argent que vous avez versé au propriétaire à sa demande.</p>
+                <p class="text-600 fs-11 mb-0 mt-1">Enregistrez l'argent que vous avez versé au propriétaire à sa
+                    demande.</p>
             </div>
             <div class="card-body p-4">
                 <div class="alert alert-subtle-info fs-11 border-info-subtle mb-4 shadow-sm">
                     <div class="d-flex">
                         <span class="fas fa-info-circle me-2 mt-1"></span>
                         <div>
-                            <strong>Scénario :</strong> Le propriétaire vous a sollicité pour une avance. Une fois le versement effectué, déclarez-le ici. ce montant sera <strong>automatiquement déduit</strong> de vos prochains loyers.
+                            <strong>Scénario :</strong> Le propriétaire vous a sollicité pour une avance. Une fois le
+                            versement effectué, déclarez-le ici. ce montant sera <strong>automatiquement déduit</strong>
+                            de vos prochains loyers.
                         </div>
                     </div>
                 </div>
 
                 {{ form_start(form) }}
-                    {% if form.locataire is defined %}
-                        <div class="mb-3">
-                            <label class="form-label text-700 fw-bold fs-11 text-uppercase">Locataire concerné (Admin)</label>
-                            {{ form_widget(form.locataire, {'attr': {'class': 'form-select'}}) }}
-                            {{ form_errors(form.locataire) }}
-                        </div>
-                    {% endif %}
+                {% if form.locataire is defined %}
+                <div class="mb-3">
+                    <label class="form-label text-700 fw-bold fs-11 text-uppercase">Locataire concerné (Admin)</label>
+                    {{ form_widget(form.locataire, {'attr': {'class': 'form-select'}}) }}
+                    {{ form_errors(form.locataire) }}
+                </div>
+                {% endif %}
 
-                    <div class="row g-3">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-700 fw-bold fs-11 text-uppercase">Montant versé</label>
-                            <div class="input-group">
-                                {{ form_widget(form.montantTotal, {'attr': {'class': 'form-control border-end-0', 'placeholder': '0.00'}}) }}
-                                <span class="input-group-text bg-200 text-700">Ar</span>
-                            </div>
-                            {{ form_errors(form.montantTotal) }}
+                <div class="row g-3">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="form-label text-700 fw-bold fs-11 text-uppercase">Montant versé</label>
+                        <div class="input-group">
+                            {{ form_widget(form.montantTotal, {'attr': {'class': 'form-control border-end-0',
+                            'placeholder': '0.00'}}) }}
+                            <span class="input-group-text bg-200 text-700">Ar</span>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-700 fw-bold fs-11 text-uppercase">Date du versement</label>
-                            {{ form_widget(form.dateAccord, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(form.dateAccord) }}
-                        </div>
+                        {{ form_errors(form.montantTotal) }}
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label text-700 fw-bold fs-11 text-uppercase">Preuve de la demande / Reçu</label>
-                        <div class="bg-subtle-secondary p-3 rounded-2 border border-dashed border-300">
-                            <p class="fs-11 text-600 mb-2">Uploadez le papier du propriétaire ou votre reçu de virement.</p>
-                            {{ form_widget(form.document, {'attr': {'class': 'form-control fs-11'}}) }}
-                            {{ form_errors(form.document) }}
-                        </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="form-label text-700 fw-bold fs-11 text-uppercase">Date du versement</label>
+                        {{ form_widget(form.dateAccord, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.dateAccord) }}
                     </div>
+                </div>
 
-                    <div class="mb-4">
-                        <label class="form-label text-700 fw-bold fs-11 text-uppercase">Observations supplémentaires</label>
-                        {{ form_widget(form.motif, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
-                        {{ form_errors(form.motif) }}
+                <div class="mb-3">
+                    <label class="form-label text-700 fw-bold fs-11 text-uppercase">Preuve de la demande / Reçu</label>
+                    <div class="bg-subtle-secondary p-3 rounded-2 border border-dashed border-300">
+                        <p class="fs-11 text-600 mb-2">Uploadez le papier du propriétaire ou votre reçu de virement.</p>
+                        {{ form_widget(form.document, {'attr': {'class': 'form-control fs-11'}}) }}
+                        {{ form_errors(form.document) }}
                     </div>
+                </div>
 
-                    <div class="d-flex justify-content-between align-items-center mt-4 border-top border-300 pt-3">
+                <div class="mb-4">
+                    <label class="form-label text-700 fw-bold fs-11 text-uppercase">Observations supplémentaires</label>
+                    {{ form_widget(form.motif, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
+                    {{ form_errors(form.motif) }}
+                </div>
+
+                <div class="row g-3 flex-between-center mt-4 border-top border-300 pt-3">
+                    <div class="col-12 col-sm-auto text-center text-sm-start order-2 order-sm-1">
                         <a href="{{ path('app_avance_index') }}" class="btn btn-link text-600 p-0 fs-11">
                             <span class="fas fa-arrow-left me-1"></span>Retour
                         </a>
-                        <button type="submit" class="btn btn-primary px-4 shadow-sm" id="btnSubmitAvance">
+                    </div>
+                    <div class="col-12 col-sm-auto order-1 order-sm-2">
+                        <button type="submit" class="btn btn-primary w-100 px-4 shadow-sm" id="btnSubmitAvance">
                             <span class="fas fa-cloud-upload-alt me-2" id="btnIcon"></span>
-                            <span class="spinner-border spinner-border-sm d-none me-2" role="status" id="btnSpinner"></span>
+                            <span class="spinner-border spinner-border-sm d-none me-2" role="status"
+                                id="btnSpinner"></span>
                             Enregistrer la déclaration
                         </button>
                     </div>
+                </div>
                 {{ form_end(form) }}
             </div>
         </div>
@@ -80,25 +89,36 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const btnSubmit = document.getElementById('btnSubmitAvance');
-    const btnSpinner = document.getElementById('btnSpinner');
-    const btnIcon = document.getElementById('btnIcon');
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const btnSubmit = document.getElementById('btnSubmitAvance');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const btnIcon = document.getElementById('btnIcon');
 
-    if (form) {
-        form.addEventListener('submit', function() {
-            btnSubmit.disabled = true;
-            btnSpinner.classList.remove('d-none');
-            btnIcon.classList.add('d-none');
-        });
-    }
-});
+        if (form) {
+            form.addEventListener('submit', function () {
+                btnSubmit.disabled = true;
+                btnSpinner.classList.remove('d-none');
+                btnIcon.classList.add('d-none');
+            });
+        }
+    });
 </script>
 
 <style>
-    .form-select option { background-color: #0b1727; color: white; }
-    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    .border-dashed { border-style: dashed !important; }
+    .form-select option {
+        background-color: #0b1727;
+        color: white;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+    }
 </style>
 {% endblock %}

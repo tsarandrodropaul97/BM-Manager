@@ -3,216 +3,223 @@
 {% block title %}Taux d'Occupation{% endblock %}
 
 {% block body %}
-    <!-- En-tête page -->
-    <div class="card mb-3">
-        <div class="card-header">
-            <div class="row flex-between-end">
-                <div class="col-auto align-self-center">
-                    <h5 class="mb-0">Taux d'Occupation</h5>
-                    <p class="mb-0 fs-11 text-muted">Suivi et analyse de l'occupation de vos biens</p>
+<!-- En-tête page -->
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="row flex-between-center g-3">
+            <div class="col-12 col-sm-auto align-self-center">
+                <h5 class="mb-0">Taux d'Occupation</h5>
+                <p class="mb-0 fs-11 text-muted">Suivi et analyse de l'occupation de vos biens</p>
+            </div>
+            <div class="col-12 col-sm-auto ms-auto text-center text-sm-end">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-primary btn-sm" type="button">
+                        <span class="fas fa-download me-1"></span>Exporter
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" type="button">
+                        <span class="fas fa-filter me-1"></span>Filtrer
+                    </button>
                 </div>
-                <div class="col-auto ms-auto">
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-primary btn-sm" type="button">
-                            <span class="fas fa-download me-1"></span>Exporter
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm" type="button">
-                            <span class="fas fa-filter me-1"></span>Filtrer
-                        </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sélecteur de période -->
+<div class="row g-3 mb-3 align-items-center">
+    <div class="col-12 col-md-auto">
+        <div class="btn-group w-100 w-md-auto" role="group" aria-label="Période">
+            <input type="radio" class="btn-check" name="periode" id="mois" checked>
+            <label class="btn btn-outline-primary btn-sm" for="mois">Ce mois</label>
+
+            <input type="radio" class="btn-check" name="periode" id="trimestre">
+            <label class="btn btn-outline-primary btn-sm" for="trimestre">Trimestre</label>
+
+            <input type="radio" class="btn-check" name="periode" id="annee">
+            <label class="btn btn-outline-primary btn-sm" for="annee">Année</label>
+        </div>
+    </div>
+    <div class="col-12 col-md-auto ms-md-auto">
+        <div class="input-group input-group-sm">
+            <input class="form-control" type="month" value="2025-09" />
+            <button class="btn btn-outline-secondary" type="button">
+                <span class="fas fa-calendar-alt"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Métriques occupation principales -->
+<div class="row g-3 mb-3">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card overflow-hidden" style="min-height: 10rem">
+            <div class="bg-holder bg-card"
+                style="background-image:url(assets/img/icons/spot-illustrations/corner-1.png);"></div>
+            <div class="card-body position-relative">
+                <h6 class="text-muted">Taux d'Occupation</h6>
+                <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-success">91.7%</div>
+                <div class="d-flex align-items-center">
+                    <span class="badge badge-subtle-success rounded-pill fs-11">+2.3%</span>
+                    <span class="fs-11 ms-1 text-muted">vs mois dernier</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card overflow-hidden" style="min-height: 10rem">
+            <div class="bg-holder bg-card"
+                style="background-image:url(assets/img/icons/spot-illustrations/corner-2.png);"></div>
+            <div class="card-body position-relative">
+                <h6 class="text-muted">Biens Occupés</h6>
+                <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-primary">22/24</div>
+                <div class="d-flex align-items-center">
+                    <span class="fs-11 text-muted">sur 24 biens total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card overflow-hidden" style="min-height: 10rem">
+            <div class="bg-holder bg-card"
+                style="background-image:url(assets/img/icons/spot-illustrations/corner-3.png);"></div>
+            <div class="card-body position-relative">
+                <h6 class="text-muted">Durée Vacance Moy.</h6>
+                <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-warning">18 jours</div>
+                <div class="d-flex align-items-center">
+                    <span class="badge badge-subtle-warning rounded-pill fs-11">-5 jours</span>
+                    <span class="fs-11 ms-1 text-muted">vs moyenne</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card overflow-hidden" style="min-height: 10rem">
+            <div class="bg-holder bg-card"
+                style="background-image:url(assets/img/icons/spot-illustrations/corner-4.png);"></div>
+            <div class="card-body position-relative">
+                <h6 class="text-muted">Nouveaux Contrats</h6>
+                <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-info">3</div>
+                <div class="d-flex align-items-center">
+                    <span class="fs-11 text-muted">ce mois-ci</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Graphique évolution et statut des biens1 -->
+<div class="row g-3 mb-3">
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header">
+                <div class="row flex-between-end">
+                    <div class="col-auto">
+                        <h6 class="mb-0">Évolution du Taux d'Occupation (12 mois)</h6>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <input type="radio" class="btn-check" name="graphType" id="line" checked>
+                            <label class="btn btn-outline-secondary" for="line">
+                                <span class="fas fa-chart-line"></span>
+                            </label>
+                            <input type="radio" class="btn-check" name="graphType" id="area">
+                            <label class="btn btn-outline-secondary" for="area">
+                                <span class="fas fa-chart-area"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div
+                    style="height: 300px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 2px dashed #dee2e6;">
+                    <div class="text-center">
+                        <span class="fas fa-chart-line fa-2x text-muted mb-2 d-block"></span>
+                        <p class="text-muted mb-0">Graphique d'évolution du taux d'occupation</p>
+                        <small class="text-muted">Oct 2024 - Sept 2025</small>
+                    </div>
+                </div>
+                <!-- Légende graphique -->
+                <div class="row mt-3 text-center g-2">
+                    <div class="col-6 col-md-3">
+                        <div class="fs-11"><span class="fas fa-square text-success me-1"></span>Occupés</div>
+                        <div class="fs-10 fw-semi-bold">91.7%</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="fs-11"><span class="fas fa-square text-warning me-1"></span>En Transition</div>
+                        <div class="fs-10 fw-semi-bold">4.2%</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="fs-11"><span class="fas fa-square text-danger me-1"></span>Vacants</div>
+                        <div class="fs-10 fw-semi-bold">4.1%</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="fs-11"><span class="fas fa-square text-secondary me-1"></span>Objectif</div>
+                        <div class="fs-10 fw-semi-bold">95%</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Sélecteur de période -->
-    <div class="row g-3 mb-3">
-        <div class="col-auto">
-            <div class="btn-group" role="group" aria-label="Période">
-                <input type="radio" class="btn-check" name="periode" id="mois" checked>
-                <label class="btn btn-outline-primary btn-sm" for="mois">Ce mois</label>
-
-                <input type="radio" class="btn-check" name="periode" id="trimestre">
-                <label class="btn btn-outline-primary btn-sm" for="trimestre">Trimestre</label>
-
-                <input type="radio" class="btn-check" name="periode" id="annee">
-                <label class="btn btn-outline-primary btn-sm" for="annee">Année</label>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h6 class="mb-0">Statut des Biens</h6>
             </div>
-        </div>
-        <div class="col-auto ms-auto">
-            <div class="input-group input-group-sm">
-                <input class="form-control" type="month" value="2025-09" />
-                <button class="btn btn-outline-secondary" type="button">
-                    <span class="fas fa-calendar-alt"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Métriques occupation principales -->
-    <div class="row g-3 mb-3">
-        <div class="col-sm-6 col-lg-3">
-            <div class="card overflow-hidden" style="min-height: 10rem">
-                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-1.png);"></div>
-                <div class="card-body position-relative">
-                    <h6 class="text-muted">Taux d'Occupation</h6>
-                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-success">91.7%</div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge badge-subtle-success rounded-pill fs-11">+2.3%</span>
-                        <span class="fs-11 ms-1 text-muted">vs mois dernier</span>
+            <div class="card-body">
+                <div
+                    style="height: 200px; background: radial-gradient(circle, #f8f9fa 30%, #e9ecef 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; width: 200px; border: 2px dashed #dee2e6;">
+                    <div class="text-center">
+                        <span class="fas fa-chart-pie fa-2x text-muted mb-2 d-block"></span>
+                        <p class="text-muted mb-0 fs-11">Répartition statuts</p>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card overflow-hidden" style="min-height: 10rem">
-                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-2.png);"></div>
-                <div class="card-body position-relative">
-                    <h6 class="text-muted">Biens Occupés</h6>
-                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-primary">22/24</div>
-                    <div class="d-flex align-items-center">
-                        <span class="fs-11 text-muted">sur 24 biens total</span>
+                <!-- Détails statuts -->
+                <div class="mt-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="fs-11"><span class="fas fa-home text-success me-2"></span>Occupés</div>
+                        <div class="fs-11 fw-semi-bold">22 biens</div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card overflow-hidden" style="min-height: 10rem">
-                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-3.png);"></div>
-                <div class="card-body position-relative">
-                    <h6 class="text-muted">Durée Vacance Moy.</h6>
-                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-warning">18 jours</div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge badge-subtle-warning rounded-pill fs-11">-5 jours</span>
-                        <span class="fs-11 ms-1 text-muted">vs moyenne</span>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="fs-11"><span class="fas fa-sync-alt text-warning me-2"></span>En transition</div>
+                        <div class="fs-11 fw-semi-bold">1 bien</div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card overflow-hidden" style="min-height: 10rem">
-                <div class="bg-holder bg-card" style="background-image:url(assets/img/icons/spot-illustrations/corner-4.png);"></div>
-                <div class="card-body position-relative">
-                    <h6 class="text-muted">Nouveaux Contrats</h6>
-                    <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-info">3</div>
-                    <div class="d-flex align-items-center">
-                        <span class="fs-11 text-muted">ce mois-ci</span>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="fs-11"><span class="fas fa-exclamation-triangle text-danger me-2"></span>Vacants
+                        </div>
+                        <div class="fs-11 fw-semi-bold">1 bien</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Graphique évolution et statut des biens1 -->
-    <div class="row g-3 mb-3">
-        <div class="col-lg-8">
-            <div class="card h-100">
-                <div class="card-header">
-                    <div class="row flex-between-end">
-                        <div class="col-auto">
-                            <h6 class="mb-0">Évolution du Taux d'Occupation (12 mois)</h6>
-                        </div>
-                        <div class="col-auto">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="graphType" id="line" checked>
-                                <label class="btn btn-outline-secondary" for="line">
-                                    <span class="fas fa-chart-line"></span>
-                                </label>
-                                <input type="radio" class="btn-check" name="graphType" id="area">
-                                <label class="btn btn-outline-secondary" for="area">
-                                    <span class="fas fa-chart-area"></span>
-                                </label>
-                            </div>
-                        </div>
+<!-- Liste détaillée des biens1 et analyse -->
+<div class="row g-3 mb-3">
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header">
+                <div class="row flex-between-end">
+                    <div class="col-auto">
+                        <h6 class="mb-0">État d'Occupation par Bien</h6>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div style="height: 300px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 2px dashed #dee2e6;">
-                        <div class="text-center">
-                            <span class="fas fa-chart-line fa-2x text-muted mb-2 d-block"></span>
-                            <p class="text-muted mb-0">Graphique d'évolution du taux d'occupation</p>
-                            <small class="text-muted">Oct 2024 - Sept 2025</small>
-                        </div>
-                    </div>
-                    <!-- Légende graphique -->
-                    <div class="row mt-3 text-center">
-                        <div class="col-3">
-                            <div class="fs-11"><span class="fas fa-square text-success me-1"></span>Occupés</div>
-                            <div class="fs-10 fw-semi-bold">91.7%</div>
-                        </div>
-                        <div class="col-3">
-                            <div class="fs-11"><span class="fas fa-square text-warning me-1"></span>En Transition</div>
-                            <div class="fs-10 fw-semi-bold">4.2%</div>
-                        </div>
-                        <div class="col-3">
-                            <div class="fs-11"><span class="fas fa-square text-danger me-1"></span>Vacants</div>
-                            <div class="fs-10 fw-semi-bold">4.1%</div>
-                        </div>
-                        <div class="col-3">
-                            <div class="fs-11"><span class="fas fa-square text-secondary me-1"></span>Objectif</div>
-                            <div class="fs-10 fw-semi-bold">95%</div>
+                    <div class="col-auto">
+                        <div class="input-group input-group-sm">
+                            <select class="form-select">
+                                <option>Tous les statuts</option>
+                                <option>Occupés</option>
+                                <option>Vacants</option>
+                                <option>En transition</option>
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h6 class="mb-0">Statut des Biens</h6>
-                </div>
-                <div class="card-body">
-                    <div style="height: 200px; background: radial-gradient(circle, #f8f9fa 30%, #e9ecef 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; width: 200px; border: 2px dashed #dee2e6;">
-                        <div class="text-center">
-                            <span class="fas fa-chart-pie fa-2x text-muted mb-2 d-block"></span>
-                            <p class="text-muted mb-0 fs-11">Répartition statuts</p>
-                        </div>
-                    </div>
-                    <!-- Détails statuts -->
-                    <div class="mt-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div class="fs-11"><span class="fas fa-home text-success me-2"></span>Occupés</div>
-                            <div class="fs-11 fw-semi-bold">22 biens</div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div class="fs-11"><span class="fas fa-sync-alt text-warning me-2"></span>En transition</div>
-                            <div class="fs-11 fw-semi-bold">1 bien</div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div class="fs-11"><span class="fas fa-exclamation-triangle text-danger me-2"></span>Vacants</div>
-                            <div class="fs-11 fw-semi-bold">1 bien</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Liste détaillée des biens1 et analyse -->
-    <div class="row g-3 mb-3">
-        <div class="col-lg-8">
-            <div class="card h-100">
-                <div class="card-header">
-                    <div class="row flex-between-end">
-                        <div class="col-auto">
-                            <h6 class="mb-0">État d'Occupation par Bien</h6>
-                        </div>
-                        <div class="col-auto">
-                            <div class="input-group input-group-sm">
-                                <select class="form-select">
-                                    <option>Tous les statuts</option>
-                                    <option>Occupés</option>
-                                    <option>Vacants</option>
-                                    <option>En transition</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0">
-                            <thead class="bg-light">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="bg-light">
                             <tr>
                                 <th class="border-0 fs-11">Bien</th>
                                 <th class="border-0 fs-11">Locataire</th>
@@ -222,8 +229,8 @@
                                 <th class="border-0 fs-11">Durée Occup.</th>
                                 <th class="border-0 fs-11">Actions</th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
                             <tr>
                                 <td class="py-2">
                                     <strong>15 Rue Victor Hugo</strong><br>
@@ -343,150 +350,150 @@
                                     </div>
                                 </td>
                             </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="card-footer bg-light py-2">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <span class="fs-11 text-muted">Affichage 5 biens sur 24</span>
-                        </div>
-                        <div class="col-auto">
-                            <nav aria-label="Pagination">
-                                <ul class="pagination pagination-sm mb-0">
-                                    <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
-                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">›</a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h6 class="mb-0">Analyse Performance</h6>
-                </div>
-                <div class="card-body">
-                    <!-- Objectif taux occupation -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="fs-11">Objectif Annuel</span>
-                            <span class="fs-11 fw-semi-bold text-success">91.7% / 95%</span>
-                        </div>
-                        <div class="progress" style="height: 6px">
-                            <div class="progress-bar bg-success" style="width: 96.5%"></div>
-                        </div>
+            <div class="card-footer bg-light py-2">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <span class="fs-11 text-muted">Affichage 5 biens sur 24</span>
                     </div>
-
-                    <!-- Temps de relocation moyen -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="fs-11">Délai Relocation</span>
-                            <span class="fs-11 fw-semi-bold text-primary">18j / 25j</span>
-                        </div>
-                        <div class="progress" style="height: 6px">
-                            <div class="progress-bar bg-primary" style="width: 72%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Stabilité locative -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="fs-11">Durée Moyenne Bail</span>
-                            <span class="fs-11 fw-semi-bold text-info">28 mois</span>
-                        </div>
-                        <div class="progress" style="height: 6px">
-                            <div class="progress-bar bg-info" style="width: 93%"></div>
-                        </div>
-                    </div>
-
-                    <hr class="my-3">
-
-                    <!-- Statistiques complémentaires -->
-                    <div class="row text-center">
-                        <div class="col-6 border-end">
-                            <div class="fs-4 fw-normal text-success mb-1">3</div>
-                            <div class="fs-11 text-muted">Baux Renouvelés</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="fs-4 fw-normal text-warning mb-1">2</div>
-                            <div class="fs-11 text-muted">Fins de Bail</div>
-                        </div>
-                    </div>
-
-                    <hr class="my-3">
-
-                    <!-- Actions rapides -->
-                    <div class="d-grid gap-2">
-                        <a class="btn btn-outline-success btn-sm" href="contrats/nouveau.html">
-                            <span class="fas fa-plus me-1"></span>Nouveau Bail
-                        </a>
-                        <a class="btn btn-outline-info btn-sm" href="biens/liste.html">
-                            <span class="fas fa-building me-1"></span>Gérer Biens
-                        </a>
-                        <a class="btn btn-outline-primary btn-sm" href="locataires/liste.html">
-                            <span class="fas fa-users me-1"></span>Candidatures
-                        </a>
+                    <div class="col-auto">
+                        <nav aria-label="Pagination">
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">›</a></li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Alertes et prévisions -->
-    <div class="row g-3">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="mb-0">Alertes Occupation</h6>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h6 class="mb-0">Analyse Performance</h6>
+            </div>
+            <div class="card-body">
+                <!-- Objectif taux occupation -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fs-11">Objectif Annuel</span>
+                        <span class="fs-11 fw-semi-bold text-success">91.7% / 95%</span>
+                    </div>
+                    <div class="progress" style="height: 6px">
+                        <div class="progress-bar bg-success" style="width: 96.5%"></div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="alert alert-warning d-flex align-items-center" role="alert">
-                        <span class="fas fa-exclamation-triangle me-2"></span>
-                        <div class="flex-1">
-                            <strong>1 bien vacant depuis +30 jours</strong>
-                            <div class="fs-11 text-muted">5 Rue Pasteur - Action requise</div>
-                        </div>
+
+                <!-- Temps de relocation moyen -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fs-11">Délai Relocation</span>
+                        <span class="fs-11 fw-semi-bold text-primary">18j / 25j</span>
                     </div>
-                    <div class="alert alert-info d-flex align-items-center" role="alert">
-                        <span class="fas fa-calendar-alt me-2"></span>
-                        <div class="flex-1">
-                            <strong>3 fins de bail à venir</strong> dans les 60 jours
-                            <div class="fs-11 text-muted">Planifier les renouvellements</div>
-                        </div>
+                    <div class="progress" style="height: 6px">
+                        <div class="progress-bar bg-primary" style="width: 72%"></div>
                     </div>
+                </div>
+
+                <!-- Stabilité locative -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fs-11">Durée Moyenne Bail</span>
+                        <span class="fs-11 fw-semi-bold text-info">28 mois</span>
+                    </div>
+                    <div class="progress" style="height: 6px">
+                        <div class="progress-bar bg-info" style="width: 93%"></div>
+                    </div>
+                </div>
+
+                <hr class="my-3">
+
+                <!-- Statistiques complémentaires -->
+                <div class="row text-center">
+                    <div class="col-6 border-end">
+                        <div class="fs-4 fw-normal text-success mb-1">3</div>
+                        <div class="fs-11 text-muted">Baux Renouvelés</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="fs-4 fw-normal text-warning mb-1">2</div>
+                        <div class="fs-11 text-muted">Fins de Bail</div>
+                    </div>
+                </div>
+
+                <hr class="my-3">
+
+                <!-- Actions rapides -->
+                <div class="d-grid gap-2">
+                    <a class="btn btn-outline-success btn-sm" href="contrats/nouveau.html">
+                        <span class="fas fa-plus me-1"></span>Nouveau Bail
+                    </a>
+                    <a class="btn btn-outline-info btn-sm" href="biens/liste.html">
+                        <span class="fas fa-building me-1"></span>Gérer Biens
+                    </a>
+                    <a class="btn btn-outline-primary btn-sm" href="locataires/liste.html">
+                        <span class="fas fa-users me-1"></span>Candidatures
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="mb-0">Prévisions & Tendances</h6>
+    </div>
+</div>
+
+<!-- Alertes et prévisions -->
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Alertes Occupation</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                    <span class="fas fa-exclamation-triangle me-2"></span>
+                    <div class="flex-1">
+                        <strong>1 bien vacant depuis +30 jours</strong>
+                        <div class="fs-11 text-muted">5 Rue Pasteur - Action requise</div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fs-11">Évolution mensuelle</span>
-                        <span class="badge badge-subtle-success">+2.3%</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fs-11">Prévision trimestre</span>
-                        <span class="badge badge-subtle-primary">93.5%</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fs-11">Renouvellements prévus</span>
-                        <span class="badge badge-subtle-info">85%</span>
-                    </div>
-                    <hr class="my-2">
-                    <div class="text-center">
-                        <small class="text-muted">Basé sur l'historique et les tendances</small>
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <span class="fas fa-calendar-alt me-2"></span>
+                    <div class="flex-1">
+                        <strong>3 fins de bail à venir</strong> dans les 60 jours
+                        <div class="fs-11 text-muted">Planifier les renouvellements</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Prévisions & Tendances</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fs-11">Évolution mensuelle</span>
+                    <span class="badge badge-subtle-success">+2.3%</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fs-11">Prévision trimestre</span>
+                    <span class="badge badge-subtle-primary">93.5%</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fs-11">Renouvellements prévus</span>
+                    <span class="badge badge-subtle-info">85%</span>
+                </div>
+                <hr class="my-2">
+                <div class="text-center">
+                    <small class="text-muted">Basé sur l'historique et les tendances</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
