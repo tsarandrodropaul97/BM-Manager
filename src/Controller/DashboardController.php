@@ -96,28 +96,34 @@ final class DashboardController extends AbstractController
                         }
                     }
 
-                    $creditRestant = 0;
+                    $creditRestant = $totalAvances;
                     $nbMoisCouverts = 0;
                     $dateReprise = null;
 
-                    if ($dateDebut && $loyerTotal > 0) {
-                        $aujourdhui = new \DateTime('first day of this month');
-                        /** @var \DateTime $dateRef */
-                        $dateRef = clone $dateDebut;
+                    $aujourdhui = new \DateTime('first day of this month');
+                    $dateRef = null;
+
+                    if ($dateDebut) {
+                        $dateRef = \DateTime::createFromInterface($dateDebut);
                         $dateRef->modify('first day of this month');
 
-                        $moisConsommes = 0;
-                        if ($aujourdhui > $dateRef) {
-                            $diff = $dateRef->diff($aujourdhui);
-                            $moisConsommes = ($diff->y * 12) + $diff->m;
-                        }
+                        if ($loyerTotal > 0) {
+                            $moisConsommes = 0;
+                            if ($aujourdhui > $dateRef) {
+                                $diff = $dateRef->diff($aujourdhui);
+                                $moisConsommes = ($diff->y * 12) + $diff->m;
+                            }
 
-                        $creditRestant = max(0, $totalAvances - ($moisConsommes * $loyerTotal));
+                            $creditRestant = max(0, $totalAvances - ($moisConsommes * $loyerTotal));
+                        }
+                    }
+
+                    if ($loyerTotal > 0) {
                         $nbMoisCouverts = floor($creditRestant / $loyerTotal);
-                        
-                        // Calcul date de reprise
+                        $dateDepartCouverture = ($dateRef && $dateRef > $aujourdhui) ? clone $dateRef : clone $aujourdhui;
+
                         /** @var \DateTime $dateReprise */
-                        $dateReprise = clone $aujourdhui;
+                        $dateReprise = clone $dateDepartCouverture;
                         if ($nbMoisCouverts > 0) {
                             $dateReprise->modify('+' . (int)$nbMoisCouverts . ' months');
                         }
@@ -135,20 +141,30 @@ final class DashboardController extends AbstractController
                     ];
 
                     // Prévisions sur 6 mois
+                    $simulCreditRestant = $creditRestant;
                     for ($i = 0; $i < 6; $i++) {
                         $moisPrevu = (new \DateTime('first day of this month'))->modify('+' . $i . ' months');
-                        $estCouvert = ($creditRestant >= ($i + 1) * $loyerTotal);
-                        $reliquatMois = 0;
-                        if (!$estCouvert && $creditRestant > ($i * $loyerTotal)) {
-                            $reliquatMois = $creditRestant - ($i * $loyerTotal);
+
+                        $deduction = 0;
+                        if (!$dateRef || $moisPrevu >= $dateRef) {
+                            if ($simulCreditRestant >= $loyerTotal) {
+                                $deduction = $loyerTotal;
+                            } else {
+                                $deduction = $simulCreditRestant;
+                            }
+                            $simulCreditRestant = max(0, $simulCreditRestant - $deduction);
                         }
+
+                        $aPayer = $loyerTotal - $deduction;
+                        $estCouvert = ($aPayer == 0 && $deduction > 0);
+                        $partiel = ($aPayer > 0 && $deduction > 0);
 
                         $previsions[] = [
                             'date' => $moisPrevu,
                             'loyer' => $loyerTotal,
-                            'deduction' => $estCouvert ? $loyerTotal : $reliquatMois,
-                            'aPayer' => $estCouvert ? 0 : ($loyerTotal - $reliquatMois),
-                            'statut' => $estCouvert ? 'Payé (Avance)' : ($reliquatMois > 0 ? 'Partiel' : 'À payer')
+                            'deduction' => $deduction,
+                            'aPayer' => $aPayer,
+                            'statut' => $estCouvert ? 'Payé (Avance)' : ($partiel ? 'Partiel' : 'À payer')
                         ];
                     }
                 }

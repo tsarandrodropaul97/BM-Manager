@@ -7,14 +7,61 @@
     html,
     body {
         height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Empêche le scroll uniquement sur mobile */
+    @media (max-width: 991.98px) {
+        html, body {
+            overflow: hidden !important;
+        }
+        
+        .login-wrapper {
+            height: 100vh !important;
+            overflow: hidden !important;
+        }
+
+        .login-card-col {
+            max-height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 15px;
+        }
+    }
+
+    /* Restauration du comportement de l'image de gauche */
+    .bg-holder {
+        position: absolute;
+        width: 100%;
+        min-height: 100%;
+        top: 0;
+        left: 0;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    /* Correction du container-fluid pour la page login */
+    .main, 
+    body > main > .container-fluid {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        height: 100% !important;
+    }
+
+    .login-wrapper {
+        min-height: 100vh;
         margin: 0;
     }
 </style>
-<div class="row min-vh-100 bg-100 g-0">
-    {# Image latérale simplifiée #}
-    <div class="col-6 d-none d-lg-block position-relative">
+<div class="row login-wrapper bg-100 g-0">
+    {# Image latérale #}
+    <div class="col-lg-6 d-none d-lg-block position-relative">
         <div class="bg-holder"
-            style="background-image:url({{ asset('assets/img/generic/21.jpg') }});background-position: 50% 20%;"></div>
+            style="background-image:url({{ asset('assets/img/generic/21.jpg') }});"></div>
 
         {# Overlay simplifié #}
         <div class="position-absolute bottom-0 start-0 w-100 p-4"
@@ -31,7 +78,7 @@
         </div>
     </div>
 
-    <div class="col-sm-10 col-md-6 px-sm-0 align-self-center mx-auto">
+    <div class="col-sm-10 col-md-6 px-sm-0 align-self-center mx-auto login-card-col">
         <div class="row justify-content-center g-0">
             <div class="col-lg-9 col-xl-8 col-xxl-6">
                 <div class="card shadow border-0">
@@ -134,20 +181,20 @@
                         </form>
 
                         {# Support compact sur 2 colonnes #}
-                        <div class="bg-gradient rounded p-3 mb-3">
-                            <h6 class="text-muted mb-2 text-center">
+                        <div class="bg-gradient rounded p-3 mb-3 border">
+                            <h6 class="text-muted mb-2 text-center small">
                                 <i class="fas fa-headset me-1"></i> Besoin d'aide ?
                             </h6>
                             <div class="row g-2">
                                 <div class="col-6">
                                     <a href="mailto:support@bmmanager.com"
-                                        class="btn btn-outline-secondary btn-sm w-100">
-                                        <i class="fas fa-envelope"></i> Support
+                                        class="btn btn-outline-secondary btn-sm w-100 py-1">
+                                        <i class="fas fa-envelope fa-xs"></i> <span class="small">Support</span>
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                    <a href="tel:+33123456789" class="btn btn-outline-secondary btn-sm w-100">
-                                        <i class="fas fa-phone"></i> Appeler
+                                    <a href="tel:+33123456789" class="btn btn-outline-secondary btn-sm w-100 py-1">
+                                        <i class="fas fa-phone fa-xs"></i> <span class="small">Appeler</span>
                                     </a>
                                 </div>
                             </div>

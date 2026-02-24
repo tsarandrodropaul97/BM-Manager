@@ -147,17 +147,8 @@ class AvanceSurLoyerController extends AbstractController
                 $stats['loyerMensuel'] = $loyer;
 
                 if ($loyer > 0) {
-                    // 1. Calculer la date de reprise finale
-                    $nbMoisTotauxInitiaux = floor($totalHistorique / $loyer);
-                    $dateReprise = clone $dateDebut;
-                    if ($nbMoisTotauxInitiaux > 0) {
-                        $dateReprise->modify('+' . (int)$nbMoisTotauxInitiaux . ' months');
-                    }
-                    $stats['dateReprise'] = $dateReprise;
-
-                    // 2. Calculer combien de mois ont été consommés depuis le début
                     $aujourdhui = new \DateTime('first day of this month');
-                    $dateRef = clone $dateDebut;
+                    $dateRef = \DateTime::createFromInterface($dateDebut);
                     $dateRef->modify('first day of this month');
 
                     $moisConsommes = 0;
@@ -166,11 +157,19 @@ class AvanceSurLoyerController extends AbstractController
                         $moisConsommes = ($diff->y * 12) + $diff->m;
                     }
 
-                    // 3. Crédit Restant
                     $creditRestant = max(0, $totalHistorique - ($moisConsommes * $loyer));
+                    $nbMoisCouverts = floor($creditRestant / $loyer);
+
+                    $dateDepartCouverture = ($dateRef > $aujourdhui) ? clone $dateRef : clone $aujourdhui;
+                    /** @var \DateTime $dateReprise */
+                    $dateReprise = clone $dateDepartCouverture;
+                    if ($nbMoisCouverts > 0) {
+                        $dateReprise->modify('+' . (int)$nbMoisCouverts . ' months');
+                    }
 
                     $stats['totalAvance'] = $creditRestant;
-                    $stats['nbMoisCouverts'] = floor($creditRestant / $loyer);
+                    $stats['nbMoisCouverts'] = $nbMoisCouverts;
+                    $stats['dateReprise'] = $dateReprise;
                     $stats['reliquatGlobal'] = $creditRestant % $loyer;
                 }
             } else {
