@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Événements & Informations{% endblock %}
+
+{% block body %}
+<!-- En-tête page -->
+<div class="card mb-3 overflow-hidden">
+    <div class="bg-holder d-none d-lg-block bg-card" 
+        style="background-image:url({{ asset('assets/img/icons/spot-illustrations/corner-1.png') }}); opacity: 0.1;">
+    </div>
+    <div class="card-body position-relative p-4">
+        <div class="row flex-between-center g-3">
+            <div class="col-12 col-md">
+                <h5 class="mb-0">Actualités & Événements</h5>
+                <p class="mb-0 fs-11 text-muted">Restez informé des dernières actualités et maintenances de votre logement.</p>
+            </div>
+            <div class="col-12 col-md-auto ms-auto">
+                <div class="badge badge-subtle-primary rounded-pill p-3 shadow-none">
+                    <span class="fas fa-bullhorn fs-8"></span>
+                    <span class="ms-2 fs-10">{{ operations|length }} message(s)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Liste des événements -->
+<div class="row g-4">
+    {% for operation in operations %}
+    <div class="col-md-6 col-xxl-4">
+        <div class="card h-100 shadow-sm hover-shadow-lg transition-base border dark__border-800 overflow-hidden">
+            <div class="position-relative">
+                <div style="height: 12.5rem; min-height: 180px;" class="bg-light dark__bg-1100 d-flex align-items-center justify-content-center overflow-hidden">
+                    {% set first_image = null %}
+                    {% for file in operation.files %}
+                        {% set ext = file.filePath|split('.')|last|lower %}
+                        {% if not first_image and ext in ['jpg', 'jpeg', 'png', 'webp'] %}
+                            {% set first_image = file.filePath %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if first_image %}
+                        <img src="{{ asset('uploads/operations/' ~ first_image) }}" alt="" 
+                            style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.95);">
+                    {% else %}
+                        <div class="text-center p-4">
+                            <span class="fas fa-bullhorn fa-3x text-300 opacity-50 mb-3"></span>
+                            <div class="fs-10 text-500 fw-semi-bold">Annonce Officielle</div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% set badge_color = 'info' %}
+                {% if operation.type == 'Sinistre' %}{% set badge_color = 'danger' %}
+                {% elseif operation.type == 'Maintenance' %}{% set badge_color = 'warning' %}
+                {% elseif operation.type == 'Déchets' %}{% set badge_color = 'success' %}
+                {% endif %}
+                <div class="position-absolute top-0 end-0 m-3">
+                    <span class="badge rounded-pill bg-{{ badge_color }} shadow-sm px-3 py-2 fs-10">
+                        {{ operation.type }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body p-4 d-flex flex-column">
+                <div class="mb-3">
+                    <small class="text-600 fs-10 fw-semi-bold">
+                        <i class="far fa-calendar-alt me-1"></i> {{ operation.createdAt|date('d F Y') }}
+                    </small>
+                </div>
+                
+                <h4 class="fw-bold text-900 mb-3 fs-8">{{ operation.titre }}</h4>
+                
+                <p class="text-700 fs-10 mb-4 line-clamp-3" style="min-height: 4.5em; line-height: 1.5;">
+                    {{ operation.description|striptags }}
+                </p>
+                
+                <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar avatar-s me-2">
+                            <div class="avatar-name rounded-circle bg-subtle-primary text-primary"><span class="fas fa-paperclip"></span></div>
+                        </div>
+                        <span class="fs-10 fw-bold text-700">{{ operation.files|length }} document(s)</span>
+                    </div>
+                    <a href="{{ path('app_tenant_operation_show', {id: operation.id}) }}" class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm">
+                        Découvrir <span class="fas fa-arrow-right ms-2 fs-11"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 py-6">
+        <div class="card border-0 bg-transparent text-center">
+            <div class="card-body">
+                <img class="mb-4" src="{{ asset('assets/img/icons/spot-illustrations/45.png') }}" alt="" width="200">
+                <h4 class="text-900 fw-bold">Tout est calme pour le moment</h4>
+                <p class="text-600 fs-10 mx-auto" style="max-width: 400px;">
+                    Vous n'avez aucun message ou événement en attente. Votre bailleur vous informera ici dès qu'il y aura une nouveauté.
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

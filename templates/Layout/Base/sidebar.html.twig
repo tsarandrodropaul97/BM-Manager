@@ -17,12 +17,12 @@
 		<a class="navbar-brand" href="{{ path('app_dashboard') }}">
 			<div class="d-flex align-items-center py-3">
 				<div class="me-3"
-					style="width: 44px; height: 44px; background: linear-gradient(135deg, #0d6efd, #6f42c1); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25); transition: transform 0.2s ease;">
+					style="width: 2.75rem; height: 2.75rem; background: linear-gradient(135deg, #0d6efd, #6f42c1); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25); transition: transform 0.2s ease;">
 					<span
-						style="color: white; font-weight: 700; font-size: 14px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; letter-spacing: -0.5px;">BM</span>
+						style="color: white; font-weight: 700; font-size: 0.875rem; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; letter-spacing: -0.5px;">BM</span>
 				</div>
 				<span class="text-900 dark__text-white"
-					style="font-weight: 600; font-size: 20px; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; letter-spacing: -0.3px;">BailManager</span>
+					style="font-weight: 600; font-size: 1.25rem; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; letter-spacing: -0.3px;">BailManager</span>
 			</div>
 		</a>
 	</div>
@@ -155,7 +155,7 @@
 						<li class="nav-item"><a class="nav-link" href="#">Quittances & Avis</a></li>
 					</ul>
 
-					<!-- Comptabilité -->
+					{# <!-- Comptabilité -->
 					<a class="nav-link dropdown-indicator" href="#compta" role="button" data-bs-toggle="collapse"
 						aria-expanded="false" aria-controls="compta">
 						<div class="d-flex align-items-center">
@@ -167,7 +167,7 @@
 						<li class="nav-item"><a class="nav-link" href="#">Journal Recettes</a></li>
 						<li class="nav-item"><a class="nav-link" href="#">Journal Dépenses</a></li>
 						<li class="nav-item"><a class="nav-link" href="#">Facturation</a></li>
-					</ul>
+					</ul> #}
 				</li>
 
 				<!-- SECTION 5: TECHNIQUE & MAINTENANCE -->
@@ -186,10 +186,14 @@
 						</div>
 					</a>
 					<ul class="nav collapse" id="maintenance">
-						<li class="nav-item"><a class="nav-link" href="{{ path('app_maintenance') }}">Vue d'ensemble</a>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_operation_index') }}">
+								<span class="fas fa-bullhorn me-2"></span>Événements & Infos
+							</a>
 						</li>
+						{# <li class="nav-item"><a class="nav-link" href="{{ path('app_maintenance') }}">Maintenance</a></li>
 						<li class="nav-item"><a class="nav-link" href="#">Interventions</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Prestataires</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">Prestataires</a></li> #}
 					</ul>
 				</li>
 
@@ -209,11 +213,11 @@
 						</div>
 					</a>
 					<ul class="nav collapse" id="admin">
-						<li class="nav-item"><a class="nav-link" href="#">Propriétaires</a></li>
+						{# <li class="nav-item"><a class="nav-link" href="#">Propriétaires</a></li> #}
 						<li class="nav-item"><a class="nav-link" href="{{ path('app_user_index') }}">Utilisateurs</a>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Documents types</a></li>
+						{# <li class="nav-item"><a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a></li> #}
+						{# <li class="nav-item"><a class="nav-link" href="#">Documents types</a></li> #}
 					</ul>
 				</li>
 
@@ -247,17 +251,24 @@
 						</div>
 					</a>
 
-					<a class="nav-link" href="#" role="button">
+					{# <a class="nav-link" href="#" role="button">
 						<div class="d-flex align-items-center">
 							<span class="nav-link-icon"><span class="fas fa-receipt"></span></span>
 							<span class="nav-link-text ps-1">Mes Quittances</span>
 						</div>
-					</a>
+					</a> #}
 
 					<a class="nav-link" href="{{ path('app_avance_index') }}" role="button">
 						<div class="d-flex align-items-center">
 							<span class="nav-link-icon"><span class="fas fa-hand-holding-usd"></span></span>
 							<span class="nav-link-text ps-1">Mes Avances</span>
+						</div>
+					</a>
+
+					<a class="nav-link" href="{{ path('app_tenant_operation_index') }}" role="button">
+						<div class="d-flex align-items-center">
+							<span class="nav-link-icon"><span class="fas fa-bullhorn"></span></span>
+							<span class="nav-link-text ps-1">Événements & Infos</span>
 						</div>
 					</a>
 

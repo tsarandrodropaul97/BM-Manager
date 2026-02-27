@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Opérations & Communications{% endblock %}
+
+{% block body %}
+<!-- En-tête page -->
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="row flex-between-center g-3">
+            <div class="col-12 col-sm-auto">
+                <h5 class="mb-0">Opérations & Incidents</h5>
+                <p class="mb-0 fs-11 text-muted">Gestion des événements imprévus et communication locataires</p>
+            </div>
+            <div class="col-12 col-sm-auto ms-auto">
+                <a href="{{ path('app_operation_new') }}" class="btn btn-primary btn-sm px-4">
+                    <span class="fas fa-plus me-1"></span>Nouvelle Opération
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filtres -->
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="get" action="{{ path('app_operation_index') }}" class="row g-3 align-items-center">
+            <div class="col-12 col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-200 border-end-0">
+                        <span class="fas fa-search text-600"></span>
+                    </span>
+                    <input type="text" name="search" value="{{ filters.search }}"
+                        class="form-control border-start-0 ps-0" placeholder="Rechercher par titre ou description...">
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <select name="type" class="form-select js-choice">
+                    <option value="">Toutes les catégories</option>
+                    <option value="Sinistre" {{ filters.type == 'Sinistre' ? 'selected' : '' }}>Sinistre</option>
+                    <option value="Maintenance" {{ filters.type == 'Maintenance' ? 'selected' : '' }}>Maintenance</option>
+                    <option value="Déchets" {{ filters.type == 'Déchets' ? 'selected' : '' }}>Déchets</option>
+                    <option value="Information" {{ filters.type == 'Information' ? 'selected' : '' }}>Information</option>
+                </select>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <input type="date" name="date" value="{{ filters.date }}" class="form-control">
+            </div>
+            <div class="col-12 col-md-auto ms-auto">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary px-4">Filtrer</button>
+                    <a href="{{ path('app_operation_index') }}" class="btn btn-link py-0 text-muted fs-11 align-self-center">Réinitialiser</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Résultats -->
+<div class="card">
+    <div class="card-header border-bottom">
+        <h6 class="mb-0">Résultats de la recherche ({{ operations|length }})</h6>
+    </div>
+    <div class="card-body p-0">
+        <div class="row g-3 p-3">
+            {% for operation in operations %}
+            <div class="col-md-6 col-lg-4 col-xxl-3">
+                <div class="card h-100 shadow-none border">
+                    <div class="position-relative">
+                        <div style="height: 11.25rem; min-height: 160px; background: #eaedf2;" class="dark__bg-1100 d-flex align-items-center justify-content-center overflow-hidden">
+                            {% set first_image = null %}
+                            {% for file in operation.files %}
+                                {% set ext = file.filePath|split('.')|last|lower %}
+                                {% if not first_image and ext in ['jpg', 'jpeg', 'png', 'webp'] %}
+                                    {% set first_image = file.filePath %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if first_image %}
+                                <img src="{{ asset('uploads/operations/' ~ first_image) }}" alt="" 
+                                    style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                <span class="fas fa-bullhorn fa-3x text-300"></span>
+                            {% endif %}
+                        </div>
+                        <div class="position-absolute top-0 start-0 m-2">
+                            {% set badge_color = 'info' %}
+                            {% if operation.type == 'Sinistre' %}{% set badge_color = 'danger' %}
+                            {% elseif operation.type == 'Maintenance' %}{% set badge_color = 'warning' %}
+                            {% elseif operation.type == 'Déchets' %}{% set badge_color = 'success' %}
+                            {% endif %}
+                            <span class="badge rounded-pill bg-{{ badge_color }}">{{ operation.type }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body pb-2">
+                        <h6 class="mb-1 text-900 fw-bold text-truncate">{{ operation.titre }}</h6>
+                        <p class="fs-11 text-muted mb-2 line-clamp-2" style="min-height: 3em; line-height: 1.5;">
+                            {{ operation.description|striptags }}
+                        </p>
+                        <div class="d-flex justify-content-between mb-2 mt-3">
+                            <span class="fs-11 text-muted">
+                                <span class="fas fa-paperclip me-1"></span>
+                                {{ operation.files|length }} doc(s)
+                            </span>
+                            <span class="fs-11 text-muted">
+                                <span class="fas fa-users me-1 text-primary"></span>
+                                {{ operation.isGlobal ? 'Tous' : operation.targetLocataires|length }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer py-2 border-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-600 fw-semi-bold">{{ operation.createdAt|date('d/m/Y') }}</small>
+                            <a href="{{ path('app_operation_show', {'id': operation.id}) }}" class="btn btn-link btn-sm p-0">
+                                Gérer <span class="fas fa-chevron-right ms-1 fs-11"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 py-5 text-center">
+                <span class="fas fa-bullhorn fa-4x text-200 mb-3"></span>
+                <p class="text-600 fs-4 fw-semi-bold">Aucune opération trouvée.</p>
+                <p class="text-500 fs-11">Essayez de modifier vos critères de recherche.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

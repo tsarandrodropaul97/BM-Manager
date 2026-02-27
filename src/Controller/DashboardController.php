@@ -16,6 +16,7 @@ final class DashboardController extends AbstractController
         \App\Repository\BiensRepository $biensRepository,
         \App\Repository\LocataireRepository $locataireRepository,
         \App\Repository\ContratRepository $contratRepository,
+        \App\Repository\OperationRepository $operationRepository,
         Request $request
     ): Response {
         $user = $this->getUser();
@@ -61,6 +62,7 @@ final class DashboardController extends AbstractController
                 'revenuMensuel' => $revenuMensuel,
                 'tauxOccupation' => round($tauxOccupation, 1),
                 'recentActivities' => $recentActivities,
+                'recentOperations' => $operationRepository->findBy([], ['createdAt' => 'DESC'], 5),
                 'biens' => $allBiens,
                 'filters' => ['bienId' => $bienId]
             ];
@@ -138,6 +140,7 @@ final class DashboardController extends AbstractController
                         'dateReprise' => $dateReprise,
                         'contrat' => $contrat,
                         'bien' => $contrat->getBien(),
+                        'recentOperations' => array_slice($operationRepository->findForLocataire($locataire), 0, 3)
                     ];
 
                     // Prévisions sur 6 mois

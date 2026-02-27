@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'événement{% endblock %}
+
+{% block body %}
+<!-- HEADER CARD -->
+<div class="card mb-3 border-0 shadow-sm overflow-hidden">
+    <div class="card-header border-bottom">
+        <div class="row flex-between-center g-3">
+            <div class="col-12 col-sm-auto align-self-center">
+                <h5 class="mb-0">Détails de l'événement</h5>
+                <p class="mb-0 fs-11 text-muted">Consultation complète des informations de l'annonce</p>
+            </div>
+            <div class="col-12 col-sm-auto ms-auto d-flex justify-content-center justify-content-sm-end gap-2">
+                <a href="{{ path('app_tenant_operation_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                    <span class="fas fa-arrow-left me-1"></span>Retour
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 justify-content-center">
+    <div class="col-lg-10">
+        <!-- HEADER CARD -->
+        <div class="card mb-3 border-0 shadow-sm overflow-hidden">
+            {% set first_image = null %}
+            {% for file in operation.files %}
+                {% set ext = file.filePath|split('.')|last|lower %}
+                {% if not first_image and ext in ['jpg', 'jpeg', 'png', 'webp'] %}
+                    {% set first_image = file.filePath %}
+                {% endif %}
+            {% endfor %}
+
+            {% if first_image %}
+            <div style="height: 22rem; min-height: 250px; background-image: url({{ asset('uploads/operations/' ~ first_image) }}); background-size: cover; background-position: center;">
+                <div class="w-100 h-100 dark__bg-opacity-50" style="background: rgba(0,0,0,0.3); backdrop-filter: blur(2px);"></div>
+            </div>
+            {% endif %}
+
+            <div class="card-body p-4 p-md-5 {% if first_image %}position-relative mt-n6 bg-white dark__bg-1100 shadow-lg mx-3 mx-md-5 rounded-3{% endif %}">
+                <div class="d-flex align-items-center mb-4">
+                    {% set badge_color = 'info' %}
+                    {% if operation.type == 'Sinistre' %}{% set badge_color = 'danger' %}
+                    {% elseif operation.type == 'Maintenance' %}{% set badge_color = 'warning' %}
+                    {% elseif operation.type == 'Déchets' %}{% set badge_color = 'success' %}
+                    {% endif %}
+                    <span class="badge badge-subtle-{{ badge_color }} rounded-pill px-3 py-1 fs-11 me-3">{{ operation.type }}</span>
+                    <span class="text-600 fs-10 fw-semi-bold">
+                        <i class="far fa-calendar-alt me-1"></i> Publié le {{ operation.createdAt|date('d F Y à H:i') }}
+                    </span>
+                </div>
+
+                <h2 class="fw-black text-900 mb-4">{{ operation.titre }}</h2>
+
+                <div class="fs-9 text-800 dark__text-300 mb-5" style="white-space: pre-line; line-height: 1.8;">
+                    {{ operation.description|default('Aucune description détaillée disponible.') }}
+                </div>
+
+                <!-- DOCUMENTS SECTION -->
+                {% if operation.files|length > 0 %}
+                <div class="pt-5 border-top border-200">
+                    <h5 class="fw-bold mb-4 text-primary">
+                        <i class="fas fa-file-download me-2"></i>Documents & Pièces jointes
+                    </h5>
+                    <div class="row g-3">
+                        {% for file in operation.files %}
+                        <div class="col-sm-6 col-md-4">
+                            <div class="card border dark__border-800 shadow-none h-100 transition-base hover-shadow-sm bg-white dark__bg-card">
+                                <div class="card-body p-3 text-center">
+                                    {% set ext = file.filePath|split('.')|last|lower %}
+                                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm border" style="height: 7.5rem; min-height: 100px; background: #f8f9fa;">
+                                        {% if ext in ['jpg', 'jpeg', 'png', 'webp'] %}
+                                            <a href="{{ asset('uploads/operations/' ~ file.filePath) }}" target="_blank">
+                                                <img src="{{ asset('uploads/operations/' ~ file.filePath) }}" class="w-100 h-100 object-fit-cover shadow-sm">
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ asset('uploads/operations/' ~ file.filePath) }}" target="_blank" class="w-100 h-100 d-flex align-items-center justify-content-center text-decoration-none">
+                                                <span class="fas fa-file-pdf fa-3x text-danger opacity-75"></span>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    <h6 class="fs-10 fw-bold text-truncate mb-3" title="{{ file.originalName }}">{{ file.originalName }}</h6>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ asset('uploads/operations/' ~ file.filePath) }}" target="_blank" class="btn btn-sm btn-falcon-default rounded-pill px-3">
+                                            <span class="fas fa-eye me-1"></span>Voir
+                                        </a>
+                                        <a href="{{ asset('uploads/operations/' ~ file.filePath) }}" download="{{ file.originalName }}" class="btn btn-sm btn-primary rounded-pill px-3 shadow-none">
+                                            <span class="fas fa-download me-1"></span>Tél.
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- FOOTER HELP -->
+        <div class="card border-0 shadow-sm bg-subtle-primary">
+            <div class="card-body p-4 text-center">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h5 class="text-primary fw-bold mb-2">Une question sur cet événement ?</h5>
+                        <p class="fs-10 text-600 mb-0">Notre équipe est à votre disposition pour vous apporter plus d'informations. Vous pouvez nous contacter via la messagerie ou par téléphone.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

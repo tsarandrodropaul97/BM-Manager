@@ -8,6 +8,7 @@ parameters:
     locataires_directory: '%kernel.project_dir%/public/uploads/locataires'
     contrats_directory: '%kernel.project_dir%/public/uploads/contrats'
     avances_directory: '%kernel.project_dir%/public/uploads/avances'
+    operations_directory: '%kernel.project_dir%/public/uploads/operations'
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +20,11 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%operations_directory%'
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
