@@ -40,16 +40,8 @@ class UserType extends AbstractType
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'mapped' => false,
-                'required' => $options['is_new'],
-                'attr' => ['autocomplete' => 'new-password', 'class' => 'form-control'],
-                'constraints' => $options['is_new'] ? [
-                    new NotBlank(['message' => 'Please enter a password']),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        'max' => 4096,
-                    ]),
-                ] : [],
+                'required' => false,
+                'attr' => ['autocomplete' => 'new-password', 'class' => 'form-control', 'placeholder' => 'Laissez vide pour générer automatiquement'],
             ])
         ;
     }

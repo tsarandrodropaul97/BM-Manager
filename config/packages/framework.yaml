@@ -5,6 +5,10 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    router:
+        # Domaine utilisé pour générer les URLs absolues dans les emails
+        utf8: true
+
     #esi: true
     #fragments: true
 

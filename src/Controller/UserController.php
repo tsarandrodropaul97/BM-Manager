@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,24 +27,49 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
-    {
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $userPasswordHasher,
+        NotificationService $notificationService
+    ): Response {
         $user = new User();
         $form = $this->createForm(UserType::class, $user, ['is_new' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Utiliser le MDP saisi ou en générer un automatiquement
             $plainPassword = $form->get('plainPassword')->getData();
-            if ($plainPassword) {
-                $user->setPassword(
-                    $userPasswordHasher->hashPassword($user, $plainPassword)
-                );
+            if (!$plainPassword) {
+                $plainPassword = $this->generateSecurePassword();
             }
+
+            $user->setPassword(
+                $userPasswordHasher->hashPassword($user, $plainPassword)
+            );
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Utilisateur créé avec succès.');
+            // Envoi de l'email de bienvenue avec les identifiants
+            try {
+                $notificationService->sendWelcomeEmail(
+                    $user->getEmail(),
+                    $plainPassword,
+                    $user->getFullName()
+                );
+                $this->addFlash('success', sprintf(
+                    'Utilisateur créé avec succès. Un email avec les identifiants a été envoyé à %s.',
+                    $user->getEmail()
+                ));
+            } catch (\Exception $e) {
+                $this->addFlash('warning', sprintf(
+                    'Utilisateur créé mais l\'envoi de l\'email a échoué : %s. Mot de passe temporaire : <strong>%s</strong>',
+                    $e->getMessage(),
+                    $plainPassword
+                ));
+            }
+
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -95,5 +121,32 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Génère un mot de passe sécurisé aléatoire de 12 caractères.
+     * Mélange lettres majuscules/minuscules, chiffres et caractères spéciaux.
+     */
+    private function generateSecurePassword(int $length = 12): string
+    {
+        $uppercase  = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+        $lowercase  = 'abcdefghjkmnpqrstuvwxyz';
+        $digits     = '23456789';
+        $specials   = '@#!$%&*';
+
+        // Garantir au moins 1 de chaque catégorie
+        $password  = $uppercase[random_int(0, strlen($uppercase) - 1)];
+        $password .= $lowercase[random_int(0, strlen($lowercase) - 1)];
+        $password .= $digits[random_int(0, strlen($digits) - 1)];
+        $password .= $specials[random_int(0, strlen($specials) - 1)];
+
+        // Compléter le reste aléatoirement
+        $all = $uppercase . $lowercase . $digits . $specials;
+        for ($i = 4; $i < $length; $i++) {
+            $password .= $all[random_int(0, strlen($all) - 1)];
+        }
+
+        // Mélanger pour éviter la prévisibilité de l'ordre
+        return str_shuffle($password);
     }
 }

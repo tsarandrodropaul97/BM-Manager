@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès BM Manager</title>
+</head>
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;padding:60px 20px;">
+    <tr>
+        <td align="center">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:540px;">
+
+                <!-- Header -->
+                <tr>
+                    <td style="padding-bottom:48px; border-bottom: 1px solid #f1f5f9;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td align="center">
+                                    <p style="margin:0;font-size:16px;font-weight:600;color:#0f172a;letter-spacing:-0.01em;">BM MANAGER</p>
+                                    <p style="margin:4px 0 0;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">Gestion Locative Haute Performance</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Content -->
+                <tr>
+                    <td style="padding:48px 0;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td>
+                                    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#0f172a;letter-spacing:-0.02em;">Bonjour {{ fullName ?: userEmail }},</h1>
+                                    <p style="margin:0 0 32px;font-size:16px;color:#475569;line-height:1.6;">
+                                        Votre compte locataire a été activé avec succès. Vous trouverez ci-dessous vos accès personnels pour vous connecter à la plateforme.
+                                    </p>
+
+                                    <!-- Credentials Section -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f8fafc;border-radius:6px;border:1px solid #f1f5f9;margin-bottom:40px;">
+                                        <tr>
+                                            <td style="padding:24px;">
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td style="padding-bottom:16px;">
+                                                            <p style="margin:0 0 4px;font-size:12px;color:#94a3b8;font-weight:500;">COURRIEL</p>
+                                                            <p style="margin:0;font-size:16px;color:#0f172a;font-weight:500;">{{ userEmail }}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <p style="margin:0 0 4px;font-size:12px;color:#94a3b8;font-weight:500;">MOT DE PASSE TEMPORAIRE</p>
+                                                            <p style="margin:0;font-size:18px;color:#2563eb;font-weight:600;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;">{{ password }}</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- CTA -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td align="center">
+                                                <a href="{{ loginUrl }}" style="display:inline-block;padding:16px 40px;background-color:#0f172a;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;border-radius:4px;transition: background-color 0.2s ease;">
+                                                    Accéder au tableau de bord
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Safety Note -->
+                                    <p align="center" style="margin:32px 0 0;font-size:13px;color:#94a3b8;line-height:1.5;">
+                                        Par mesure de sécurité, nous vous invitons à modifier ce mot de passe dès votre première connexion dans les réglages de votre profil.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Divider -->
+                <tr>
+                    <td style="border-top: 1px solid #f1f5f9; padding-top: 32px;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td>
+                                    <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">
+                                        Besoin d'aide ? Contactez l'administrateur :<br>
+                                        <span style="font-weight:600;color:#0f172a;">{{ ownerName }}</span> &mdash; {{ ownerPhone }}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Footnote -->
+                <tr>
+                    <td style="padding-top:48px;text-align:center;">
+                        <p style="margin:0;font-size:12px;color:#cbd5e1;">
+                            Plateforme BM Manager &bull; Gestion Immobilière &bull; {{ "now"|date("Y") }}
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

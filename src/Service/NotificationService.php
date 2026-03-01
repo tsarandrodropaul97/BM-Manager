@@ -13,6 +13,7 @@ class NotificationService
     private const ADMIN_EMAIL = 'tsarandropaul97@gmail.com';
     private const ADMIN_NAME = 'SILENY Tsarandro Paul';
     private const ADMIN_PHONE = '03433 79087';
+    private const APP_BASE_URL = 'http://bien.sileny.isfpp-madagascar.com';
 
     public function __construct(
         private MailerInterface $mailer
@@ -77,6 +78,30 @@ class NotificationService
                 'avance' => $avance,
                 'locataire' => $locataire,
                 'ownerName' => self::ADMIN_NAME,
+                'ownerPhone' => self::ADMIN_PHONE,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+    /**
+     * Envoie les identifiants de connexion à un nouvel utilisateur.
+     */
+    public function sendWelcomeEmail(string $toEmail, string $plainPassword, ?string $fullName = null): void
+    {
+        $loginUrl = self::APP_BASE_URL;
+
+        $email = (new TemplatedEmail())
+            ->from(new Address(self::ADMIN_EMAIL, self::ADMIN_NAME))
+            ->to($toEmail)
+            ->subject('Bienvenue sur BM Manager - Vos identifiants de connexion')
+            ->htmlTemplate('emails/user_welcome.html.twig')
+            ->context([
+                'userEmail'  => $toEmail,
+                'password'   => $plainPassword,
+                'fullName'   => $fullName,
+                'loginUrl'   => $loginUrl,
+                'ownerName'  => self::ADMIN_NAME,
                 'ownerPhone' => self::ADMIN_PHONE,
             ]);
 
