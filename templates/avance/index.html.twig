@@ -340,21 +340,13 @@
                                 </form>
                                 {% endif %}
 
-                                {% if is_granted('ROLE_ADMIN') %}
-                                <form method="post" action="{{ path('app_avance_delete', {'id': avance.id}) }}"
-                                    class="d-inline">
+                                <form method="post" action="{{ path('app_avance_delete', {id: avance.id}) }}"
+                                    class="d-inline form-confirm" data-message="Voulez-vous vraiment supprimer cette avance ?">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avance.id) }}">
-                                    <button class="btn btn-danger" type="submit" title="Supprimer"
-                                        data-confirm="Voulez-vous vraiment supprimer cette avance ?">
+                                    <button class="btn btn-danger" type="submit" title="Supprimer">
                                         <span class="fas fa-trash-alt"></span>
                                     </button>
                                 </form>
-                                {% else %}
-                                <a href="{{ path('app_avance_show', {'id': avance.id}) }}" class="btn btn-light"
-                                    title="Détails">
-                                    <span class="fas fa-eye"></span>
-                                </a>
-                                {% endif %}
                             </div>
                         </td>
                     </tr>
@@ -786,6 +778,16 @@
 
         previewModal.addEventListener('hidden.bs.modal', function () {
             previewContent.innerHTML = '';
+        });
+
+        // Gestion de la confirmation de suppression
+        document.querySelectorAll('.form-confirm').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                const message = this.getAttribute('data-message') || 'Voulez-vous vraiment confirmer cette action ?';
+                if (!confirm(message)) {
+                    e.preventDefault();
+                }
+            });
         });
     });
 </script>

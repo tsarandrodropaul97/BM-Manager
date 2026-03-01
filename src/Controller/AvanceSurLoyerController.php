@@ -482,9 +482,24 @@ class AvanceSurLoyerController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_avance_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, AvanceSurLoyer $avance, EntityManagerInterface $entityManager): Response
     {
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$isAdmin) {
+            $locataire = $user->getLocataire();
+            if (!$locataire || $avance->getLocataire()->getId() !== $locataire->getId()) {
+                throw $this->createAccessDeniedException('Accès refusé.');
+            }
+            // Optionnel : empêcher la suppression d'une avance déjà validée par l'admin pour le locataire
+            // if ($avance->getStatus() === 'validée') {
+            //     $this->addFlash('error', 'Vous ne pouvez pas supprimer une avance déjà validée.');
+            //     return $this->redirectToRoute('app_avance_index');
+            // }
+        }
+
         if ($this->isCsrfTokenValid('delete' . $avance->getId(), $request->getPayload()->getString('_token'))) {
             // Supprimer les fichiers physiques des justificatifs liés
             foreach ($avance->getDocuments() as $doc) {
