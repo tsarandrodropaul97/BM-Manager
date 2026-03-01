@@ -21,10 +21,12 @@
                 {% endfor %}
                 {% endfor %}
 
-                {{ form_start(form) }}
+                {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
                 <div class="row g-3">
-                    <!-- Colonne Gauche : Identité -->
+                    <!-- Colonne Gauche : Identité + CIN + Sécurité -->
                     <div class="col-lg-8">
+
+                        <!-- Informations Personnelles -->
                         <div class="card shadow-none border mb-3">
                             <div class="card-header border-bottom">
                                 <h6 class="mb-0 text-primary">
@@ -51,8 +53,8 @@
                                         <h4 class="mb-1">{{ locataire.nomComplet }}</h4>
                                         <p class="text-muted fs-11 mb-2">Modifier votre photo de profil</p>
                                         <div class="col-12 col-md-8 mx-auto mx-sm-0">
-                                            {{ form_widget(form.photo, {'attr': {'class': 'form-control
-                                            form-control-sm'}}) }}
+                                            {{ form_widget(form.photo, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            {{ form_errors(form.photo) }}
                                         </div>
                                     </div>
                                 </div>
@@ -75,10 +77,8 @@
                                         {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
                                     </div>
                                     <div class="col-12">
-                                        {{ form_label(form.adresseActuelle, null, {'label_attr': {'class':
-                                        'form-label'}}) }}
-                                        {{ form_widget(form.adresseActuelle, {'attr': {'class': 'form-control', 'rows':
-                                        2}}) }}
+                                        {{ form_label(form.adresseActuelle, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.adresseActuelle, {'attr': {'class': 'form-control', 'rows': 2}}) }}
                                     </div>
                                     <div class="col-12 col-md-6">
                                         {{ form_label(form.profession, null, {'label_attr': {'class': 'form-label'}}) }}
@@ -92,6 +92,131 @@
                             </div>
                         </div>
 
+                        <!-- Section CIN -->
+                        <div class="card shadow-none border mb-3">
+                            <div class="card-header border-bottom">
+                                <h6 class="mb-0 text-warning">
+                                    <span class="fas fa-address-card me-2"></span>Carte d'Identité Nationale (CIN)
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted fs-11 mb-3">
+                                    <span class="fas fa-info-circle me-1"></span>
+                                    Formats acceptés : JPG, PNG, WEBP ou PDF. Taille maximale : 2 Mo par fichier.
+                                </p>
+                                <div class="row g-4">
+                                    <!-- CIN Recto -->
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semi-bold">
+                                            <span class="fas fa-id-card me-1 text-warning"></span>CIN Recto
+                                        </label>
+                                        {% if locataire.cinRecto %}
+                                        <div class="mb-2">
+                                            {% set cinRectoExt = locataire.cinRecto|split('.')|last|lower %}
+                                            {% if cinRectoExt in ['jpg', 'jpeg', 'png', 'webp'] %}
+                                            <div class="border rounded overflow-hidden" style="height: 140px; background: #f0f4f8; cursor: pointer;"
+                                                onclick="openPreview('{{ asset('uploads/locataires/' ~ locataire.cinRecto) }}', 'CIN Recto')">
+                                                <img src="{{ asset('uploads/locataires/' ~ locataire.cinRecto) }}"
+                                                    alt="CIN Recto"
+                                                    style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s;"
+                                                    onmouseover="this.style.transform='scale(1.05)'"
+                                                    onmouseout="this.style.transform='scale(1)'">
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-between mt-1">
+                                                <small class="text-success"><span class="fas fa-check-circle me-1"></span>Document enregistré</small>
+                                                <button type="button" class="btn btn-link btn-sm p-0 text-primary fs-11"
+                                                    onclick="openPreview('{{ asset('uploads/locataires/' ~ locataire.cinRecto) }}', 'CIN Recto')">
+                                                    <span class="fas fa-expand-alt me-1"></span>Agrandir
+                                                </button>
+                                            </div>
+                                            {% else %}
+                                            <div class="border rounded d-flex align-items-center justify-content-center bg-subtle-warning"
+                                                style="height: 140px;">
+                                                <div class="text-center">
+                                                    <span class="fas fa-file-pdf fa-3x text-warning mb-2 d-block"></span>
+                                                    <small class="text-warning fw-bold">Document PDF</small>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex mt-1">
+                                                <a href="{{ asset('uploads/locataires/' ~ locataire.cinRecto) }}" target="_blank"
+                                                    class="btn btn-link btn-sm p-0 text-primary fs-11">
+                                                    <span class="fas fa-external-link-alt me-1"></span>Voir le PDF
+                                                </a>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <label class="form-label fs-11 text-muted">Remplacer le document :</label>
+                                        {% else %}
+                                        <div class="border rounded border-dashed d-flex align-items-center justify-content-center mb-2"
+                                            style="height: 140px; background: #f8f9fa; border-style: dashed !important;">
+                                            <div class="text-center text-muted">
+                                                <span class="fas fa-cloud-upload-alt fa-2x mb-2 d-block text-300"></span>
+                                                <small>Aucun document</small>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {{ form_widget(form.cinRecto, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        {{ form_errors(form.cinRecto) }}
+                                    </div>
+
+                                    <!-- CIN Verso -->
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-semi-bold">
+                                            <span class="fas fa-id-card-alt me-1 text-warning"></span>CIN Verso
+                                        </label>
+                                        {% if locataire.cinVerso %}
+                                        <div class="mb-2">
+                                            {% set cinVersoExt = locataire.cinVerso|split('.')|last|lower %}
+                                            {% if cinVersoExt in ['jpg', 'jpeg', 'png', 'webp'] %}
+                                            <div class="border rounded overflow-hidden" style="height: 140px; background: #f0f4f8; cursor: pointer;"
+                                                onclick="openPreview('{{ asset('uploads/locataires/' ~ locataire.cinVerso) }}', 'CIN Verso')">
+                                                <img src="{{ asset('uploads/locataires/' ~ locataire.cinVerso) }}"
+                                                    alt="CIN Verso"
+                                                    style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s;"
+                                                    onmouseover="this.style.transform='scale(1.05)'"
+                                                    onmouseout="this.style.transform='scale(1)'">
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-between mt-1">
+                                                <small class="text-success"><span class="fas fa-check-circle me-1"></span>Document enregistré</small>
+                                                <button type="button" class="btn btn-link btn-sm p-0 text-primary fs-11"
+                                                    onclick="openPreview('{{ asset('uploads/locataires/' ~ locataire.cinVerso) }}', 'CIN Verso')">
+                                                    <span class="fas fa-expand-alt me-1"></span>Agrandir
+                                                </button>
+                                            </div>
+                                            {% else %}
+                                            <div class="border rounded d-flex align-items-center justify-content-center bg-subtle-warning"
+                                                style="height: 140px;">
+                                                <div class="text-center">
+                                                    <span class="fas fa-file-pdf fa-3x text-warning mb-2 d-block"></span>
+                                                    <small class="text-warning fw-bold">Document PDF</small>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex mt-1">
+                                                <a href="{{ asset('uploads/locataires/' ~ locataire.cinVerso) }}" target="_blank"
+                                                    class="btn btn-link btn-sm p-0 text-primary fs-11">
+                                                    <span class="fas fa-external-link-alt me-1"></span>Voir le PDF
+                                                </a>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <label class="form-label fs-11 text-muted">Remplacer le document :</label>
+                                        {% else %}
+                                        <div class="border rounded border-dashed d-flex align-items-center justify-content-center mb-2"
+                                            style="height: 140px; background: #f8f9fa;">
+                                            <div class="text-center text-muted">
+                                                <span class="fas fa-cloud-upload-alt fa-2x mb-2 d-block text-300"></span>
+                                                <small>Aucun document</small>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {{ form_widget(form.cinVerso, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        {{ form_errors(form.cinVerso) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sécurité et Mot de passe -->
                         <div class="card shadow-none border">
                             <div class="card-header border-bottom">
                                 <h6 class="mb-0 text-danger">
@@ -101,8 +226,7 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        {{ form_label(form.currentPassword, null, {'label_attr': {'class':
-                                        'form-label'}}) }}
+                                        {{ form_label(form.currentPassword, null, {'label_attr': {'class': 'form-label'}}) }}
                                         {{ form_widget(form.currentPassword, {'attr': {'class': 'form-control',
                                         'placeholder': 'Votre mot de passe actuel'}}) }}
                                         <div class="fs-11 text-muted mt-1 italic">Requis uniquement pour changer de mot
@@ -116,12 +240,12 @@
                                     <div class="col-12 col-md-6">
                                         {{ form_label(form.plainPassword.second, null, {'label_attr': {'class':
                                         'form-label'}}) }}
-                                        {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}})
-                                        }}
+                                        {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <!-- Colonne Droite : Infos Location & Actions -->
@@ -174,6 +298,39 @@
                                 </div>
                             </div>
 
+                            <!-- Statut CIN -->
+                            <div class="card mb-3 border">
+                                <div class="card-body">
+                                    <h6 class="text-uppercase fs-11 fw-semi-bold text-600 mb-3">
+                                        <span class="fas fa-address-card me-1"></span>Documents CIN
+                                    </h6>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fs-11 text-700">CIN Recto :</span>
+                                        {% if locataire.cinRecto %}
+                                        <span class="badge badge-subtle-success fs-10">
+                                            <span class="fas fa-check me-1"></span>Fourni
+                                        </span>
+                                        {% else %}
+                                        <span class="badge badge-subtle-warning fs-10">
+                                            <span class="fas fa-exclamation me-1"></span>Manquant
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fs-11 text-700">CIN Verso :</span>
+                                        {% if locataire.cinVerso %}
+                                        <span class="badge badge-subtle-success fs-10">
+                                            <span class="fas fa-check me-1"></span>Fourni
+                                        </span>
+                                        {% else %}
+                                        <span class="badge badge-subtle-warning fs-10">
+                                            <span class="fas fa-exclamation me-1"></span>Manquant
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="card border">
                                 <div class="card-body">
                                     <button type="submit" class="btn btn-primary d-block w-100 mb-2">
@@ -197,4 +354,28 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de prévisualisation image -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h6 class="modal-title" id="previewModalTitle"></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-2">
+                <img id="previewModalImage" src="" alt="" class="img-fluid rounded" style="max-height: 75vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openPreview(src, title) {
+    document.getElementById('previewModalImage').src = src;
+    document.getElementById('previewModalTitle').textContent = title;
+    var modal = new bootstrap.Modal(document.getElementById('previewModal'));
+    modal.show();
+}
+</script>
 {% endblock %}

@@ -50,7 +50,31 @@ class UserProfileType extends AbstractType
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
-                        'mimeTypesMessage' => 'Veuillez uploader une image valide',
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, WEBP)',
+                    ])
+                ],
+            ])
+            ->add('cinRecto', FileType::class, [
+                'label' => 'CIN Recto',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, WEBP ou PDF)',
+                    ])
+                ],
+            ])
+            ->add('cinVerso', FileType::class, [
+                'label' => 'CIN Verso',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, WEBP ou PDF)',
                     ])
                 ],
             ])

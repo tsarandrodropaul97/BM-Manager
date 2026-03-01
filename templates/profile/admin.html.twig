@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil - Administration{% endblock %}
+
+{% block body %}
+<div class="row g-3">
+    <div class="col-12">
+        <div class="card mb-3">
+            <div class="card-header border-bottom d-flex flex-between-center g-3">
+                <h5 class="mb-0">Réglages du Profil</h5>
+                <span class="badge badge-subtle-danger">Compte Administrateur</span>
+            </div>
+            <div class="card-body bg-light dark__bg-1100">
+                {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endfor %}
+
+                {{ form_start(form) }}
+                <div class="row g-3">
+                    <!-- Colonne Gauche : Informations -->
+                    <div class="col-lg-8">
+
+                        <!-- Informations du compte -->
+                        <div class="card shadow-none border mb-3">
+                            <div class="card-header border-bottom">
+                                <h6 class="mb-0 text-danger">
+                                    <span class="fas fa-user-shield me-2"></span>Informations du Compte Administrateur
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <!-- Avatar admin -->
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="bg-subtle-danger text-danger d-flex align-items-center justify-content-center rounded-circle me-3"
+                                        style="width: 80px; height: 80px; flex-shrink: 0;">
+                                        <span class="fas fa-user-shield fa-2x"></span>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">{{ user.fullName ?: user.email }}</h5>
+                                        <p class="text-muted fs-11 mb-0">{{ user.email }}</p>
+                                        <span class="badge badge-subtle-danger mt-1">Administrateur</span>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        {{ form_label(form.fullName, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.fullName, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom complet'}}) }}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sécurité -->
+                        <div class="card shadow-none border">
+                            <div class="card-header border-bottom">
+                                <h6 class="mb-0 text-danger">
+                                    <span class="fas fa-shield-alt me-2"></span>Sécurité et Mot de passe
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        {{ form_label(form.currentPassword, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.currentPassword, {'attr': {'class': 'form-control', 'placeholder': 'Votre mot de passe actuel'}}) }}
+                                        <div class="fs-11 text-muted mt-1">Requis uniquement pour changer de mot de passe.</div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.plainPassword.first, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(form.plainPassword.second, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Colonne Droite : Actions -->
+                    <div class="col-lg-4">
+                        <div class="sticky-top" style="top: 80px; z-index: 10;">
+                            <!-- Info admin -->
+                            <div class="card mb-3 border border-danger-subtle bg-subtle-danger">
+                                <div class="card-body text-center py-4">
+                                    <span class="fas fa-user-shield fa-3x text-danger mb-3 d-block"></span>
+                                    <h6 class="text-danger mb-1">Compte Administrateur</h6>
+                                    <p class="text-muted fs-11 mb-0">Vous avez accès à toutes les fonctionnalités de gestion.</p>
+                                </div>
+                            </div>
+
+                            <!-- Boutons -->
+                            <div class="card border">
+                                <div class="card-body">
+                                    <button type="submit" class="btn btn-primary d-block w-100 mb-2">
+                                        <span class="fas fa-save me-2"></span>Enregistrer
+                                    </button>
+                                    <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary d-block w-100">
+                                        Annuler
+                                    </a>
+                                    <p class="text-center fs-11 text-muted mt-3 mb-0">
+                                        <span class="fas fa-info-circle me-1"></span>
+                                        Les modifications seront prises en compte immédiatement.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
